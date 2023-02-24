@@ -1,0 +1,27 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: mytransport
+  namespace: kubernetes-dashboard
+spec:
+  serverName: "testk3s.hpadmin.sf.intra.laposte.fr"
+  insecureSkipVerify: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kubernetes-dashboard-ingress
+  namespace: kubernetes-dashboard
+spec:
+  entryPoints:
+  - web
+  - websecure
+  routes:
+  - match: host(`testk3s.hpadmin.sf.intra.laposte.fr`)
+    kind: Rule
+    services:
+    - name: kubernetes-dashboard
+      port: 443
+      serversTransport: mytransport
+  tls:
+    secretName: awx-tls-secret   
