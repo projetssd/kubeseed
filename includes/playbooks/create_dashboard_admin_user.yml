@@ -1,0 +1,33 @@
+---
+- hosts: localhost
+  gather_facts: false
+    
+  tasks:
+  - name: Create admin user
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings_storage }}/k3s/k3s.yaml"
+      state: present
+      definition:
+        name: admin-user
+        api_version: v1
+        kind: ServiceAccount
+        namespace: kubernetes-dashboard
+
+  - name: Create admin user role
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings_storage }}/k3s/k3s.yaml"
+      state: present
+      definition:
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRoleBinding
+        metadata:
+          name: admin-user
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: cluster-admin
+        subjects:
+          - kind: ServiceAccount
+            name: admin-user
+            namespace: kubernetes-dashboard
+

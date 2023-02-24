@@ -21,11 +21,7 @@ function ks_logo() {
   printf "${colorp}${projetname}${nocolor} - ${colora}${authors}${nocolor}\n"
   printf "${color3}$(lsb_release -sd)${nocolor}"
   printf "${color3}$(uname -srmo) - Uptime: $(/usr/bin/uptime -p)${nocolor}\n"
-
-
 }
-
-
 
 function ks_get_cloudflare_infos() {
   #####################################
@@ -227,8 +223,6 @@ function ks_make_dir_writable() {
     --extra-vars '{"DIRECTORY":"'${1}'"}'
 
 }
-
-
 
 function ks_checking_errors() {
   if [[ "$1" == "0" ]]; then
@@ -852,21 +846,6 @@ EOF
   log_path=${SETTINGS_STORAGE}/logs/ansible.log
 EOF
 
-  echo "Création de la configuration en cours"
-  # On créé la database
-  sqlite3 "${SETTINGS_STORAGE}/kubeseeddb" <<EOF
-    create table seedbox_params(param varchar(50) PRIMARY KEY, value varchar(50));
-    replace into seedbox_params (param,value) values ('installed',0);
-    create table applications(name varchar(50) PRIMARY KEY,
-      status integer,
-      subdomain varchar(50),
-      port integer);
-    create table applications_params (appname varchar(50),
-      param varachar(50),
-      value varchar(50),
-      FOREIGN KEY(appname) REFERENCES applications(name));
-EOF
-
   ##################################################
   # Account.yml
   mkdir -p "${SETTINGS_STORAGE}/logs"
@@ -890,7 +869,6 @@ EOF
   fi
 
   touch "${SETTINGS_SOURCE}/.prerequis.lock"
-
 
   # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
   temppath=$(ls ${VENV_DIR}/lib)
@@ -924,17 +902,41 @@ EOF
   mkdir -p ${SETTINGS_STORAGE}/k3s
   sudo cp /etc/rancher/k3s/k3s.yaml ${SETTINGS_STORAGE}/k3s
   sudo chown ${USER}: ${SETTINGS_STORAGE}/k3s/k3s.yaml
+  export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
   ks_pause
   echo ""
   # On crée les fichier de status à 0
   # shellcheck disable=SC2162
-  unset_window
+
   clear
   echo "Les composants sont maintenants tous installés/réglés, poursuite de l'installation"
 
-  read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"
 
-  # fin du venv
+  # Installation dashboard
+  ks_log_statusbar "Installation du dashboard K3S"
+  GITHUB_URL=https://github.com/kubernetes/dashboard/releases
+  VERSION_KUBE_DASHBOARD=$(curl -w '%{url_effective}' -I -L -s -S ${GITHUB_URL}/latest -o /dev/null | sed -e 's|.*/||')
+  kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
+  ansible-playbook ${SETTINGS_STORAGE}/includes/playbooks/create_dashboard_admin_user.yml
+
+  # On finit par la database
+  echo "Création de la configuration en cours"
+  # On créé la database
+  sqlite3 "${SETTINGS_STORAGE}/kubeseeddb" <<EOF
+    create table seedbox_params(param varchar(50) PRIMARY KEY, value varchar(50));
+    replace into seedbox_params (param,value) values ('installed',0);
+    create table applications(name varchar(50) PRIMARY KEY,
+      status integer,
+      subdomain varchar(50),
+      port integer);
+    create table applications_params (appname varchar(50),
+      param varachar(50),
+      value varchar(50),
+      FOREIGN KEY(appname) REFERENCES applications(name));
+EOF
+  unset_window
+  clear
+  read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"
 }
 
 function ks_log_write() {
@@ -1124,29 +1126,26 @@ function ks_affiche_menu_db() {
 
 LINES=$(tput lines)
 
-set_window ()
-{
-    # Create a virtual window that is two lines smaller at the bottom.
-    tput csr 0 $(($LINES-3))
+set_window() {
+  # Create a virtual window that is two lines smaller at the bottom.
+  tput csr 0 $(($LINES - 3))
 }
 
-unset_window()
-{
+unset_window() {
   tput csr 0 $(($LINES))
 }
 
-ks_log_statusbar ()
-{
+ks_log_statusbar() {
 
-    clear
-    set_window
-    # Move cursor to last line in your screen
-    tput cup $LINES 0;
+  clear
+  set_window
+  # Move cursor to last line in your screen
+  tput cup $LINES 0
 
-    echo -en " ===================\n===== $1 ====="
+  echo -en " ===================\n===== $1 ====="
 
-    # Move cursor to home position, back in virtual window
-    tput cup 0 0
+  # Move cursor to home position, back in virtual window
+  tput cup 0 0
 }
 
 #function ks_log_statusbar() {
@@ -1158,10 +1157,6 @@ ks_log_statusbar ()
 #  echo $1
 #  tput rc # bring the cursor back to the last saved position
 #}
-
-
-
-
 
 set_window
 
