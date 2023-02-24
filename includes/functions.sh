@@ -784,7 +784,7 @@ function ks_install() {
   sudo ln -s /usr/bin/python3 /usr/bin/python
 
   cat <<EOF >/etc/logrotate.d/ansible
-${SETTINGS_SOURCE}/logs/*.log {
+${SETTINGS_STORAGE}/logs/*.log {
   rotate 7
   daily
   compress
@@ -1119,14 +1119,40 @@ function ks_affiche_menu_db() {
   IFS=${OLDFIFS}
 }
 
-function ks_log_statusbar() {
-  tput sc                           #save the current cursor position
-  tput cup $(($(tput lines) - 2)) 3 # go to last line
-  tput ed
-  tput cup $(($(tput lines) - 1)) 3 # go to last line
-  echo $1
-  tput rc # bring the cursor back to the last saved position
+LINES=$(tput lines)
+
+set_window ()
+{
+    # Create a virtual window that is two lines smaller at the bottom.
+    tput csr 0 $(($LINES-2))
 }
+set_window
+ks_log_statusbar ()
+{
+    # Move cursor to last line in your screen
+    tput cup $LINES 0;
+
+    echo -n "$1"
+
+    # Move cursor to home position, back in virtual window
+    tput cup 0 0
+}
+
+#function ks_log_statusbar() {
+#
+#  tput sc                           #save the current cursor position
+#  tput cup $(($(tput lines) - 2)) 3 # go to last line
+#  tput ed
+#  tput cup $(($(tput lines) - 1)) 3 # go to last line
+#  echo $1
+#  tput rc # bring the cursor back to the last saved position
+#}
+
+
+
+
+
+set_window
 
 function ks_choix_appli_sauvegarde() {
   touch $SERVICESPERUSER
