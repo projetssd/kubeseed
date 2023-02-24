@@ -264,11 +264,6 @@ function ks_install_rclone() {
   echo ""
 }
 
-function ks_install_common() {
-
-
-}
-
 function ks_unionfs_fuse() {
   echo -e "${BLUE}### Unionfs-Fuse ###${NC}"
   echo -e " ${BWHITE}* Installation Mergerfs${NC}"
