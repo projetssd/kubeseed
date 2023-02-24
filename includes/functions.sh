@@ -905,10 +905,9 @@ EOF
   sudo cp /etc/rancher/k3s/k3s.yaml ${SETTINGS_STORAGE}/k3s
   sudo chown ${USER}: ${SETTINGS_STORAGE}/k3s/k3s.yaml
   export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
-  ks_pause
   echo ""
   # On crée les fichier de status à 0
-  # shellcheck disable=SC2162
+
 
   clear
   echo "Les composants sont maintenants tous installés/réglés, poursuite de l'installation"
@@ -921,7 +920,25 @@ EOF
   kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
   ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/create_dashboard_admin_user.yml
 
-  ks_pause
+  ks_log_statusbar "Installation Helm"
+  curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  chmod 700 get_helm.sh
+  ./get_helm.sh
+  rm -f get_helm.sh
+
+  ks_log_statusbar "Installation du mode letsencrypt"
+  kubectl create serviceaccount tiller --namespace=kube-systemhelm repo update
+  kubectl create clusterrolebinding tiller-admin --serviceaccount=kube-system:tiller --clusterrole=cluster-adminhelm repo update
+  helm repo add jetstack https://charts.jetstack.io && helm repo update
+  kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.8.1/deploy/manifests/00-crds.yaml
+  kubectl create namespace cert-manager
+  kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+  helm install --name cert-manager --namespace cert-manager --version v0.8.1 jetstack/cert-manager --set ingressShim.defaultIssuerName=letsencrypt-prod --set ingressShim.defaultIssuerKind=ClusterIssuer
+
+
+
+
+
 
   # On finit par la database
   echo "Création de la configuration en cours"
@@ -1151,18 +1168,6 @@ ks_log_statusbar() {
   # Move cursor to home position, back in virtual window
   tput cup 0 0
 }
-
-#function ks_log_statusbar() {
-#
-#  tput sc                           #save the current cursor position
-#  tput cup $(($(tput lines) - 2)) 3 # go to last line
-#  tput ed
-#  tput cup $(($(tput lines) - 1)) 3 # go to last line
-#  echo $1
-#  tput rc # bring the cursor back to the last saved position
-#}
-
-set_window
 
 function ks_choix_appli_sauvegarde() {
   touch $SERVICESPERUSER
