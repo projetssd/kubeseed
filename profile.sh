@@ -2,8 +2,8 @@
 
 
 # Si le fichier n'existe pas, on ne fait rien
-if [ -f "${HOME}/.config/ssd/env" ]; then
-  source "${HOME}/.config/ssd/env"
+if [ -f "${HOME}/.config/kubeseed/env" ]; then
+  source "${HOME}/.config/kubeseed/env"
   export PATH="$HOME/.local/bin:$PATH"
   # On rentre dans le venv
   source ${VENV_DIR}/bin/activate
