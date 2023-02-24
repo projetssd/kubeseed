@@ -852,7 +852,7 @@ EOF
 
   echo "Création de la configuration en cours"
   # On créé la database
-  sqlite3 "${SETTINGS_SOURCE}/kubeseeddb" <<EOF
+  sqlite3 "${SETTINGS_STORAGE}/kubeseeddb" <<EOF
     create table seedbox_params(param varchar(50) PRIMARY KEY, value varchar(50));
     replace into seedbox_params (param,value) values ('installed',0);
     create table applications(name varchar(50) PRIMARY KEY,
@@ -916,6 +916,7 @@ EOF
   clear
   ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
   # Installation de k3s
+  ks_log_statusbar "Installation de K3S"
   echo "Installation de K3S"
   curl -sfL https://get.k3s.io | sudo sh -
   mkdir -p ${SETTINGS_STORAGE}/k3s
@@ -925,6 +926,8 @@ EOF
   echo ""
   # On crée les fichier de status à 0
   # shellcheck disable=SC2162
+  unset_window
+  clear
   echo "Les composants sont maintenants tous installés/réglés, poursuite de l'installation"
 
   read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"

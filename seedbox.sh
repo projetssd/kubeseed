@@ -38,7 +38,7 @@ source "${SETTINGS_SOURCE}/includes/functions.sh"
 # Maintenant, on a toutes les infos
 #
 
-if [ ! -f "${SETTINGS_SOURCE}/kubeseeddb" ]; then
+if [ ! -f "${SETTINGS_STORAGE}/kubeseeddb" ]; then
   # ssd v3 n'est pas installé
   clear
   ks_install
