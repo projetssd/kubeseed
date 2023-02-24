@@ -199,7 +199,7 @@ function ks_check_dir() {
 }
 
 function ks_create_dir() {
-  ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/create_directory.yml" \
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/create_directory.yml" \
     --extra-vars '{"DIRECTORY":"'${1}'"}'
 }
 
@@ -210,18 +210,18 @@ function ks_conf_dir() {
 function ks_create_file() {
   TMPMYUID=$(whoami)
   MYGID=$(id -g)
-  ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/create_file.yml" \
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/create_file.yml" \
     --extra-vars '{"FILE":"'${1}'","UID":"'${TMPMYUID}'","GID":"'${MYGID}'"}'
 }
 
 function ks_change_file_owner() {
-  ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/chown_file.yml" \
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/chown_file.yml" \
     --extra-vars '{"FILE":"'${1}'"}'
 
 }
 
 function ks_make_dir_writable() {
-  ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/change_rights.yml" \
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/change_rights.yml" \
     --extra-vars '{"DIRECTORY":"'${1}'"}'
 
 }
