@@ -53,9 +53,11 @@ fi
 export SETTINGS_SOURCE=${SETTINGS_SOURCE}
 export SETTINGS_STORAGE=${SETTINGS_STORAGE}
 export VENV_DIR=${SETTINGS_STORAGE}/venv/k3s
-temppath=$(ls ${SETTINGS_SOURCE}/venv/lib)
-pythonpath=${SETTINGS_SOURCE}/venv/lib/${temppath}/site-packages
-export PYTHONPATH=${pythonpath}
+if [ -f "${VENV_DIR}/bin/activate" ]; then
+  temppath=$(ls ${VENV_DIR}/lib)
+  pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
+  export PYTHONPATH=${pythonpath}
+fi
 # On risque d'avoir besoin de ces variables d'environnement par la suite
 export MYUID=$(id -u)
 export MYGID=$(id -g)
