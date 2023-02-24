@@ -917,7 +917,7 @@ EOF
   GITHUB_URL=https://github.com/kubernetes/dashboard/releases
   VERSION_KUBE_DASHBOARD=$(curl -w '%{url_effective}' -I -L -s -S ${GITHUB_URL}/latest -o /dev/null | sed -e 's|.*/||')
   kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
-  ansible-playbook ${SETTINGS_STORAGE}/includes/playbooks/create_dashboard_admin_user.yml
+  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/create_dashboard_admin_user.yml
 
   ks_pause
 

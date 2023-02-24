@@ -15,7 +15,7 @@
 
   - name: Create admin user role
     kubernetes.core.k8s:
-      kubeconfig: "{{ settings_storage }}/k3s/k3s.yaml"
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
       definition:
         apiVersion: rbac.authorization.k8s.io/v1
