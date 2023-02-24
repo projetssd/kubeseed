@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: yes
+  tasks:
+  - name: "Make sure directory {{ DIRECTORY }} is present"
+    file:
+      path: "{{ DIRECTORY }}"
+      state: directory
+      owner: "{{ lookup('env','USER') }}"
+      group: "{{ lookup('env','MYGIDNAME') }}"

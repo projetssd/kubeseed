@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: yes
+  tasks:
+  - name: "Change directory {{ DIRECTORY }} rights"
+    file:
+      path: "{{ DIRECTORY }}"
+      state: directory
+      mode: 0777

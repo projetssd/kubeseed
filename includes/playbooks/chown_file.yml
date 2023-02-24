@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: yes
+  tasks:
+  - name: "Change owner of the file {{ FILE }}"
+    file:
+      path: "{{ FILE }}"
+      state: file
+      owner: "{{ lookup('env','USER') }}"
+      group: "{{ lookup('env','MYGIDNAME') }}"

@@ -487,11 +487,11 @@ function ks_launch_service() {
 
   log_write "Installation de ${line}"
   error=0
-  tempsubdomain=$(get_from_account_yml sub.${line}.${line})
+  tempsubdomain=$(ks_get_from_account_yml sub.${line}.${line})
   if [ "${tempsubdomain}" = notfound ]; then
     ks_subdomain_unitaire ${line}
   fi
-  tempauth=$(get_from_account_yml sub.${line}.auth)
+  tempauth=$(ks_get_from_account_yml sub.${line}.auth)
   if [ "${tempauth}" = notfound ]; then
     ks_auth_unitaire ${line}
   fi
@@ -536,8 +536,8 @@ function ks_launch_service() {
     fi
   fi
   if [ ${error} = 0 ]; then
-    temp_subdomain=$(get_from_account_yml "sub.${line}.${line}")
-    DOMAIN=$(get_from_account_yml user.domain)
+    temp_subdomain=$(ks_get_from_account_yml "sub.${line}.${line}")
+    DOMAIN=$(ks_get_from_account_yml user.domain)
     echo "2" >"${SETTINGS_STORAGE}/status/${line}"
 
     FQDNTMP="${temp_subdomain}.$DOMAIN"
@@ -587,8 +587,8 @@ function ks_manage_apps() {
 
 function ks_suppression_appli() {
 
-  sousdomaine=$(get_from_account_yml sub.${APPSELECTED}.${APPSELECTED})
-  domaine=$(get_from_account_yml user.domain)
+  sousdomaine=$(ks_get_from_account_yml sub.${APPSELECTED}.${APPSELECTED})
+  domaine=$(ks_get_from_account_yml user.domain)
 
   APPSELECTED=$1
   DELETE=0
@@ -731,7 +731,7 @@ function ks_manage_account_yml() {
 }
 
 function ks_get_from_account_yml() {
-  tempresult=$(ansible-playbook ${SETTINGS_SOURCE}/includes/config/playbooks/get_var.yml -e myvar=$1 -e tempfile=${tempfile} | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}' | xargs)
+  tempresult=$(ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/get_var.yml -e myvar=$1 -e tempfile=${tempfile} | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}' | xargs)
   if [ -z "$tempresult" ]; then
     tempresult=notfound
   fi
@@ -846,7 +846,7 @@ EOF
   inventory = ~/.ansible/inventories/local
   interpreter_python=/usr/bin/python3
   vault_password_file = ~/.vault_pass
-  log_path=${SETTINGS_SOURCE}/logs/ansible.log
+  log_path=${SETTINGS_STORAGE}/logs/ansible.log
 EOF
 
   echo "Création de la configuration en cours"
@@ -866,8 +866,8 @@ EOF
 
   ##################################################
   # Account.yml
+  mkdir -p "${SETTINGS_STORAGE}/logs"
   ks_create_dir "${SETTINGS_STORAGE}"
-  ks_create_dir "${SETTINGS_STORAGE}/logs"
   ks_create_dir "${SETTINGS_STORAGE}/variables"
   ks_create_dir "${SETTINGS_STORAGE}/conf"
   ks_create_dir "${SETTINGS_STORAGE}/vars"
@@ -1156,7 +1156,7 @@ function ks_sauve_one_appli() {
   CCYAN="${CSI}0;36m"
 
   # Variables
-  remote=$(ks_get_from_account_yml rclone.remote)
+  remote=$(ks_ks_get_from_account_yml rclone.remote)
   APPLI=$1
 
   NB_MAX_BACKUP=3
