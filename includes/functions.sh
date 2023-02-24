@@ -1126,10 +1126,12 @@ set_window ()
     # Create a virtual window that is two lines smaller at the bottom.
     tput csr 0 $(($LINES-2))
 }
-set_window
+
 ks_log_statusbar ()
 {
+
     clear
+    set_window
     # Move cursor to last line in your screen
     tput cup $LINES 0;
 
