@@ -1122,7 +1122,12 @@ LINES=$(tput lines)
 set_window ()
 {
     # Create a virtual window that is two lines smaller at the bottom.
-    tput csr 0 $(($LINES-2))
+    tput csr 0 $(($LINES-3))
+}
+
+unset_window()
+{
+  tput csr 0 $(($LINES))
 }
 
 ks_log_statusbar ()
@@ -1133,6 +1138,7 @@ ks_log_statusbar ()
     # Move cursor to last line in your screen
     tput cup $LINES 0;
 
+    echo "============================================="
     echo -n " ===== $1 ====="
 
     # Move cursor to home position, back in virtual window
