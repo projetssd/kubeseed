@@ -5,7 +5,7 @@
   tasks:
   - name: Create admin user
     kubernetes.core.k8s:
-      kubeconfig: "{{ settings_storage }}/k3s/k3s.yaml"
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
       definition:
         name: admin-user
