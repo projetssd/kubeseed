@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+# Si le fichier n'existe pas, on ne fait rien
+if [ -f "${HOME}/.config/ssd/env" ]; then
+  source "${HOME}/.config/ssd/env"
+  export PATH="$HOME/.local/bin:$PATH"
+  # On rentre dans le venv
+  source ${VENV_DIR}/bin/activate
+  # On charge les variables
+  source ${SETTINGS_SOURCE}/includes/variables.sh
+  # On charge les fonctions
+  source ${SETTINGS_SOURCE}/includes/functions.sh
+  # On charge les fonctions qui sont lancées par le menu
+  #source ${SETTINGS_SOURCE}/includes/menus.sh
+
+  PYTHONPATH=${VENV_DIR}/lib/$(ls ${VENV_DIR}/lib)/site-packages
+  export PYTHONPATH
+  # le fonction nous a probablement fait sortir du venv, on le recharge
+  source ${VENV_DIR}/bin/activate
+fi
+
+

@@ -919,6 +919,8 @@ EOF
   kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
   ansible-playbook ${SETTINGS_STORAGE}/includes/playbooks/create_dashboard_admin_user.yml
 
+  ks_pause
+
   # On finit par la database
   echo "Création de la configuration en cours"
   # On créé la database
