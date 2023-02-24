@@ -10,14 +10,14 @@ function ks_logo() {
   colorp='\033[1;34m' # Bold BLUE
   colora='\033[1;32m' # Bold GREEN
   projetname='KubeSeed'
-  authors='Authors: Merrick'
+  authors='Author: Merrick'
   printf " \n"
-  printf " ${color1} ██╗  ██╗${color2}██╗   ██╗██████╗ ███████╗${color1}███████╗${color2}███████╗███████╗██████╗ ${nocolor}\n"
-  printf " ${color1} ██║ ██╔╝${color2}██║   ██║██╔══██╗██╔════╝${color1}██╔════╝${color2}██╔════╝██╔════╝██╔══██╗${nocolor}\n"
-  printf " ${color1} █████╔╝ ${color2}██║   ██║██████╔╝█████╗  ${color1}███████╗${color2}█████╗  █████╗  ██║  ██║${nocolor}\n"
-  printf " ${color1} ██╔═██╗ ${color2}██║   ██║██╔══██╗██╔══╝  ${color1}╚════██║${color2}██╔══╝  ██╔══╝  ██║  ██║${nocolor}\n"
-  printf " ${color1} ██║  ██╗${color2}╚██████╔╝██████╔╝███████╗${color1}███████║${color2}███████╗███████╗██████╔╝${nocolor}\n"
-  printf " ${color1} ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝╚══════╝╚${color1}══════╝╚${color2}══════╝╚═════╝ ${nocolor}\n"
+  printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
+  printf " ${colorp} ██║ ██╔╝${colora}██║   ██║██╔══██╗██╔════╝${colorp}██╔════╝${colora}██╔════╝██╔════╝██╔══██╗${nocolor}\n"
+  printf " ${colorp} █████╔╝ ${colora}██║   ██║██████╔╝█████╗  ${colorp}███████╗${colora}█████╗  █████╗  ██║  ██║${nocolor}\n"
+  printf " ${colorp} ██╔═██╗ ${colora}██║   ██║██╔══██╗██╔══╝  ${colorp}╚════██║${colora}██╔══╝  ██╔══╝  ██║  ██║${nocolor}\n"
+  printf " ${colorp} ██║  ██╗${colora}╚██████╔╝██████╔╝███████╗${colorp}███████║${colora}███████╗███████╗██████╔╝${nocolor}\n"
+  printf " ${colorp} ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚══════╝╚══════╝╚${colorp}══════╝╚${colora}══════╝╚═════╝ ${nocolor}\n"
   printf "${colorp}${projetname}${nocolor} - ${colora}${authors}${nocolor}\n"
   printf "${color3}$(lsb_release -sd)${nocolor}"
   printf "${color3}$(uname -srmo) - Uptime: $(/usr/bin/uptime -p)${nocolor}\n"
