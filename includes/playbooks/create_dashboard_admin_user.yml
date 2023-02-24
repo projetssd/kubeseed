@@ -7,6 +7,7 @@
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
+      namespace: kubernetes-dashboard
       definition:
         name: admin-user
         api_version: v1
@@ -17,6 +18,7 @@
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
+      namespace: kubernetes-dashboard
       definition:
         apiVersion: rbac.authorization.k8s.io/v1
         kind: ClusterRoleBinding

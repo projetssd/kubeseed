@@ -821,7 +821,8 @@ EOF
     shyaml \
     netaddr \
     dnspython \
-    configparser
+    configparser \
+    kubernetes
 
   mkdir -p ~/.ansible/inventories
 
@@ -880,6 +881,7 @@ EOF
   ansible-galaxy collection install community.general
   # dépendence permettant de gérer les fichiers yml
   ansible-galaxy install kwoodson.yedit
+  ansible-galaxy collection install kubernetes.core
 
   ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
   ks_manage_account_yml settings.source "${SETTINGS_SOURCE}"
