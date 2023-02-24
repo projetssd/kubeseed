@@ -53,14 +53,14 @@ function ks_get_cloudflare_infos() {
     while [ -z "$cloud_email" ]; do
       echo >&2 -n -e "${BWHITE}Votre Email Cloudflare: ${CEND}"
       read cloud_email
-      manage_account_yml cloudflare.login "$cloud_email"
+      ks_manage_account_yml cloudflare.login "$cloud_email"
       update_seedbox_param "cf_login" $cloud_email
     done
 
     while [ -z "$cloud_api" ]; do
       echo >&2 -n -e "${BWHITE}Votre API Cloudflare: ${CEND}"
       read cloud_api
-      manage_account_yml cloudflare.api "$cloud_api"
+      ks_manage_account_yml cloudflare.api "$cloud_api"
     done
   fi
   echo ""
@@ -95,23 +95,23 @@ function ks_install_oauth() {
     while [ -z "$oauth_client" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_client: ${CEND}"
       read oauth_client
-      manage_account_yml oauth.client "$oauth_client"
+      ks_manage_account_yml oauth.client "$oauth_client"
     done
 
     while [ -z "$oauth_secret" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_secret: ${CEND}"
       read oauth_secret
-      manage_account_yml oauth.secret "$oauth_secret"
+      ks_manage_account_yml oauth.secret "$oauth_secret"
     done
 
     while [ -z "$email" ]; do
       echo >&2 -n -e "${BWHITE}Compte Gmail utilisé(s), séparés d'une virgule si plusieurs: ${CEND}"
       read email
-      manage_account_yml oauth.account "$email"
+      ks_manage_account_yml oauth.account "$email"
     done
 
     openssl=$(openssl rand -hex 16)
-    manage_account_yml oauth.openssl "$openssl"
+    ks_manage_account_yml oauth.openssl "$openssl"
 
     echo ""
     echo -e "${CRED}---------------------------------------------------------------${CEND}"
@@ -286,7 +286,7 @@ function ks_subdomain_unitaire() {
   else
     SUBDOMAIN=${line}
   fi
-  manage_account_yml sub.${line}.${line} $SUBDOMAIN
+  ks_manage_account_yml sub.${line}.${line} $SUBDOMAIN
 }
 
 function ks_auth_unitaire() {
@@ -320,7 +320,7 @@ function ks_auth_unitaire() {
     ;;
   esac
 
-  manage_account_yml sub.${line}.auth ${TYPE_AUTH}
+  ks_manage_account_yml sub.${line}.auth ${TYPE_AUTH}
 
 }
 
@@ -332,13 +332,13 @@ function ks_define_parameters() {
     whiptail --title "Adresse Email" --inputbox \
       "Merci de taper votre adresse Email :" 7 50 3>&1 1>&2 2>&3
   )
-  manage_account_yml user.mail $CONTACTEMAIL
+  ks_manage_account_yml user.mail $CONTACTEMAIL
 
   DOMAIN=$(
     whiptail --title "Votre nom de Domaine" --inputbox \
       "Merci de taper votre nom de Domaine (exemple: nomdedomaine.fr) :" 7 50 3>&1 1>&2 2>&3
   )
-  manage_account_yml user.domain $DOMAIN
+  ks_manage_account_yml user.domain $DOMAIN
   echo ""
 }
 
@@ -354,11 +354,11 @@ function ks_create_user_non_systeme() {
       "Mot de passe :" 7 50 3>&1 1>&2 2>&3
   )
 
-  manage_account_yml user.htpwd $(htpasswd -nb ${USER} $PASSWORD)
-  manage_account_yml user.name ${USER}
-  manage_account_yml user.pass $PASSWORD
-  manage_account_yml user.userid $(id -u)
-  manage_account_yml user.groupid $(id -g)
+  ks_manage_account_yml user.htpwd $(htpasswd -nb ${USER} $PASSWORD)
+  ks_manage_account_yml user.name ${USER}
+  ks_manage_account_yml user.pass $PASSWORD
+  ks_manage_account_yml user.userid $(id -u)
+  ks_manage_account_yml user.groupid $(id -g)
 
   update_seedbox_param "name" "${user}"
   update_seedbox_param "userid" "$(id -u)"
@@ -369,14 +369,14 @@ function ks_create_user_non_systeme() {
     whiptail --title "Adresse Email" --inputbox \
       "Merci de taper votre adresse Email :" 7 50 3>&1 1>&2 2>&3
   )
-  manage_account_yml user.mail "${CONTACTEMAIL}"
+  ks_manage_account_yml user.mail "${CONTACTEMAIL}"
   update_seedbox_param "mail" "${CONTACTEMAIL}"
 
   DOMAIN=$(
     whiptail --title "Votre nom de Domaine" --inputbox \
       "Merci de taper votre nom de Domaine (exemple: nomdedomaine.fr) :" 7 50 3>&1 1>&2 2>&3
   )
-  manage_account_yml user.domain "${DOMAIN}"
+  ks_manage_account_yml user.domain "${DOMAIN}"
   update_seedbox_param "domain" "${DOMAIN}"
   echo ""
   return
@@ -597,7 +597,7 @@ function ks_suppression_appli() {
       DELETE=1
     fi
   fi
-  manage_account_yml sub.${APPSELECTED} " "
+  ks_manage_account_yml sub.${APPSELECTED} " "
 
   docker rm -f "$APPSELECTED" >/dev/null 2>&1
   if [ $DELETE -eq 1 ]; then
@@ -707,11 +707,11 @@ function ks_update_seedbox_param() {
 
 function ks_manage_account_yml() {
   # usage
-  # manage_account_yml key value
+  # ks_manage_account_yml key value
   # key séparées par des points (par exemple user.name ou sub.application.subdomain)
   # pour supprimer une clé, il faut que le value soit égale à un espace
-  # ex : manage_account_yml sub.toto.toto toto => va créer la clé sub.toto.toto et lui mettre à la valeur toto
-  # ex : manage_account_yml sub.toto.toto " " => va supprimer la clé sub.toto.toto et toutes les sous clés
+  # ex : ks_manage_account_yml sub.toto.toto toto => va créer la clé sub.toto.toto et lui mettre à la valeur toto
+  # ex : ks_manage_account_yml sub.toto.toto " " => va supprimer la clé sub.toto.toto et toutes les sous clés
   if [ -f ${SETTINGS_STORAGE}/.account.lock ]; then
     echo "Fichier account locké, impossible de continuer"
     echo "----------------------------------------------"
@@ -721,9 +721,9 @@ function ks_manage_account_yml() {
     touch ${SETTINGS_STORAGE}/.account.lock
     ansible-vault decrypt "${ANSIBLE_VARS}" >/dev/null 2>&1
     if [ "${2}" = " " ]; then
-      ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/manage_account_yml.yml" -e "account_key=${1} account_value=${2}  state=absent"
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/manage_account_yml.yml" -e "account_key=${1} account_value=${2}  state=absent"
     else
-      ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/manage_account_yml.yml" -e "account_key=${1} account_value=${2} state=present"
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/manage_account_yml.yml" -e "account_key=${1} account_value=${2} state=present"
     fi
     ansible-vault encrypt "${ANSIBLE_VARS}l" >/dev/null 2>&1
     rm -f ${SETTINGS_STORAGE}/.account.lock
@@ -1156,7 +1156,7 @@ function ks_sauve_one_appli() {
   CCYAN="${CSI}0;36m"
 
   # Variables
-  remote=$(ks_ks_get_from_account_yml rclone.remote)
+  remote=$(ks_get_from_account_yml rclone.remote)
   APPLI=$1
 
   NB_MAX_BACKUP=3
