@@ -1138,8 +1138,7 @@ ks_log_statusbar ()
     # Move cursor to last line in your screen
     tput cup $LINES 0;
 
-    echo "============================================="
-    echo -n " ===== $1 ====="
+    echo -en " ===================\n===== $1 ====="
 
     # Move cursor to home position, back in virtual window
     tput cup 0 0
