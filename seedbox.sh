@@ -9,11 +9,11 @@
 
 ################################################
 # TEST ROOT USER
-if [ "$USER" != "root" ]; then
+if [ "$USER" == "root" ]; then
     echo -e "${CCYAN}-----------------------${CEND}"
     echo -e "${CCYAN}[  Lancement en root  ]${CEND}"
     echo -e "${CCYAN}-----------------------${CEND}"
-    echo -e "${CCYAN} SSD v3 nécessite les droits root pour s'éxécuter. Merci de lancer le script en root ou d'utiliser sudo${CEND}"
+    echo -e "${CCYAN} KubeSeed ne doit pas être lancé en root ou en sudo${CEND}"
     echo -e "${CCYAN}-----------------------${CEND}"
     exit 1
 fi
@@ -31,16 +31,16 @@ export SETTINGS_SOURCE
 cd ${SETTINGS_SOURCE}
 
 source "${SETTINGS_SOURCE}/includes/variables.sh"
-# source "${SETTINGS_SOURCE}/includes/functions.sh"
+source "${SETTINGS_SOURCE}/includes/functions.sh"
 # source "${SETTINGS_SOURCE}/includes/menus.sh"
 
 #
 # Maintenant, on a toutes les infos
 #
 
-if [ ! -f "${SETTINGS_SOURCE}/ssddb" ]; then
+if [ ! -f "${SETTINGS_SOURCE}/kubeseeddb" ]; then
   # ssd v3 n'est pas installé
-  premier_lancement
+  ks_install
 fi
 
 # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
@@ -49,7 +49,7 @@ temppath=$(ls ${SETTINGS_SOURCE}/venv/lib)
 pythonpath=${SETTINGS_SOURCE}/venv/lib/${temppath}/site-packages
 export PYTHONPATH=${pythonpath}
 
-IS_INSTALLED=$(select_seedbox_param "installed")
+IS_INSTALLED=$(ks_select_seedbox_param "installed")
 
 #clear
 

@@ -26,7 +26,7 @@ export NEWT_COLORS='
 
 if [ ! -f "${HOME}/.config/ssd/env" ]; then
   # pas de fichier d'environnement
-  if [ -f "/opt/seedbox-compose/ssddb" ]; then
+  if [ -f "/opt/seedbox-compose/kubeseeddb" ]; then
     # la seedbox est installée, on va prendre les valeurs par défaut de la v1/2.0
     export SETTINGS_SOURCE=/opt/seedbox-compose
     export SETTINGS_STORAGE=/opt/seedbox
@@ -52,6 +52,7 @@ fi
 
 export SETTINGS_SOURCE=${SETTINGS_SOURCE}
 export SETTINGS_STORAGE=${SETTINGS_STORAGE}
+export VENV_DIR=${SETTINGS_STORAGE}/venv/k3s
 temppath=$(ls ${SETTINGS_SOURCE}/venv/lib)
 pythonpath=${SETTINGS_SOURCE}/venv/lib/${temppath}/site-packages
 export PYTHONPATH=${pythonpath}

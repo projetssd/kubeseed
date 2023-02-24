@@ -1,7 +1,7 @@
 #!/bin/bash
 ##########
 
-function logo() {
+function ks_logo() {
 
   color1='\033[1;31m' # Bold RED
   color2='\033[1;35m' # Bold PURPLE
@@ -23,16 +23,9 @@ function logo() {
 
 }
 
-function update_system() {
-  #Mise à jour systeme
-  echo -e "${BLUE}### MISE A JOUR DU SYSTEME ###${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/system/tasks/main.yml
-  checking_errors $?
-}
 
 
-
-function get_cloudflare_infos() {
+function ks_get_cloudflare_infos() {
   #####################################
   # Récupère les infos de cloudflare
   # Pour utilisation ultérieure
@@ -73,7 +66,7 @@ function get_cloudflare_infos() {
   echo ""
 }
 
-function isntall_oauth() {
+function ks_install_oauth() {
   #######################################
   # Récupère les infos oauth
   #######################################
@@ -134,7 +127,7 @@ function isntall_oauth() {
   echo ""
 }
 
-function install-rtorrent-cleaner() {
+function ks_install_rtorrent_cleaner() {
   #configuration de rtorrent-cleaner avec ansible
   echo -e "${BLUE}### RTORRENT-CLEANER ###${NC}"
   echo ""
@@ -147,8 +140,7 @@ function install-rtorrent-cleaner() {
   sudo sed -i "s|%SETTINGS_STORAGE%|${SETTINGS_STORAGE}|g" /usr/local/bin/rtorrent-cleaner
 }
 
-
-function install_sauvegarde() {
+function ks_install_sauvegarde() {
   #configuration Sauvegarde
   echo -e "${BLUE}### BACKUP ###${NC}"
   echo -e " ${BWHITE}* Mise en place Sauvegarde${NC}"
@@ -157,12 +149,12 @@ function install_sauvegarde() {
   echo ""
 }
 
-function debug() {
+function ks_debug() {
   echo "### DEBUG ${1}"
   pause
 }
 
-function install_plex_dupefinder() {
+function ks_install_plex_dupefinder() {
   #configuration plex_dupefinder avec ansible
   echo -e "${BLUE}### PLEX_DUPEFINDER ###${NC}"
   echo -e " ${BWHITE}* Installation plex_dupefinder${NC}"
@@ -170,7 +162,7 @@ function install_plex_dupefinder() {
   checking_errors $?
 }
 
-function install_traktarr() {
+function ks_install_traktarr() {
   ##configuration traktarr avec ansible
   echo -e "${BLUE}### TRAKTARR ###${NC}"
   echo -e " ${BWHITE}* Installation traktarr${NC}"
@@ -178,12 +170,11 @@ function install_traktarr() {
   checking_errors $?
 }
 
-function update_logrotate() {
+function ks_update_logrotate() {
   ansible-playbook ${SETTINGS_SOURCE}/includes/config/playbooks/logrotate.yml
 }
 
-
-function install_autoscan() {
+function ks_install_autoscan() {
   #configuration autoscan avec ansible
   echo -e "${BLUE}### AUTOSCAN ###${NC}"
   echo -e " ${BWHITE}* Installation autoscan${NC}"
@@ -191,7 +182,7 @@ function install_autoscan() {
   checking_errors $?
 }
 
-function install_cloudplow() {
+function ks_install_cloudplow() {
   #configuration plex_autoscan avec ansible
   echo -e "${BLUE}### CLOUDPLOW ###${NC}"
   echo -e " ${BWHITE}* Installation cloudplow${NC}"
@@ -200,53 +191,44 @@ function install_cloudplow() {
   checking_errors $?
 }
 
-function check_dir() {
+function ks_check_dir() {
   if [[ $1 != "${SETTINGS_SOURCE}" ]]; then
     # shellcheck disable=SC2164
     cd "${SETTINGS_SOURCE}"
   fi
 }
 
-
-function create_dir() {
+function ks_create_dir() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/create_directory.yml" \
     --extra-vars '{"DIRECTORY":"'${1}'"}'
 }
 
-function conf_dir() {
-  create_dir "${SETTINGS_STORAGE}"
+function ks_conf_dir() {
+  ks_create_dir "${SETTINGS_STORAGE}"
 }
 
-function create_file() {
+function ks_create_file() {
   TMPMYUID=$(whoami)
   MYGID=$(id -g)
   ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/create_file.yml" \
     --extra-vars '{"FILE":"'${1}'","UID":"'${TMPMYUID}'","GID":"'${MYGID}'"}'
 }
 
-function change_file_owner() {
+function ks_change_file_owner() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/chown_file.yml" \
     --extra-vars '{"FILE":"'${1}'"}'
 
 }
 
-function make_dir_writable() {
+function ks_make_dir_writable() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/change_rights.yml" \
     --extra-vars '{"DIRECTORY":"'${1}'"}'
 
 }
 
-function install_base_packages() {
-  echo ""
-  echo -e "${BLUE}### INSTALLATION DES PACKAGES ###${NC}"
-  echo ""
-  echo -e " ${BWHITE}* Installation apache2-utils, unzip, git, curl ...${NC}"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/config/roles/install/tasks/main.yml"
-  checking_errors $?
-  echo ""
-}
 
-function checking_errors() {
+
+function ks_checking_errors() {
   if [[ "$1" == "0" ]]; then
     echo -e "	${GREEN}--> Operation success !${NC}"
     CURRENT_ERROR=0
@@ -256,144 +238,46 @@ function checking_errors() {
   fi
 }
 
-function install_fail2ban() {
+function ks_install_fail2ban() {
   echo -e "${BLUE}### FAIL2BAN ###${NC}"
   ansible-playbook "${SETTINGS_SOURCE}/includes/config/roles/fail2ban/tasks/main.yml"
-  checking_errors $?
+  ks_checking_errors $?
   echo ""
 }
 
-
-function install_traefik() {
-  create_dir "${SETTINGS_STORAGE}/docker/traefik/acme/"
-  echo -e "${BLUE}### TRAEFIK ###${NC}"
-
-  ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/templates/ansible/ansible.yml"
-  DOMAIN=$(cat "${TMPDOMAIN}")
-
-  # choix sous domaine traefik
-  echo ""
-  echo -e "${BWHITE}Adresse par défault: https://traefik.${DOMAIN} ${CEND}"
-  echo ""
-  read -rp $'\e[33mSouhaitez vous personnaliser le sous domaine? (o/n)\e[0m: ' OUI
-  if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
-
-    while [ -z "$SUBDOMAIN" ]; do
-      echo >&2 -n -e "${BWHITE}Sous Domaine: ${CEND}"
-      read SUBDOMAIN
-    done
-
-    if [ ! -z "$SUBDOMAIN" ]; then
-      manage_account_yml sub.traefik.traefik $SUBDOMAIN
-    fi
-  else
-    manage_account_yml sub.traefik.traefik traefik
-  fi
-
-  # choix authentification traefik
-  echo ""
-  read -rp $'\e\033[1;37mChoix de Authentification pour traefik [ Enter ] 1 => basique | 2 => oauth | 3 => authelia: ' AUTH
-  case $AUTH in
-  1)
-    TYPE_AUTH=basique
-    ;;
-
-  2)
-    TYPE_AUTH=oauth
-    ;;
-
-  3)
-    TYPE_AUTH=authelia
-    ;;
-
-  *)
-    TYPE_AUTH=basique
-    echo "Pas de choix sélectionné, on passe sur une auth basique"
-    ;;
-  esac
-  manage_account_yml sub.traefik.auth ${TYPE_AUTH}
-
-  echo ""
-  echo -e " ${BWHITE}* Installation Traefik${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/dockerapps/traefik.yml
-  checking_errors $?
-  if [[ ${CURRENT_ERROR} -eq 1 ]]; then
-    echo "${RED}Cette étape peut ne pas aboutir lors d'une première installation${CEND}"
-    echo "${RED}Suite à l'installation de docker, il faut se déloguer/reloguer pour que cela fonctionne${CEND}"
-    echo "${RED}Cette erreur est bloquante, impossible de continuer${CEND}"
-    exit 1
-  fi
-
-  echo ""
-}
-
-function install_watchtower() {
+function ks_install_watchtower() {
   echo -e "${BLUE}### WATCHTOWER ###${NC}"
   echo -e " ${BWHITE}* Installation Watchtower${NC}"
   ansible-playbook ${SETTINGS_SOURCE}/includes/dockerapps/watchtower.yml
-  checking_errors $?
+  ks_checking_errors $?
   echo ""
 }
 
-
-function install_rclone() {
+function ks_install_rclone() {
   echo -e "${BLUE}### RCLONE ###${NC}"
   fusermount -uz /mnt/rclone >>/dev/null 2>&1
-  create_dir /mnt/rclone
-  create_dir /mnt/rclone/${USER}
+  ks_create_dir /mnt/rclone
+  ks_create_dir /mnt/rclone/${USER}
   ${SETTINGS_SOURCE}/includes/config/scripts/rclone.sh
   ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/rclone/tasks/main.yml
-  checking_errors $?
+  ks_checking_errors $?
   echo ""
 }
 
-function install_common() {
-  source "${SETTINGS_SOURCE}/venv/bin/activate"
-  # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
-  temppath=$(ls ${SETTINGS_SOURCE}/venv/lib)
-  pythonpath=${SETTINGS_SOURCE}/venv/lib/${temppath}/site-packages
-  export PYTHONPATH=${pythonpath}
-  # toutes les installs communes
-  # installation des dépendances, permet de créer les docker network via ansible
-  ansible-galaxy collection install community.general
-  #ansible-galaxy collection install community.docker
-  # dépendence permettant de gérer les fichiers yml
-  ansible-galaxy install kwoodson.yedit
+function ks_install_common() {
 
-  manage_account_yml settings.storage "${SETTINGS_STORAGE}"
-  manage_account_yml settings.source "${SETTINGS_SOURCE}"
-
-  # On vérifie que le user ait bien les droits d'écriture
-  make_dir_writable "${SETTINGS_SOURCE}"
-  # on vérifie que le user ait bien les droits d'écriture dans la db
-  change_file_owner "${SETTINGS_SOURCE}/ssddb"
-  # On crée le conf dir (par défaut /opt/seedbox) s'il n'existe pas
-  conf_dir
-
-  stocke_public_ip
-  # On part à la pêche aux infos....
-  ${SETTINGS_SOURCE}/includes/config/scripts/get_infos.sh
-  pause
-  echo ""
-  # On crée les fichier de status à 0
-  status
-  # Mise à jour du système
-  update_system
-  # Installation des packages de base
-  install_base_packages
-  # Installation de docker
 
 }
 
-function unionfs_fuse() {
+function ks_unionfs_fuse() {
   echo -e "${BLUE}### Unionfs-Fuse ###${NC}"
   echo -e " ${BWHITE}* Installation Mergerfs${NC}"
   ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/unionfs/tasks/main.yml
-  checking_errors $?
+  ks_checking_errors $?
   echo ""
 }
 
-function subdomain_unitaire() {
+function ks_subdomain_unitaire() {
   line=$1
   echo ""
   read -rp $'\e\033[1;37m --> Personnaliser le sous domaines pour '${line}' : (o/N) ? ' OUI
@@ -410,7 +294,7 @@ function subdomain_unitaire() {
   manage_account_yml sub.${line}.${line} $SUBDOMAIN
 }
 
-function auth_unitaire() {
+function ks_auth_unitaire() {
   line=$1
   echo ""
 
@@ -445,7 +329,7 @@ function auth_unitaire() {
 
 }
 
-function define_parameters() {
+function ks_define_parameters() {
   echo -e "${BLUE}### INFORMATIONS UTILISATEURS ###${NC}"
 
   create_user
@@ -463,7 +347,7 @@ function define_parameters() {
   echo ""
 }
 
-function create_user_non_systeme() {
+function ks_create_user_non_systeme() {
   # nouvelle version de define_parameters()
   echo -e "${BLUE}### INFORMATIONS UTILISATEURS ###${NC}"
 
@@ -503,8 +387,7 @@ function create_user_non_systeme() {
   return
 }
 
-
-function choose_services() {
+function ks_choose_services() {
   echo -e "${BLUE}### SERVICES ###${NC}"
   echo "DEBUG ${SERVICESAVAILABLE}"
   echo -e " ${BWHITE}--> Services en cours d'installation : ${NC}"
@@ -537,7 +420,7 @@ function choose_services() {
   fi
 }
 
-function choose_other_services() {
+function ks_choose_other_services() {
   echo -e "${BLUE}### SERVICES ###${NC}"
   echo -e " ${BWHITE}--> Services en cours d'installation : ${NC}"
   rm -Rf "${SERVICESPERUSER}" >/dev/null 2>&1
@@ -569,17 +452,16 @@ function choose_other_services() {
   fi
 }
 
-function choose_media_folder_classique() {
+function ks_choose_media_folder_classique() {
   echo -e "${BLUE}### DOSSIERS MEDIAS ###${NC}"
   echo -e " ${BWHITE}--> Création des dossiers Medias : ${NC}"
   mkdir -p "${HOME}/filebot"
   mkdir -p "${HOME}/local/{Films,Series,Musiques,Animes}"
-  checking_errors $?
+  ks_checking_errors $?
   echo ""
 }
 
-
-function install_services() {
+function ks_install_services() {
   if [ -f "$SERVICESPERUSER" ]; then
 
     if [[ ! -d "${SETTINGS_STORAGE}/conf" ]]; then
@@ -590,7 +472,7 @@ function install_services() {
       mkdir -p "${SETTINGS_STORAGE}/vars" >/dev/null 2>&1
     fi
 
-    create_file "${SETTINGS_STORAGE}/temp.txt"
+    ks_create_file "${SETTINGS_STORAGE}/temp.txt"
 
     ## préparation installation
     #for line in $(grep -l 2 ${SETTINGS_STORAGE}/status/*); do
@@ -604,7 +486,7 @@ function install_services() {
   fi
 }
 
-function launch_service() {
+function ks_launch_service() {
 
   line=$1
 
@@ -612,11 +494,11 @@ function launch_service() {
   error=0
   tempsubdomain=$(get_from_account_yml sub.${line}.${line})
   if [ "${tempsubdomain}" = notfound ]; then
-    subdomain_unitaire ${line}
+    ks_subdomain_unitaire ${line}
   fi
   tempauth=$(get_from_account_yml sub.${line}.auth)
   if [ "${tempauth}" = notfound ]; then
-    auth_unitaire ${line}
+    ks_auth_unitaire ${line}
   fi
 
   if [[ "${line}" == "plex" ]]; then
@@ -669,18 +551,18 @@ function launch_service() {
   FQDNTMP=""
 }
 
-function copie_yml() {
+function ks_copie_yml() {
   echo "#########################################################"
   echo "# ATTENTION                                             #"
   echo "# Cette fonction va copier les fichiers yml choisis     #"
   echo "# Afin de pouvoir les personnaliser                     #"
   echo "# Mais ne lancera pas les services associés             #"
   echo "#########################################################"
-  choose_services
+  ks_choose_services
   for line in $(cat $SERVICESPERUSER); do
     copie_yml_unit "${line}"
   done
-  choose_other_services
+  ks_choose_other_services
   for line in $(cat $SERVICESPERUSER); do
     copie_yml_unit "${line}"
   done
@@ -699,9 +581,7 @@ function copie_yml_unit() {
   fi
 }
 
-
-
-function manage_apps() {
+function ks_manage_apps() {
   echo -e "${BLUE}##########################################${NC}"
   echo -e "${BLUE}###          GESTION DES APPLIS        ###${NC}"
   echo -e "${BLUE}##########################################${NC}"
@@ -710,7 +590,7 @@ function manage_apps() {
 
 }
 
-function suppression_appli() {
+function ks_suppression_appli() {
 
   sousdomaine=$(get_from_account_yml sub.${APPSELECTED}.${APPSELECTED})
   domaine=$(get_from_account_yml user.domain)
@@ -782,7 +662,7 @@ function suppression_appli() {
     docker rm -f memcached-$APPSELECTED >/dev/null 2>&1
   fi
 
-  checking_errors $?
+  ks_checking_errors $?
 
   ansible-playbook -e pgrole=${APPSELECTED} ${SETTINGS_SOURCE}/includes/config/playbooks/remove_cf_record.yml
 
@@ -793,29 +673,29 @@ function suppression_appli() {
   req1="delete from applications where name='"
   req2="'"
   req=${req1}${APPSELECTED}${req2}
-  sqlite3 ${SETTINGS_SOURCE}/ssddb <<EOF
+  sqlite3 ${SETTINGS_SOURCE}/kubeseeddb <<EOF
 $req
 
 EOF
 
 }
 
-function pause() {
+function ks_pause() {
   echo ""
   echo -e "${YELLOW}###  -->APPUYER SUR ENTREE POUR CONTINUER<--  ###${NC}"
   read
   echo ""
 }
 
-select_seedbox_param() {
-  if [ ! -f ${SETTINGS_SOURCE}/ssddb ]; then
+ks_select_seedbox_param() {
+  if [ ! -f ${SETTINGS_SOURCE}/kubeseeddb ]; then
     # le fichier de base de données n'est pas là
     # on sort avant de faire une requête, sinon il va se créer
     # et les tests ne seront pas bons
     return 0
   fi
   request="select value from seedbox_params where param ='"${1}"'"
-  RETURN=$(sqlite3 ${SETTINGS_SOURCE}/ssddb "${request}")
+  RETURN=$(sqlite3 ${SETTINGS_SOURCE}/kubeseeddb "${request}")
   if [ $? != 0 ]; then
     echo 0
   else
@@ -824,13 +704,13 @@ select_seedbox_param() {
 
 }
 
-function update_seedbox_param() {
+function ks_update_seedbox_param() {
   # shellcheck disable=SC2027
   request="replace into seedbox_params (param,value) values ('"${1}"','"${2}"')"
-  sqlite3 "${SETTINGS_SOURCE}/ssddb" "${request}"
+  sqlite3 "${SETTINGS_SOURCE}/kubeseeddb" "${request}"
 }
 
-function manage_account_yml() {
+function ks_manage_account_yml() {
   # usage
   # manage_account_yml key value
   # key séparées par des points (par exemple user.name ou sub.application.subdomain)
@@ -855,17 +735,22 @@ function manage_account_yml() {
   fi
 }
 
-function get_from_account_yml() {
-  tempresult=$(ansible-playbook ${SETTINGS_SOURCE}/includes/config/playbooks/get_var.yml -e myvar=$1 -e tempfile=${tempfile} | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}'|xargs)
+function ks_get_from_account_yml() {
+  tempresult=$(ansible-playbook ${SETTINGS_SOURCE}/includes/config/playbooks/get_var.yml -e myvar=$1 -e tempfile=${tempfile} | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}' | xargs)
   if [ -z "$tempresult" ]; then
     tempresult=notfound
   fi
   echo $tempresult
 }
 
-function premier_lancement() {
+function ks_install() {
 
   sudo chown -R ${USER}: ${SETTINGS_SOURCE}/
+
+  # mise en place du sudo sans password
+  if [ ! -f /etc/sudoers.d/${1} ]; then
+    echo "${1} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${1}
+  fi
 
   echo "Certains composants doivent encore être installés/réglés"
   echo "Cette opération va prendre plusieurs minutes selon votre système "
@@ -874,35 +759,35 @@ function premier_lancement() {
   echo "=================================================================="
   echo "Installation des paquets systeme"
 
-  apt update
+  sudo apt update
 
-  apt-get install -y --reinstall \
-  build-essential \
-  libssl-dev \
-  libffi-dev \
-  python3-dev \
-  python3-pip \
-  python-dev \
-  python3-venv \
-  sqlite3 \
-  apache2-utils \
-  dnsutils \
-  python3-apt-dbg \
-  python3-apt \
-  python-apt-doc \
-  python-apt-common \
-  ca-certificates \
-  curl \
-  gnupg \
-  software-properties-common \
-  apt-transport-https \
-  lsb-release 
+  sudo apt-get install -y --reinstall \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    python3-pip \
+    python-dev \
+    python3-venv \
+    sqlite3 \
+    apache2-utils \
+    dnsutils \
+    python3-apt-dbg \
+    python3-apt \
+    python-apt-doc \
+    python-apt-common \
+    ca-certificates \
+    curl \
+    gnupg \
+    software-properties-common \
+    apt-transport-https \
+    lsb-release
 
-rm -f /usr/bin/python
+  sudo rm -f /usr/bin/python
 
-ln -s /usr/bin/python3 /usr/bin/python
+  sudo ln -s /usr/bin/python3 /usr/bin/python
 
-cat <<EOF >/etc/logrotate.d/ansible
+  cat <<EOF >/etc/logrotate.d/ansible
 ${SETTINGS_SOURCE}/logs/*.log {
   rotate 7
   daily
@@ -910,7 +795,6 @@ ${SETTINGS_SOURCE}/logs/*.log {
   missingok
 }
 EOF
-
 
   # création d'un vault_pass vide
 
@@ -925,13 +809,14 @@ EOF
   # création d'un virtualenv
   echo "=================================================================="
   echo "Création du virtualenv"
-  python3 -m venv ${SETTINGS_SOURCE}/ssdv3
+  mkdir -p "${VENV_DIR}"
+  python3 -m venv "${SETTINGS_STORAGE}/venv/ks"
 
   # activation du venv
-  source ${SETTINGS_SOURCE}/ssdv3/bin/activate
+  source "${VENV_DIR}/bin/activate"
 
-  temppath=$(ls ${SETTINGS_SOURCE}/ssdv3/lib)
-  pythonpath=${SETTINGS_SOURCE}/ssdv3/lib/${temppath}/site-packages
+  temppath=$(ls ${VENV_DIR}/lib)
+  pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
   export PYTHONPATH=${pythonpath}
 
   echo "=================================================================="
@@ -971,7 +856,7 @@ EOF
 
   echo "Création de la configuration en cours"
   # On créé la database
-  sqlite3 "${SETTINGS_SOURCE}/ssddb" <<EOF
+  sqlite3 "${SETTINGS_SOURCE}/kubeseeddb" <<EOF
     create table seedbox_params(param varchar(50) PRIMARY KEY, value varchar(50));
     replace into seedbox_params (param,value) values ('installed',0);
     create table applications(name varchar(50) PRIMARY KEY,
@@ -986,17 +871,14 @@ EOF
 
   ##################################################
   # Account.yml
-  sudo mkdir "${SETTINGS_SOURCE}/logs"
-  sudo chown -R ${user}: "${SETTINGS_SOURCE}/logs"
-  sudo chmod 755 "${SETTINGS_SOURCE}/logs"
-
-  create_dir "${SETTINGS_STORAGE}"
-  create_dir "${SETTINGS_STORAGE}/variables"
-  create_dir "${SETTINGS_STORAGE}/conf"
-  create_dir "${SETTINGS_STORAGE}/vars"
+  ks_create_dir "${SETTINGS_STORAGE}"
+  ks_create_dir "${SETTINGS_STORAGE}/logs"
+  ks_create_dir "${SETTINGS_STORAGE}/variables"
+  ks_create_dir "${SETTINGS_STORAGE}/conf"
+  ks_create_dir "${SETTINGS_STORAGE}/vars"
   if [ ! -f "${ANSIBLE_VARS}" ]; then
     mkdir -p "${HOME}/.ansible/inventories/group_vars"
-    cp ${SETTINGS_SOURCE}/includes/config/account.yml "${ANSIBLE_VARS}"
+    cp "${SETTINGS_SOURCE}/includes/config/account.yml" "${ANSIBLE_VARS}"
   fi
 
   if [[ -d "${HOME}/.cache" ]]; then
@@ -1011,7 +893,34 @@ EOF
 
   touch "${SETTINGS_SOURCE}/.prerequis.lock"
 
-  install_common
+    source "${VENV_DIR}/bin/activate"
+  # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
+  temppath=$(ls ${VENV_DIR}/lib)
+  pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
+  export PYTHONPATH=${pythonpath}
+  # toutes les installs communes
+  # installation des dépendances, permet de créer les docker network via ansible
+  ansible-galaxy collection install community.general
+  #ansible-galaxy collection install community.docker
+  # dépendence permettant de gérer les fichiers yml
+  ansible-galaxy install kwoodson.yedit
+
+  ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
+  ks_manage_account_yml settings.source "${SETTINGS_SOURCE}"
+
+  # On vérifie que le user ait bien les droits d'écriture
+  ks_make_dir_writable "${SETTINGS_SOURCE}"
+  # on vérifie que le user ait bien les droits d'écriture dans la db
+  ks_change_file_owner "${SETTINGS_SOURCE}/kubeseeddb"
+  # On crée le conf dir (par défaut /opt/seedbox) s'il n'existe pas
+  ks_conf_dir
+
+  ks_stocke_public_ip
+  # On part à la pêche aux infos....
+  ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
+  ks_pause
+  echo ""
+  # On crée les fichier de status à 0
   # shellcheck disable=SC2162
   echo "Les composants sont maintenants tous installés/réglés, poursuite de l'installation"
 
@@ -1020,39 +929,38 @@ EOF
   # fin du venv
 }
 
-
-function log_write() {
+function ks_log_write() {
   DATE=$(date +'%F %T')
   FILE=${SETTINGS_SOURCE}/logs/seedbox.log
   echo "${DATE} - ${1}" >>${FILE}
   echo "${1}"
 }
 
-function stocke_public_ip() {
+function ks_stocke_public_ip() {
   echo "Stockage des adresses ip publiques"
   IPV4=$(curl -4 https://ip.mn83.fr)
   echo "IPV4 = ${IPV4}"
-  manage_account_yml network.ipv4 ${IPV4}
+  ks_manage_account_yml network.ipv4 ${IPV4}
   #IPV6=$(dig @resolver1.ipv6-sandbox.opendns.com AAAA myip.opendns.com +short -6)
   IPV6=$(curl -6 https://ip.mn83.fr)
   if [ $? -eq 0 ]; then
     echo "IPV6 = ${IPV6}"
-    manage_account_yml network.ipv6 "a[${IPV6}]"
+    ks_manage_account_yml network.ipv6 "a[${IPV6}]"
   else
     echo "Aucune adresse ipv6 trouvée"
   fi
 }
 
-function install_environnement() {
+function ks_install_environnement() {
   clear
   echo ""
   source "${SETTINGS_SOURCE}/profile.sh"
   ansible-playbook "${SETTINGS_SOURCE}/includes/config/roles/user_environment/tasks/main.yml"
   echo "Pour bénéficer des changements, vous devez vous déconnecter/reconnecter"
-  pause
+  ks_pause
 }
 
-function debug_menu() {
+function ks_debug_menu() {
   if [ -z "$OLDIFS" ]; then
     OLDIFS=${IFS}
   fi
@@ -1089,7 +997,7 @@ function debug_menu() {
       # pas de sous menu, on va rester sur le même
       :
     else
-      debug_menu "${db_select2[0]}"
+      ks_debug_menu "${db_select2[0]}"
 
     fi
     IFS=$'\n'
@@ -1098,7 +1006,7 @@ function debug_menu() {
   IFS=${OLDFIFS}
 }
 
-function calcul_niveau_menu() {
+function ks_calcul_niveau_menu() {
   if [[ $# -ne 0 ]]; then
     niveau=${2}
     if [ -z $niveau ]; then
@@ -1122,7 +1030,7 @@ function calcul_niveau_menu() {
         if [ -z "$parent2" ]; then
           echo $niveau
         fi
-        niveau=$(calcul_niveau_menu ${parent} ${niveau})
+        niveau=$(ks_calcul_niveau_menu ${parent} ${niveau})
       fi
       echo $niveau
     fi
@@ -1131,7 +1039,7 @@ function calcul_niveau_menu() {
   fi
 }
 
-function affiche_menu_db() {
+function ks_affiche_menu_db() {
   if [ -z "$OLDIFS" ]; then
     OLDIFS=${IFS}
   fi
@@ -1150,7 +1058,7 @@ function affiche_menu_db() {
     fi
   fi
   clear
-  logo
+  ks_logo
   ## chargement des menus
   request="select * from menu where parent_id ${start_menu}"
   sqlite3 "${SETTINGS_SOURCE}/menu" "${request}" | while read -a db_select; do
@@ -1174,12 +1082,12 @@ function affiche_menu_db() {
 
     request2="select parent_id from menu where id ${start_menu}"
     newchoice=$(sqlite3 ${SETTINGS_SOURCE}/menu $request2)
-    affiche_menu_db ${newchoice}
+    ks_affiche_menu_db ${newchoice}
   elif [ "${PORT_CHOICE,,}" == "q" ]; then
     exit 0
   elif [ "${PORT_CHOICE,,}" == "h" ]; then
     # retour au début
-    affiche_menu_db
+    ks_affiche_menu_db
   else
     # on va voir s'il y a une action à faire
     request_action="select action from menu where parent_id ${start_menu} and ordre = ${PORT_CHOICE}"
@@ -1200,13 +1108,13 @@ function affiche_menu_db() {
       # pas de sous menu, on va rester sur le même
       newchoice=${precedent}
     fi
-    affiche_menu_db ${newchoice}
+    ks_affiche_menu_db ${newchoice}
 
   fi
   IFS=${OLDFIFS}
 }
 
-function log_statusbar() {
+function ks_log_statusbar() {
   tput sc                           #save the current cursor position
   tput cup $(($(tput lines) - 2)) 3 # go to last line
   tput ed
@@ -1215,7 +1123,7 @@ function log_statusbar() {
   tput rc # bring the cursor back to the last saved position
 }
 
-function choix_appli_sauvegarde() {
+function ks_choix_appli_sauvegarde() {
   touch $SERVICESPERUSER
   TABSERVICES=()
   for SERVICEACTIVATED in $(docker ps --format "{{.Names}}"); do
@@ -1234,7 +1142,7 @@ function choix_appli_sauvegarde() {
   fi
 }
 
-function sauve_one_appli() {
+function ks_sauve_one_appli() {
   #############################
   # Parametres :
   # $1 = nom de l'appli
@@ -1252,7 +1160,7 @@ function sauve_one_appli() {
   CCYAN="${CSI}0;36m"
 
   # Variables
-  remote=$(get_from_account_yml rclone.remote)
+  remote=$(ks_get_from_account_yml rclone.remote)
   APPLI=$1
 
   NB_MAX_BACKUP=3
@@ -1342,18 +1250,18 @@ function sauve_one_appli() {
 
 }
 
-function change_password() {
+function ks_change_password() {
   echo "#############################################"
   echo "Cette procédure va redéarrer traefik "
   echo "Pendant cette opération, les interfaces web seront inaccessibles"
   read -rp $'\e[33mSaisissez le nouveau password\e[0m : ' NEWPASS
-  manage_account_yml user.pass "${NEWPASS}"
-  manage_account_yml user.htpwd $(htpasswd -nb ${USER} ${NEWPASS})
+  ks_manage_account_yml user.pass "${NEWPASS}"
+  ks_manage_account_yml user.htpwd $(htpasswd -nb ${USER} ${NEWPASS})
   docker rm -f traefik
-  launch_service traefik
+  ks_launch_service traefik
 }
 
-function relance_container() {
+function ks_relance_container() {
   touch $SERVICESPERUSER
   TABSERVICES=()
   for SERVICEACTIVATED in $(docker ps --format "{{.Names}}"); do
@@ -1367,41 +1275,39 @@ function relance_container() {
   )
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
-    log_write "Relance du container ${line}"
+    ks_log_write "Relance du container ${line}"
     echo "###############################################"
     echo "# Relance du container ${line} "
     echo "###############################################"
     docker rm -f ${line}
-    launch_service ${line}
+    ks_launch_service ${line}
   fi
 }
 
-function install_plextraktsync() {
+function ks_install_plextraktsync() {
   ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/plextraktsync/tasks/main.yml
   echo "Préparation pour le premier lancement de configuration"
   echo "Assurez vous d'avoir les api Trakt avant de continuer (https://trakt.tv/oauth/applications/new)"
-  pause
+  ks_pause
   /usr/local/bin/plextraktsync
   echo "L'outil est installé et se lancera automatiquement toutes les heures"
-  pause
+  ks_pause
 }
 
-function install_block_public_tracker() {
+function ks_install_block_public_tracker() {
   echo "Block_public_tracker va bloquer les trackers publics (piratebay, etc...) sur votre machine au niveau réseau"
   echo "Ces trackers ne seront plus accessibles"
   echo "Appuyez sur entrée pour continer, ou ctrl+C pour sortir"
-  pause
+  ks_pause
   ansible-playbook ${SETTINGS_SOURCE}/includes/config/playbooks/block_public_tracker.yml
   echo "Block_public_tracker a été installé avec succès"
-  pause
+  ks_pause
 }
 
-function relance_tous_services() {
-  sqlite3 ${SETTINGS_SOURCE}/ssddb <<EOF >$SERVICESPERUSER
+function ks_relance_tous_services() {
+  sqlite3 ${SETTINGS_SOURCE}/kubeseeddb <<EOF >$SERVICESPERUSER
 select name from applications;
 EOF
 
-  install_services
-  launch_service traefik
+  ks_install_services
 }
-

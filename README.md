@@ -1,2 +1,4 @@
-# ssdv3
-Ssd version 3 - uses kubernetes for containers
+# Kubeseed
+Kubeseed - uses kubernetes for containers
+
+# PROJET EN COURS D'ECRITURE - NE PAS UTILISER EN L'ETAT
