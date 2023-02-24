@@ -748,8 +748,8 @@ function ks_install() {
   sudo chown -R ${USER}: ${SETTINGS_SOURCE}/
 
   # mise en place du sudo sans password
-  if [ ! -f /etc/sudoers.d/${1} ]; then
-    echo "${1} ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/${1}
+  if [ ! -f /etc/sudoers.d/${USER} ]; then
+    echo "${USER} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USER}
   fi
 
   echo "Certains composants doivent encore être installés/réglés"
@@ -917,6 +917,7 @@ EOF
 
   ks_stocke_public_ip
   # On part à la pêche aux infos....
+  ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
   ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
   ks_pause
   echo ""

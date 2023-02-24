@@ -24,30 +24,30 @@ export NEWT_COLORS='
 
 # A partir de là, on va chercher les variables nécessaires
 
-if [ ! -f "${HOME}/.config/ssd/env" ]; then
+if [ ! -f "${HOME}/.config/kubeseed/env" ]; then
   # pas de fichier d'environnement
   if [ -f "/opt/seedbox-compose/kubeseeddb" ]; then
     # la seedbox est installée, on va prendre les valeurs par défaut de la v1/2.0
     export SETTINGS_SOURCE=/opt/seedbox-compose
     export SETTINGS_STORAGE=/opt/seedbox
-    mkdir -p "${HOME}/.config/ssd/"
-    echo "SETTINGS_SOURCE=/opt/seedbox-compose" >>"${HOME}/.config/ssd/env"
-    echo "SETTINGS_STORAGE=/opt/seedbox" >>"${HOME}/.config/ssd/env"
+    mkdir -p "${HOME}/.config/kubeseed/"
+    echo "SETTINGS_SOURCE=/opt/seedbox-compose" >>"${HOME}/.config/kubeseed/env"
+    echo "SETTINGS_STORAGE=/opt/seedbox" >>"${HOME}/.config/kubeseed/env"
   else
     # Si on est là, c'est que rien n'est installé, on va poser les questions*
-    mkdir -p "${HOME}/.config/ssd/"
+    mkdir -p "${HOME}/.config/kubeseed/"
     # on prend le répertoire courant pour la source
     sourcedir=$(dirname "$(readlink -f "$0")")
     export SETTINGS_SOURCE=${sourcedir}
-    echo "SETTINGS_SOURCE=${sourcedir}" >>"${HOME}/.config/ssd/env"
+    echo "SETTINGS_SOURCE=${sourcedir}" >>"${HOME}/.config/kubeseed/env"
     read -p "Dans quel répertoire voulez vous stocker les réglages des containers ? (défaut : ${HOME}/seedbox) " destdir
     destdir=${destdir:-${HOME}/seedbox}
     export SETTINGS_STORAGE=${destdir}
-    echo "SETTINGS_STORAGE=${destdir}/" >>"${HOME}/.config/ssd/env"
+    echo "SETTINGS_STORAGE=${destdir}/" >>"${HOME}/.config/kubeseed/env"
     mkdir -p ${SETTINGS_STORAGE}
   fi
 else
-  source "${HOME}/.config/ssd/env"
+  source "${HOME}/.config/kubeseed/env"
 fi
 
 export SETTINGS_SOURCE=${SETTINGS_SOURCE}

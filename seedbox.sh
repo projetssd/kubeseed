@@ -59,7 +59,7 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
     # Si on est là, c'est que le prérequis sont installés, mais c'est tout
     # On propose donc l'install de la seedbox
     clear
-    logo
+    ks_logo
     echo -e "${CCYAN}INSTALLATION SEEDBOX DOCKER${CEND}"
     echo -e "${CGREEN}${CEND}"
     echo -e "${CGREEN}   1) Installation Seedbox rclone && gdrive${CEND}"
@@ -89,12 +89,12 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
         # Installation de mergerfs
         # Cette install a une incidence sur docker (dépendances dans systemd)
         unionfs_fuse
-        pause
+        ks_pause
 
         # mise en place de la sauvegarde
         sauve
         # Affichage du résumé
-        #pause
+        #ks_pause
         # on marque la seedbox comme installée
         update_seedbox_param "installed" 1
         echo "L'installation est maintenant terminée."
@@ -118,7 +118,7 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
         # Choix des dossiers et création de l'arborescence
         choose_media_folder_plexdrive
         update_seedbox_param "installed" 1
-        pause
+        ks_pause
         touch "${SETTINGS_STORAGE}/media-$SEEDUSER"
         echo "L'installation est maintenant terminée."
         echo "Pour le configurer ou modifier les applis, vous pouvez le relancer"
@@ -146,7 +146,7 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
       echo "Les chemins par défaut avant la v2.2 étaient "
       echo "- source : /opt/seedbox-compose"
       echo "- destination : /opt/seedbox"
-      pause
+      ks_pause
       #check_dir "$PWD"
       if [[ ${IS_INSTALLED} -eq 0 ]]; then
         clear
@@ -161,7 +161,7 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
         # Installation de mergerfs
         # Cette install a une incidence sur docker (dépendances dans systemd)
         unionfs_fuse
-        pause
+        ks_pause
 
         # mise en place de la sauvegarde
         sauve
@@ -183,9 +183,9 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
         userid=$(id -u)
         grpid=$(id -g)
 
-        manage_account_yml user.userid "$userid"
-        manage_account_yml user.id "$userid"
-        manage_account_yml user.groupid "$grpid"
+        ks_manage_account_yml user.userid "$userid"
+        ks_manage_account_yml user.id "$userid"
+        ks_manage_account_yml user.groupid "$grpid"
         ## reinitialisation de toutes les applis
         relance_tous_services
         # on marque la seedbox comme installée
@@ -224,7 +224,7 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
       echo "= Pour le faire, sortez du script, puis tapez"
       echo "= git pull"
       echo "==============================================="
-      pause
+      ks_pause
     fi
   else
     clear
@@ -233,11 +233,11 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
     echo "= Pour repasser sur master, sortez du script, puis tapez "
     echo "= git checkout master"
     echo "==============================================="
-    pause
+    ks_pause
   fi
   # Verif compatibilité v2.1 => v2.2
   # On regarde que le all.yml existe, sinon, on copie le account.yml
-  log_statusbar "Verification du group_vars/all.yml"
+  ks_log_statusbar "Verification du group_vars/all.yml"
   if [ ! -f "${HOME}/.ansible/inventories/group_vars/all.yml" ]; then
     mkdir -p "${HOME}/.ansible/inventories/group_vars"
     cp "${SETTINGS_STORAGE}/variables/account.yml" "${ANSIBLE_VARS}"
@@ -247,12 +247,12 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
   source ${SETTINGS_SOURCE}/venv/bin/activate
   emplacement_stockage=$(get_from_account_yml settings.storage)
   if [ "${emplacement_stockage}" == notfound ]; then
-    manage_account_yml settings.storage "${SETTINGS_STORAGE}"
+    ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
   fi
 
   emplacement_source=$(get_from_account_yml settings.source)
   if [ "${emplacement_source}" == notfound ]; then
-    manage_account_yml settings.source "${SETTINGS_SOURCE}"
+    ks_manage_account_yml settings.source "${SETTINGS_SOURCE}"
   fi
   update_status
   # Verif compatibilité v2/0 => V2.1
@@ -260,7 +260,7 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
   log_statusbar "Verification de l'emplacement du stockage"
   emplacement_stockage=$(get_from_account_yml settings.storage)
   if [ "${emplacement_stockage}" == notfound ]; then
-    manage_account_yml settings.storage "/opt/seedbox"
+    ks_manage_account_yml settings.storage "/opt/seedbox"
   fi
   # On ressource l'environnement
   source "${SETTINGS_SOURCE}/profile.sh"
