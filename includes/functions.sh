@@ -563,7 +563,7 @@ function ks_copie_yml() {
   done
 }
 
-function copie_yml_unit() {
+function ks_copie_yml_unit() {
 
   if [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml" ]]; then
     # Il y a un playbook spécifique pour cette appli, on le copie
@@ -754,8 +754,9 @@ function ks_install() {
   echo "=================================================================="
   echo "Installation des paquets systeme"
 
+  ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
-
+  ks_log_statusbar "Installation des paquest systeme"
   sudo apt-get install -y --reinstall \
     build-essential \
     libssl-dev \
@@ -800,7 +801,7 @@ EOF
     )
     echo "$mypass" >"${HOME}/.vault_pass"
   fi
-
+  ks_log_statusbar "Création du virtualenv"
   # création d'un virtualenv
   echo "=================================================================="
   echo "Création du virtualenv"
@@ -817,7 +818,9 @@ EOF
   echo "=================================================================="
   echo "Installation des paquets python"
   ## Constants
+  ks_log_statusbar "Installation/upgrade de pip"
   python3 -m pip install --disable-pip-version-check --upgrade --force-reinstall pip
+  ks_log_statusbar "Installation des paquets python"
   pip install wheel
   pip install ansible \
     docker \
@@ -888,13 +891,14 @@ EOF
 
   touch "${SETTINGS_SOURCE}/.prerequis.lock"
 
-    source "${VENV_DIR}/bin/activate"
+
   # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
   temppath=$(ls ${VENV_DIR}/lib)
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
   export PYTHONPATH=${pythonpath}
   # toutes les installs communes
   # installation des dépendances, permet de créer les docker network via ansible
+  ks_log_statusbar "Installation des paquest galaxy"
   ansible-galaxy collection install community.general
   #ansible-galaxy collection install community.docker
   # dépendence permettant de gérer les fichiers yml
@@ -913,7 +917,12 @@ EOF
   ks_stocke_public_ip
   # On part à la pêche aux infos....
   ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
-  ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
+  # Installation de k3s
+  echo "Installation de K3S"
+  curl -sfL https://get.k3s.io | sudo sh -
+  mkdir -p ${SETTINGS_STORAGE}/k3s
+  sudo cp /etc/rancher/k3s/k3s.yaml ${SETTINGS_STORAGE}/k3s
+  sudo chown ${USER}: ${SETTINGS_STORAGE}/k3s/k3s.yaml
   ks_pause
   echo ""
   # On crée les fichier de status à 0
