@@ -8,6 +8,7 @@
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
       namespace: kubernetes-dashboard
+      name: admin-user
       definition:
         name: admin-user
         api_version: v1
