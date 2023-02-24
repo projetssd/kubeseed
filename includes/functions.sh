@@ -756,8 +756,8 @@ function ks_install() {
 
   ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
-  ks_log_statusbar "Installation des paquest systeme"
-  sudo apt-get install -y --reinstall \
+  ks_log_statusbar "Installation des paquets systeme"
+  sudo apt-get install -y \
     build-essential \
     libssl-dev \
     libffi-dev \
@@ -815,8 +815,6 @@ EOF
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
   export PYTHONPATH=${pythonpath}
 
-  echo "=================================================================="
-  echo "Installation des paquets python"
   ## Constants
   ks_log_statusbar "Installation/upgrade de pip"
   python3 -m pip install --disable-pip-version-check --upgrade --force-reinstall pip
@@ -898,9 +896,8 @@ EOF
   export PYTHONPATH=${pythonpath}
   # toutes les installs communes
   # installation des dépendances, permet de créer les docker network via ansible
-  ks_log_statusbar "Installation des paquest galaxy"
+  ks_log_statusbar "Installation des paquets galaxy"
   ansible-galaxy collection install community.general
-  #ansible-galaxy collection install community.docker
   # dépendence permettant de gérer les fichiers yml
   ansible-galaxy install kwoodson.yedit
 
@@ -913,9 +910,10 @@ EOF
   ks_change_file_owner "${SETTINGS_SOURCE}/kubeseeddb"
   # On crée le conf dir (par défaut /opt/seedbox) s'il n'existe pas
   ks_conf_dir
-
+  ks_log_statusbar "Stockage des ip publiques"
   ks_stocke_public_ip
   # On part à la pêche aux infos....
+  clear
   ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
   # Installation de k3s
   echo "Installation de K3S"

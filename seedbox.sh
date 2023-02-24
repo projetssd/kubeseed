@@ -40,6 +40,7 @@ source "${SETTINGS_SOURCE}/includes/functions.sh"
 
 if [ ! -f "${SETTINGS_SOURCE}/kubeseeddb" ]; then
   # ssd v3 n'est pas installé
+  clear
   ks_install
 fi
 
