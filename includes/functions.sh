@@ -911,11 +911,11 @@ EOF
   kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/create_dashboard_admin_user.yml"
 
+
   ks_log_statusbar "Installation du mode letsencrypt"
   kubectl create ns cert-manager
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
-
-  # continuer sur https://mikenet.uk/homelab/raspberry-pi/kubernetes/2022/04/26/ingress-setup-for-letsencrypt-and-traefik-on-k3s.html
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
 
 
