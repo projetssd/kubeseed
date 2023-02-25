@@ -63,3 +63,5 @@ fi
 export MYUID=$(id -u)
 export MYGID=$(id -g)
 export MYGIDNAME=$(id -gn)
+# Rclone
+export RCLONE_MNT_DIR="${HOME}/seedbox/rclone"

@@ -251,11 +251,10 @@ function ks_install_watchtower() {
 
 function ks_install_rclone() {
   echo -e "${BLUE}### RCLONE ###${NC}"
-  fusermount -uz /mnt/rclone >>/dev/null 2>&1
-  ks_create_dir /mnt/rclone
-  ks_create_dir /mnt/rclone/${USER}
-  ${SETTINGS_SOURCE}/includes/config/scripts/rclone.sh
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/rclone/tasks/main.yml
+  fusermount -uz "${RCLONE_MNT_DIR}" >>/dev/null 2>&1
+  ks_create_dir "${RCLONE_MNT_DIR}"
+  "${SETTINGS_SOURCE}/includes/config/rclone.sh"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/config/roles/rclone/tasks/main.yml"
   ks_checking_errors $?
   echo ""
 }
@@ -752,6 +751,7 @@ function ks_install() {
 
   ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
+
   ks_log_statusbar "Installation des paquets systeme"
   sudo apt-get install -y \
     build-essential \
@@ -781,7 +781,6 @@ function ks_install() {
   sudo ln -s /usr/bin/python3 /usr/bin/python
 
   # création d'un vault_pass vide
-
   if [ ! -f "${HOME}/.vault_pass" ]; then
     mypass=$(
       tr -dc A-Za-z0-9 </dev/urandom | head -c 25
@@ -789,8 +788,9 @@ function ks_install() {
     )
     echo "$mypass" >"${HOME}/.vault_pass"
   fi
-  ks_log_statusbar "Création du virtualenv"
+
   # création d'un virtualenv
+  ks_log_statusbar "Création du virtualenv"
   echo "=================================================================="
   echo "Création du virtualenv"
   mkdir -p "${VENV_DIR}"
@@ -803,7 +803,7 @@ function ks_install() {
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
   export PYTHONPATH=${pythonpath}
 
-  ## Constants
+  ## PIP
   ks_log_statusbar "Installation/upgrade de pip"
   python3 -m pip install --disable-pip-version-check --upgrade --force-reinstall pip
   ks_log_statusbar "Installation des paquets python"
@@ -861,13 +861,12 @@ EOF
     sudo chown -R "${USER}": "${HOME}/.ansible"
   fi
 
-  touch "${SETTINGS_SOURCE}/.prerequis.lock"
 
   # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
   temppath=$(ls ${VENV_DIR}/lib)
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
   export PYTHONPATH=${pythonpath}
-  # toutes les installs communes
+
   # installation des dépendances, permet de créer les docker network via ansible
   ks_log_statusbar "Installation des paquets galaxy"
   ansible-galaxy collection install community.general
@@ -880,21 +879,22 @@ EOF
 
   # On vérifie que le user ait bien les droits d'écriture
   ks_make_dir_writable "${SETTINGS_SOURCE}"
-  # on vérifie que le user ait bien les droits d'écriture dans la db
-  ks_change_file_owner "${SETTINGS_STORAGE}/kubeseeddb"
   # On crée le conf dir (par défaut /opt/seedbox) s'il n'existe pas
   ks_conf_dir
+
+  # Gestion des IP
   ks_log_statusbar "Stockage des ip publiques"
   ks_stocke_public_ip
-  # On part à la pêche aux infos....
 
+  # Logrotate
   ks_log_statusbar "Gestion du logrotate"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/logrotate.yml"
 
+  #  On part à la pêche aux infos....
   ks_log_statusbar "Gestion des infos utilisateur"
   ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
-  # Installation de k3s
 
+  # Installation de k3s
   ks_log_statusbar "Installation de K3S"
   echo "Installation de K3S"
   curl -sfL https://get.k3s.io | sudo sh -
@@ -902,8 +902,6 @@ EOF
   sudo cp /etc/rancher/k3s/k3s.yaml ${SETTINGS_STORAGE}/k3s
   sudo chown ${USER}: ${SETTINGS_STORAGE}/k3s/k3s.yaml
   export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
-  echo ""
-  # On crée les fichier de status à 0
 
   # Installation dashboard
   ks_log_statusbar "Installation du dashboard K3S"
@@ -912,13 +910,14 @@ EOF
   kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/create_dashboard_admin_user.yml"
 
-
+  # Letsencrypt
   ks_log_statusbar "Installation du mode letsencrypt"
   kubectl create ns cert-manager
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
-
+  # Instalation rclone
+  ks_install_rclone
 
 
 

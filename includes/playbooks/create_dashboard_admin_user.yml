@@ -34,3 +34,28 @@
             name: admin-user
             namespace: kubernetes-dashboard
 
+  - name: Create Ingress for dashboard
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      state: present
+      namespace: kubernetes-dashboard
+      name: kubernetes-dashboard
+      kind: Ingress
+      definition:
+        apiVersion: networking.k8s.io/v1
+        metadata:
+          labels:
+            app: kubernetes-dashboard
+          annotations:
+            kubernetes.io/ingress.class: "traefik"
+            traefik.ingress.kubernetes.io/router.entrypoints: web, websecure ## web not needed here.
+            traefik.ingress.kubernetes.io/router.tls: "true"
+        spec:
+          rules:
+            - host: "dashboard.{{ user.domain }}"
+              http:
+                paths:
+                  - path: /
+                    backend:
+                      serviceName: kubernetes-dashboard
+                      servicePort: 443
