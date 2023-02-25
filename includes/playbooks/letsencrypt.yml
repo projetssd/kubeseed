@@ -28,9 +28,8 @@
   - name: Force letsencrypt
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-
       kind: Certificate
-      namespace: kube-system
+      namespace: cert-manager
       name: wildcard-cert
       definition:
         apiVersion: cert-manager.io/v1

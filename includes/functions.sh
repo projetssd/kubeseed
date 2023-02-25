@@ -773,7 +773,8 @@ function ks_install() {
     gnupg \
     software-properties-common \
     apt-transport-https \
-    lsb-release
+    lsb-release \
+    python3-kubernetes
 
   sudo rm -f /usr/bin/python
 
