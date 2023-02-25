@@ -856,7 +856,7 @@ EOF
   ks_create_dir "${SETTINGS_STORAGE}/vars"
   if [ ! -f "${ANSIBLE_VARS}" ]; then
     mkdir -p "${HOME}/.ansible/inventories/group_vars"
-    cp "${SETTINGS_SOURCE}/includes/config/account.yml" "${ANSIBLE_VARS}"
+    cp "${SETTINGS_SOURCE}/includes/files/account.yml" "${ANSIBLE_VARS}"
   fi
 
   if [[ -d "${HOME}/.cache" ]]; then
@@ -895,7 +895,7 @@ EOF
   ks_log_statusbar "Stockage des ip publiques"
   ks_stocke_public_ip
   # On part à la pêche aux infos....
-  clear
+  ks_log_statusbar "Gestion des infos utilisateur"
   ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
   # Installation de k3s
   ks_log_statusbar "Installation de K3S"
@@ -908,19 +908,12 @@ EOF
   echo ""
   # On crée les fichier de status à 0
 
-
-  clear
-  echo "Les composants sont maintenants tous installés/réglés, poursuite de l'installation"
-
-
   # Installation dashboard
   ks_log_statusbar "Installation du dashboard K3S"
   GITHUB_URL=https://github.com/kubernetes/dashboard/releases
   VERSION_KUBE_DASHBOARD=$(curl -w '%{url_effective}' -I -L -s -S ${GITHUB_URL}/latest -o /dev/null | sed -e 's|.*/||')
   kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
-  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/create_dashboard_admin_user.yml
-
-
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/create_dashboard_admin_user.yml"
 
   ks_log_statusbar "Installation du mode letsencrypt"
   kubectl create ns cert-manager

@@ -16,7 +16,7 @@ echo -e "${BLUE}### INFORMATIONS UTILISATEURS ###${NC}"
 
 if [ ! -f ${ANSIBLE_VARS} ]; then
   mkdir -p "${HOME}/.ansible/inventories/group_vars"
-  cp ${SETTINGS_SOURCE}/includes/config/account.yml ${ANSIBLE_VARS}
+  cp ${SETTINGS_SOURCE}/includes/files/account.yml ${ANSIBLE_VARS}
 fi
 
 echo ""
