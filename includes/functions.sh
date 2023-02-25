@@ -739,7 +739,7 @@ function ks_install() {
 
   # mise en place du sudo sans password
   if [ ! -f /etc/sudoers.d/${USER} ]; then
-    echo "${USER} ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/${USER}
+    echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${USER}
   fi
 
   echo "Certains composants doivent encore être installés/réglés"
@@ -759,7 +759,6 @@ function ks_install() {
     libffi-dev \
     python3-dev \
     python3-pip \
-    python-dev \
     python3-venv \
     sqlite3 \
     apache2-utils \
@@ -1149,7 +1148,7 @@ ks_log_statusbar() {
   clear
   set_window
   # Move cursor to last line in your screen
-  tput cup $LINES 1
+  tput cup $(($LINES - 1)) 0
 
   echo -en " ===================\n===== $1 ====="
 
