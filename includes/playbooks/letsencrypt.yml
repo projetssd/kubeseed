@@ -3,7 +3,7 @@
   gather_facts: false
   become: yes
   tasks:
-  - name: Install letsencrypt
+  - name: Install letsencrypt ClusterIssuer
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
@@ -25,7 +25,7 @@
                       key: "{{ cloudflare.api }}"
                       name: cloudflare-api-token-secret
                     email: "{{ user.mail }}"
-  - name: Force letsencrypt
+  - name: Install letsencrypt Certificate
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       kind: Certificate
@@ -40,3 +40,14 @@
           issuerRef:
             kind: ClusterIssuer
             name: letsencrypt-production
+  - name: Force Certificate
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      kind: TLSStore
+      namespace: kube-system
+      name: default
+      definition:
+        apiVersion: traefik.containo.us/v1alpha1
+        spec:
+          defaultCertificate:
+            secretName: wildcard-secret
