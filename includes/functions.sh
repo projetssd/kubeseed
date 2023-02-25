@@ -779,15 +779,6 @@ function ks_install() {
 
   sudo ln -s /usr/bin/python3 /usr/bin/python
 
-  cat <<EOF >/etc/logrotate.d/ansible
-${SETTINGS_STORAGE}/logs/*.log {
-  rotate 7
-  daily
-  compress
-  missingok
-}
-EOF
-
   # création d'un vault_pass vide
 
   if [ ! -f "${HOME}/.vault_pass" ]; then
@@ -889,15 +880,20 @@ EOF
   # On vérifie que le user ait bien les droits d'écriture
   ks_make_dir_writable "${SETTINGS_SOURCE}"
   # on vérifie que le user ait bien les droits d'écriture dans la db
-  ks_change_file_owner "${SETTINGS_SOURCE}/kubeseeddb"
+  ks_change_file_owner "${SETTINGS_STORAGE}/kubeseeddb"
   # On crée le conf dir (par défaut /opt/seedbox) s'il n'existe pas
   ks_conf_dir
   ks_log_statusbar "Stockage des ip publiques"
   ks_stocke_public_ip
   # On part à la pêche aux infos....
+
+  ks_log_statusbar "Gestion du logrotate"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/logrotate.yml"
+
   ks_log_statusbar "Gestion des infos utilisateur"
   ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
   # Installation de k3s
+
   ks_log_statusbar "Installation de K3S"
   echo "Installation de K3S"
   curl -sfL https://get.k3s.io | sudo sh -

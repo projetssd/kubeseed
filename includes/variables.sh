@@ -53,6 +53,7 @@ fi
 export SETTINGS_SOURCE=${SETTINGS_SOURCE}
 export SETTINGS_STORAGE=${SETTINGS_STORAGE}
 export VENV_DIR=${SETTINGS_STORAGE}/venv/ks
+export ANSIBLE_VARS=${HOME}/.ansible/inventories/group_vars/all.yml
 if [ -f "${VENV_DIR}/bin/activate" ]; then
   temppath=$(ls ${VENV_DIR}/lib)
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
