@@ -9,9 +9,9 @@
       state: present
       namespace: cert-manager
       name: letsencrypt-production
-      apiVersion: cert-manager.io/v1
       kind: ClusterIssuer
       definition:
+        apiVersion: cert-manager.io/v1
         spec:
           acme:
             email: "{{ user.mail }}"
@@ -28,11 +28,12 @@
   - name: Force letsencrypt
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-      apiVersion: cert-manager.io/v1
+
       kind: Certificate
       namespace: kube-system
       name: wildcard-cert
       definition:
+        apiVersion: cert-manager.io/v1
         spec:
           secretName: wildcard-secret
           dnsNames:
