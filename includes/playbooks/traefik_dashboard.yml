@@ -34,7 +34,7 @@
           kubernetes.io/ingress.class: traefik
         spec:
           rules:
-            - host: traefik.${DOMAIN}
+            - host: "{{ appli.traefik.domain }}.{{ user.domain }}"
               http:
                 paths:
                   - path: /
