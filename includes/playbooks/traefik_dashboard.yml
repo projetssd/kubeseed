@@ -3,7 +3,7 @@
   gather_facts: false
     
   tasks:
-  - name: Create admin user
+  - name: Create ClusterIP service
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
@@ -23,7 +23,7 @@
           app.kubernetes.io/instance: traefik
           app.kubernetes.io/name: traefik-dashboard
 
-  - name: Create admin user role
+  - name: Create Ingress rule
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
