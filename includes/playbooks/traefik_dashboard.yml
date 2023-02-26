@@ -11,6 +11,10 @@
       name: traefik-dashboard
       kind: Service
       definition:
+        metadata:
+          labels:
+            app.kubernetes.io/instance: traefik
+            app.kubernetes.io/name: traefik-dashboard
         spec:
           type: ClusterIP
           ports:
