@@ -8,24 +8,27 @@
 #                   GNU General Public License v3.0                     #
 #########################################################################
 ---
+- hosts: localhost
+  gather_facts: false
+  tasks:
 
-- name: Set 'record' variable
-  set_fact:
-    record: "{{ (subdomain == user.domain) | ternary(user.domain,subdomain + '.' + user.domain) }}"
+  - name: Set 'record' variable
+    set_fact:
+      record: "{{ (subdomain == user.domain) | ternary(user.domain,subdomain + '.' + user.domain) }}"
 
-- name: Set DNS Record
-  cloudflare_dns:
-    account_api_token: "{{ cloudflare.api }}"
-    account_email: "{{ cloudflare.login }}"
-    zone: "{{ user.domain }}"
-    state: present
-    solo: true
-    proxied: yes
-    type: A
-    value: "{{ network.ipv4 }}"
-    record: "{{ subdomain }}"
+  - name: Set DNS Record
+    cloudflare_dns:
+      account_api_token: "{{ cloudflare.api }}"
+      account_email: "{{ cloudflare.login }}"
+      zone: "{{ user.domain }}"
+      state: present
+      solo: true
+      proxied: yes
+      type: A
+      value: "{{ network.ipv4 }}"
+      record: "{{ subdomain }}"
 
-- name: Display DNS Record
-  debug:
-    msg: "DNS Record for '{{ record }}' set to '{{ network.ipv4 }}'."
+  - name: Display DNS Record
+    debug:
+      msg: "DNS Record for '{{ record }}' set to '{{ network.ipv4 }}'."
 
