@@ -32,6 +32,7 @@
       state: present
       name: traefik-ingressroute
       namespace: kube-system
+      kind: IngressRoute
       definition:
         spec:
           entryPoints:
