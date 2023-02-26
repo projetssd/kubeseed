@@ -11,8 +11,6 @@ read -rp $'\e[33mQuel sous domaine pour le dashboard Traefik [traefik]\e[0m :' t
 traefik_domain=${dtraefik_domain:-traefik}
 ks_manage_account_yml appli.traefik.domain ${traefik_domain}
 ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cloudflare_domain.yml" -e "${traefik_domain}"
-
-kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
 ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/traefik_dashboard.yml"
 echo "==================================="
 echo "Le dashboard est accessible à l'adresse https://${traefik_domain}.$(ks_get_from_account_yml user.domain)/dashboard/"
