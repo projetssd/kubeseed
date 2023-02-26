@@ -1130,6 +1130,7 @@ function ks_affiche_menu_db() {
 }
 
 LINES=$(tput lines)
+COLS=$(tput cols)
 
 set_window() {
   # Create a virtual window that is two lines smaller at the bottom.
@@ -1151,8 +1152,11 @@ ks_log_statusbar() {
   set_window
   # Move cursor to last line in your screen
   tput cup $(($LINES - 2)) 0
-
-  echo "==================="
+  for i in {0 .. ${COLS}}
+  do
+      echo -n "="
+  done
+  echo -e "\n"
   echo -en " ===== $1 ====="
 
   # Move cursor to home position, back in virtual window
