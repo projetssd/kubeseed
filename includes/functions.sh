@@ -749,6 +749,11 @@ function ks_install() {
   echo "=================================================================="
   echo "Installation des paquets systeme"
 
+  ks_log_statusbar "Gestion du source list"
+  # TODO : gérer ça un peu mieux, c'est moche
+  sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
+  sudo cp "${SETTINGS_SOURCE}/includes/files/debian.sources.list.bullseye" /etc/apt/sources.list
+
   ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
 
@@ -903,11 +908,7 @@ EOF
   export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
 
   # Installation dashboard
-  ks_log_statusbar "Installation du dashboard K3S"
-  GITHUB_URL=https://github.com/kubernetes/dashboard/releases
-  VERSION_KUBE_DASHBOARD=$(curl -w '%{url_effective}' -I -L -s -S ${GITHUB_URL}/latest -o /dev/null | sed -e 's|.*/||')
-  kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/${VERSION_KUBE_DASHBOARD}/aio/deploy/recommended.yaml
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/create_dashboard_admin_user.yml"
+  ${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh
 
   # Letsencrypt
   ks_log_statusbar "Installation du mode letsencrypt"
@@ -1143,14 +1144,16 @@ ks_log_statusbar() {
   # si en debug
   if [ -n "$DEBUG" ]
   then
+    echo "###### MODE DEBUG ######"
     ks_pause
   fi
   clear
   set_window
   # Move cursor to last line in your screen
-  tput cup $(($LINES - 1)) 0
+  tput cup $(($LINES - 2)) 0
 
-  echo -en " ===================\n===== $1 ====="
+  echo "==================="
+  echo -en " ===== $1 ====="
 
   # Move cursor to home position, back in virtual window
   tput cup 0 0

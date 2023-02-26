@@ -47,13 +47,12 @@
         apiVersion: traefik.containo.us/v1alpha1
 
 
-  - name: Create Server transport
+  - name: Create IngressRoute
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       kind: IngressRoute
       name: kubernetes-dashboard-ingress
       namespace: kubernetes-dashboard
-
       definition:
         entryPoints:
           - web
