@@ -9,6 +9,7 @@
       state: present
       namespace: kube-system
       name: traefik-dashboard
+      kind: Service
       definition:
         type: ClusterIP
         ports:
@@ -27,6 +28,7 @@
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
+      kind: Ingress
       name: traefik-ingress
       namespace: kube-system
       definition:
