@@ -34,6 +34,7 @@
       namespace: kube-system
       kind: IngressRoute
       definition:
+        apiVersion: traefik.containo.us/v1alpha1
         spec:
           entryPoints:
             - websecure
