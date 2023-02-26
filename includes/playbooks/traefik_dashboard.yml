@@ -30,25 +30,20 @@
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
-      kind: Ingress
-      name: traefik-ingress
+      name: traefik-ingressroute
       namespace: kube-system
       definition:
-        metadata:
-          annotations:
-            kubernetes.io/ingress.class: traefik
         spec:
-          rules:
-            - host: "{{ appli.traefik.domain }}.{{ user.domain }}"
-              http:
-                paths:
-                  - path: /
-                    pathType: Prefix
-                    backend:
-                      service:
-                        name: traefik-dashboard
-                        port:
-                          number: 9000
+          entryPoints:
+            - websecure
+          routes:
+            - match: "Host(`{{ appli.traefik.domain }}.{{ user.domain }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+              kind: Rule
+              services:
+                - name: api@internal
+                  kind: TraefikService
+
+
 
 
 
