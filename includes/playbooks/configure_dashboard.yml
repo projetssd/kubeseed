@@ -55,7 +55,6 @@
       namespace: kubernetes-dashboard
       definition:
         entryPoints:
-          - web
           - websecure
         apiVersion: traefik.containo.us/v1alpha1
         routes:

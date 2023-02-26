@@ -26,7 +26,6 @@ echo -e "${BLUE}serviront à vous authentifier sur les différents services en m
 USERNAME=$(ks_get_from_account_yml user.name)
 if [ ${USERNAME} == notfound ]; then
   ks_manage_account_yml user.name "${USER}"
-  ks_update_seedbox_param "name" ${USER}
 else
   echo -e "${BLUE}Username déjà renseigné${CEND}"
   user=${USERNAME}
@@ -44,7 +43,6 @@ fi
 MAIL=$(ks_get_from_account_yml user.mail)
 if [ ${MAIL} == notfound ]; then
   read -p $'\e[32m↘️ Mail | Appuyer sur [Enter]: \e[0m' mail </dev/tty
-  ks_update_seedbox_param "mail" $mail
   ks_manage_account_yml user.mail $mail
 else
   echo -e "${BLUE}Email déjà renseigné${CEND}"
@@ -54,7 +52,6 @@ DOMAINE=$(ks_get_from_account_yml user.domain)
 if [ ${DOMAINE} == notfound ]; then
   read -p $'\e[32m↘️ Domaine | Appuyer sur [Enter]: \e[0m' domain </dev/tty
   ks_manage_account_yml user.domain "$domain"
-  ks_update_seedbox_param "domain" $domain
 else
   echo -e "${BLUE}Domaine déjà renseigné${CEND}"
 fi
@@ -96,3 +93,5 @@ ks_manage_account_yml user.htpwd $(htpasswd -nb $user $pass)
 
 ks_manage_account_yml user.userid "$userid"
 ks_manage_account_yml user.groupid "$grpid"
+
+ks_manage_account_yml user.k3s_secret $(htpasswd -nb $user $pass | openssl base64)
