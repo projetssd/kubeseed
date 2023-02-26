@@ -34,8 +34,9 @@
       name: traefik-ingress
       namespace: kube-system
       definition:
-        annotations:
-          kubernetes.io/ingress.class: traefik
+        metadata:
+          annotations:
+            kubernetes.io/ingress.class: traefik
         spec:
           rules:
             - host: "{{ appli.traefik.domain }}.{{ user.domain }}"
