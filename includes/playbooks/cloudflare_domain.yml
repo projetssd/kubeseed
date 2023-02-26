@@ -12,10 +12,6 @@
   gather_facts: false
   tasks:
 
-  - name: Set 'record' variable
-    set_fact:
-      record: "{{ (subdomain == user.domain) | ternary(user.domain,subdomain + '.' + user.domain) }}"
-
   - name: Set DNS Record
     cloudflare_dns:
       account_api_token: "{{ cloudflare.api }}"
@@ -30,5 +26,5 @@
 
   - name: Display DNS Record
     debug:
-      msg: "DNS Record for '{{ record }}' set to '{{ network.ipv4 }}'."
+      msg: "DNS Record for '{{ subdomain }}.{{ user.domain }}' set to '{{ network.ipv4 }}'."
 

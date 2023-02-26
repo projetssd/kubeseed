@@ -11,18 +11,16 @@
       name: traefik-dashboard
       kind: Service
       definition:
-        type: ClusterIP
-        ports:
-          - name: traefik
-            port: 9000
-            targetPort: traefik
-            protocol: TCP
-        selector:
-          app.kubernetes.io/instance: traefik
-          app.kubernetes.io/name: traefik
-        labels:
-          app.kubernetes.io/instance: traefik
-          app.kubernetes.io/name: traefik-dashboard
+        spec:
+          type: ClusterIP
+          ports:
+            - name: traefik
+              port: 9000
+              targetPort: traefik
+              protocol: TCP
+          selector:
+            app.kubernetes.io/instance: traefik
+            app.kubernetes.io/name: traefik
 
   - name: Create Ingress rule
     kubernetes.core.k8s:
@@ -34,17 +32,18 @@
       definition:
         annotations:
           kubernetes.io/ingress.class: traefik
-        rules:
-          - host: "{{ app.traefik.domain}}.{{ user.domain }}"
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: traefik-dashboard
-                      port:
-                        number: 9000
+        spec:
+          rules:
+            - host: traefik.${DOMAIN}
+              http:
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: traefik-dashboard
+                        port:
+                          number: 9000
 
 
 
