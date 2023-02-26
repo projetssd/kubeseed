@@ -53,10 +53,11 @@
       kind: IngressRoute
       name: kubernetes-dashboard-ingress
       namespace: kubernetes-dashboard
-      entryPoints:
-        - web
-        - websecure
+
       definition:
+        entryPoints:
+          - web
+          - websecure
         apiVersion: traefik.containo.us/v1alpha1
         routes:
           - match: "host(`dashboard.{{ user.domain }}`)"
