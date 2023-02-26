@@ -1,2 +1,1 @@
-- mettre le logrotate en ansible
-- changer le chemin des logs
+- gérer les sources list
