@@ -59,7 +59,7 @@
           - websecure
         apiVersion: traefik.containo.us/v1alpha1
         routes:
-          - match: "host(`dashboard.{{ user.domain }}`)"
+          - match: "host(`{{ app.dashboard.domain}}.{{ user.domain }}`)"
             kind: Rule
             services:
               - name: kubernetes-dashboard

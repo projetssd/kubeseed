@@ -1,0 +1,50 @@
+---
+- hosts: localhost
+  gather_facts: false
+    
+  tasks:
+  - name: Create admin user
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      state: present
+      namespace: kube-system
+      name: traefik-dashboard
+      definition:
+        type: ClusterIP
+        ports:
+          - name: traefik
+            port: 9000
+            targetPort: traefik
+            protocol: TCP
+        selector:
+          app.kubernetes.io/instance: traefik
+          app.kubernetes.io/name: traefik
+        labels:
+          app.kubernetes.io/instance: traefik
+          app.kubernetes.io/name: traefik-dashboard
+
+  - name: Create admin user role
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      state: present
+      name: traefik-ingress
+      namespace: kube-system
+      definition:
+        annotations:
+          kubernetes.io/ingress.class: traefik
+        rules:
+          - host: "{{ app.traefik.domain}}.{{ user.domain }}"
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: traefik-dashboard
+                      port:
+                        number: 9000
+
+
+
+
+

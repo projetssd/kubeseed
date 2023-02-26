@@ -910,6 +910,9 @@ EOF
   # Installation dashboard
   ${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh
 
+  # Dashboard traefik
+  ${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh
+
   # Letsencrypt
   ks_log_statusbar "Installation du mode letsencrypt"
   kubectl create ns cert-manager
@@ -1142,6 +1145,7 @@ unset_window() {
 }
 
 ks_log_statusbar() {
+  COLS=$(tput cols)
   # si en debug
   if [ -n "$DEBUG" ]
   then
@@ -1152,12 +1156,12 @@ ks_log_statusbar() {
   set_window
   # Move cursor to last line in your screen
   tput cup $(($LINES - 2)) 0
-  for i in {0 .. ${COLS}}
+  for (( i=0; i<=${COLS}; i++ ))
   do
       echo -n "="
   done
   echo -e "\n"
-  echo -en " ===== $1 ====="
+  echo -en "===== $1 ====="
 
   # Move cursor to home position, back in virtual window
   tput cup 0 0
