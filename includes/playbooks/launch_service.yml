@@ -93,7 +93,7 @@
                     - name: "{{ application }}"
                       image: '{{image}}'
                       ports:
-                        - containerPort: "{{ app_port | string}}"
+                        - containerPort: "{{ app_port }}" #TODO : voir pourquoi ça ne marche pas ici ?
                       env: "{{ application_env }}"
 
     - name: debug

@@ -1,6 +1,6 @@
 ---
 application: 'rutorrent'
-app_port: '8080'
+app_port: 8080
 image: 'mondedie/rutorrent:latest'
 pg_volumes:
   - "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{pgrole}}/config:/config"
