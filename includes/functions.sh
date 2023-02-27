@@ -906,6 +906,7 @@ EOF
   sudo cp /etc/rancher/k3s/k3s.yaml ${SETTINGS_STORAGE}/k3s
   sudo chown ${USER}: ${SETTINGS_STORAGE}/k3s/k3s.yaml
   export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
+  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml -e ks=kubeseed
 
   # Installation dashboard
   ${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh
