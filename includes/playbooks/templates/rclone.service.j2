@@ -1,0 +1,24 @@
+[Unit]
+Description=Google Drive (rclone-cache)
+AssertPathIsDirectory={{ lookup('env','RCLONE_MNT_DIR') }}
+After=network-online.target
+
+[Service]
+User={{ lookup('env','USER') }}
+Group={{ lookup('env','MYGIDNAME') }}
+Type=simple
+ExecStart=/usr/bin/rclone mount -vv \
+  --config={{ lookup('env','HOME') }}/.config/rclone/rclone.conf \
+  --allow-other --gid {{user.groupid}} --uid {{user.userid}} \
+  --allow-non-empty \
+  --vfs-cache-mode full \
+  --vfs-cache-max-size 150G \
+  --cache-dir={{ lookup('env','HOME') }}/.config/rclone/cache \
+  {{rclone.remote}}: \
+  {{ lookup('env','RCLONE_MNT_DIR') }}
+ExecStop=/bin/fusermount -uz {{ lookup('env','RCLONE_MNT_DIR') }}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

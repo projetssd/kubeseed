@@ -250,20 +250,21 @@ function ks_install_watchtower() {
 }
 
 function ks_install_rclone() {
+  curl https://rclone.org/install.sh | sudo bash
   echo -e "${BLUE}### RCLONE ###${NC}"
   fusermount -uz "${RCLONE_MNT_DIR}" >>/dev/null 2>&1
   ks_create_dir "${RCLONE_MNT_DIR}"
   "${SETTINGS_SOURCE}/includes/config/rclone.sh"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/config/roles/rclone/tasks/main.yml"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/rclone.yml"
   ks_checking_errors $?
   echo ""
 }
 
-function ks_unionfs_fuse() {
+function ks_mergerfs() {
   echo -e "${BLUE}### Unionfs-Fuse ###${NC}"
   echo -e " ${BWHITE}* Installation Mergerfs${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/unionfs/tasks/main.yml
-  ks_checking_errors $?
+  ks_create_dir "${HOME}/Medias"
+  sudo apt install mergerfs
   echo ""
 }
 
@@ -747,7 +748,6 @@ function ks_install() {
   echo "=================================================================="
   read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"
   echo "=================================================================="
-  echo "Installation des paquets systeme"
 
   ks_log_statusbar "Gestion du source list"
   # TODO : gérer ça un peu mieux, c'est moche
@@ -867,7 +867,7 @@ EOF
 
 
   # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
-  temppath=$(ls ${VENV_DIR}/lib)
+  temppath=$(ls "${VENV_DIR}/lib")
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
   export PYTHONPATH=${pythonpath}
 
@@ -896,7 +896,7 @@ EOF
 
   #  On part à la pêche aux infos....
   ks_log_statusbar "Gestion des infos utilisateur"
-  ${SETTINGS_SOURCE}/includes/scripts/get_infos.sh
+  "${SETTINGS_SOURCE}/includes/scripts/get_infos.sh"
 
   # Installation de k3s
   ks_log_statusbar "Installation de K3S"
@@ -906,22 +906,32 @@ EOF
   sudo cp /etc/rancher/k3s/k3s.yaml ${SETTINGS_STORAGE}/k3s
   sudo chown ${USER}: ${SETTINGS_STORAGE}/k3s/k3s.yaml
   export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
-  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml -e ks=kubeseed
+  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml -e ns=kubeseed
 
   # Installation dashboard
-  ${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh
+  ks_log_statusbar "Installation du dashboard Kubernetes"
+  "${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh"
 
   # Dashboard traefik
-  ${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh
+  ks_log_statusbar "Installation du dashboard Traefik"
+  "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
 
   # Letsencrypt
   ks_log_statusbar "Installation du mode letsencrypt"
-  kubectl create ns cert-manager
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml -e ns=cert-manager"
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
   # Instalation rclone
-  ks_install_rclone
+  ks_log_statusbar "Installation/configuration de rclone"
+  read -rp "Voulez vous utiliser rclone ? [O] : " INSTALL_RCLONE
+  INSTALL_RCLONE=${INSTALL_RCLONE:-O}
+  if [[ ${INSTALL_RCLONE} == "O" || ${INSTALL_RCLONE} == "o" ]]
+  then
+    ks_install_rclone
+    ks_log_statusbar "Configuration de mergerfs"
+    ks_mergerfs
+  fi
 
 
 

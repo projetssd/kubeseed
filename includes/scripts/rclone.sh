@@ -4,12 +4,20 @@ source "${SETTINGS_SOURCE}/includes/functions.sh"
 # shellcheck source=${BASEDIR}/includes/variables.sh
 source "${SETTINGS_SOURCE}/includes/variables.sh"
 
+echo "####################################################"
+echo "# ATTENTION                                        #"
+echo "####################################################"
+echo "# Avec les nouvelles versions de rclone,           #"
+echo "# il n'est plus possible de générer le rclone.conf #"
+echo "# depuis le serveur                                #"
+echo "#==================================================#"
+echo "# Assurez vous d'avoir un rclone.conf existant     #"
+echo "# avant de continuer                               #"
+echo "####################################################"
+
 mkdir -p ${HOME}/.config/rclone
 RCLONE_CONFIG_FILE=${HOME}/.config/rclone/rclone.conf
 
-
-cd /tmp
-rm drive.txt team.txt >/dev/null 2>&1
 
 function paste() {
   echo -e "${YELLOW}\nColler le contenu de rclone.conf avec le clic droit, et taper ${CCYAN}STOP${CEND}${YELLOW} pour poursuivre le script.\n${NC}"
@@ -42,7 +50,7 @@ function detection() {
     #
     rm -f /tmp/choix_crypt
     rm -f /tmp/id_teamdrive
-    ${SETTINGS_SOURCE}/includes/config/scripts/rclone_list_td.py
+    ${SETTINGS_SOURCE}/includes/scripts/rclone_list_td.py
     remotecrypt=$(cat /tmp/choix_crypt)
     id_teamdrive=$(cat /tmp/id_teamdrive)
     rm -f /tmp/choix_crypt
@@ -52,7 +60,7 @@ function detection() {
   2)
     rm -f /tmp/choix_crypt
     rm -f /tmp/id_teamdrive
-    ${SETTINGS_SOURCE}/includes/config/scripts/rclone_list_gd.py
+    ${SETTINGS_SOURCE}/includes/scripts/rclone_list_gd.py
     remotecrypt=$(cat /tmp/choix_crypt)
     id_teamdrive=$(cat /tmp/id_teamdrive)
     rm -f /tmp/choix_crypt
@@ -66,20 +74,10 @@ function detection() {
 
 }
 
-function clone() {
-  ## si rclone n'existe pas
-  rclone="/usr/bin/rclone"
-  conf="${RCLONE_CONFIG_FILE}"
-  ## pas de rclone.conf
-  if [ ! -e "${RCLONE_CONFIG_FILE}" ]; then
-    curl https://rclone.org/install.sh | bash
-  fi
-}
-
 function verif() {
   detection
-  manage_account_yml rclone.remote $remotecrypt
-  manage_account_yml rclone.id_teamdrive $id_teamdrive
+  ks_manage_account_yml rclone.remote $remotecrypt
+  ks_manage_account_yml rclone.id_teamdrive $id_teamdrive
   exit
 }
 
@@ -94,33 +92,20 @@ function menu() {
   echo -e "${CCYAN}Gestion du rclone.conf${CEND}"
   echo -e "${CGREEN}${CEND}"
   echo -e "${CGREEN}   1) Copier/coller un rclone.conf déjà existant ${CEND}"
-  echo -e "${CGREEN}   2) Création rclone.conf${CEND}"
-  echo -e "${CGREEN}   3) rclone.conf déjà existant sur le serveur --> ${RCLONE_CONFIG_FILE}${CEND}"
+  echo -e "${CGREEN}   2) rclone.conf déjà existant sur le serveur --> ${RCLONE_CONFIG_FILE}${CEND}"
 
   echo -e ""
 
-  read -p "Votre choix [1-3]: " CHOICE
+  read -p "Votre choix [1-2]: " CHOICE
 
   case $CHOICE in
   1) ## Copier/coller un rclone.conf déjà existant
-    rclone="/usr/bin/rclone"
-
-    rclone >/dev/null 2>&1
     paste
     verif
     ;;
   2) ## Création rclone.conf
-    clone
-    clear
-    ${SETTINGS_SOURCE}/includes/config/scripts/createrclone.sh
-    verif
-    ;;
-  3) ## Création rclone.conf
-    clone
     verif
     ;;
   esac
 }
-menu
-cd /tmp
-rm drive.txt team.txt >/dev/null 2>&1
+

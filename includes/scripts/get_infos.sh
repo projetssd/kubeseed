@@ -1,12 +1,9 @@
 #!/bin/bash
 ########################################
-# Gestion des services SSD
+# Gestion des infos Kubeseed
 ########################################
-#
 # Permet de récupérer des infos
 # qui seront traitées par la suite
-# TODO : a voir si on passe des parametres
-# pour dire quelle info on veut ?
 ########################################
 
 source ${SETTINGS_SOURCE}/includes/functions.sh
