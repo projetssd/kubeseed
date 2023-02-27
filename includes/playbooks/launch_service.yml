@@ -66,35 +66,45 @@
 #      file:
 #        path: "{{ tempfile_1.path }}"
 #        state: absent
+
+    - name: set_fact
+      set_fact:
+        mondebug:
+          api_version: apps/v1
+          kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+          kind: Deployment
+          namespace: kubeseed
+          name: "{{ application }}"
+          definition:
+            metadata:
+              labels:
+                app: "{{ application }}"
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  app: "{{ application }}"
+              template:
+                metadata:
+                  labels:
+                    app: "{{ application }}"
+                spec:
+                  containers:
+                    - name: "{{ application }}"
+                      image: '{{image}}'
+                      ports:
+                        - containerPort: "{{ app_port }}"
+                      env: "{{ application_env }}"
+
+    - name: debug
+      debug:
+        vars: mondebug
+
     
     # DEPLOY ######################################################################
     - name: "Launch {{ application }} - Deployment"
-      kubernetes.core.k8s:
-        api_version: apps/v1
-        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-        kind: Deployment
-        namespace: kubeseed
-        name: "{{ application }}"
-        definition:
-          metadata:
-            labels:
-              app: "{{ application }}"
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: "{{ application }}"
-            template:
-              metadata:
-                labels:
-                  app: "{{ application }}"
-              spec:
-                containers:
-                  - name: "{{ application }}"
-                    image: '{{image}}'
-                    ports:
-                      - containerPort: "{{ app_port }}"
-                    env: "{{ application_env }}"
+      kubernetes.core.k8s: "{{ mondebug }}"
+
 
 
 
