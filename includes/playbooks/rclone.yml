@@ -3,6 +3,12 @@
   become: yes
   gather_facts: false
   tasks:
+    - name: user_allow_other in fuse.conf
+      become: yes
+      lineinfile:
+        path: /etc/fuse.conf
+        line: user_allow_other
+
     - name: Import systemd rclone.service
       become: yes
       template:
