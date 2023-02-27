@@ -14,6 +14,7 @@ echo "#==================================================#"
 echo "# Assurez vous d'avoir un rclone.conf existant     #"
 echo "# avant de continuer                               #"
 echo "####################################################"
+ks_pause
 
 mkdir -p ${HOME}/.config/rclone
 RCLONE_CONFIG_FILE=${HOME}/.config/rclone/rclone.conf
@@ -82,8 +83,7 @@ function verif() {
 }
 
 function menu() {
-  clear
-  logo
+
   if [ ! -e "$rclone" ]; then
     curl https://rclone.org/install.sh | sudo bash
   fi
