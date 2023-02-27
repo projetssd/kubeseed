@@ -482,7 +482,7 @@ function ks_launch_service() {
 
   line=$1
 
-  log_write "Installation de ${line}"
+  ks_log_write "Installation de ${line}"
   error=0
   tempsubdomain=$(ks_get_from_account_yml applis.${line}.subdomain)
   if [ "${tempsubdomain}" = notfound ]; then
@@ -528,7 +528,7 @@ function ks_launch_service() {
       # puis on lance le générique avec ce qu'on vient de copier
       ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_SOURCE}/containers/${line}.yml"
     else
-      log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
+      ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
       error=1
     fi
   fi
@@ -569,7 +569,7 @@ function ks_copie_yml_unit() {
     # on copie les variables pour le user
     cp "${SETTINGS_SOURCE}/includes/dockerapps/vars/${line}.yml" "${SETTINGS_STORAGE}/vars/${line}.yml"
   else
-    log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
+    ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
   fi
 }
 
@@ -598,10 +598,10 @@ function ks_suppression_appli() {
 
   docker rm -f "$APPSELECTED" >/dev/null 2>&1
   if [ $DELETE -eq 1 ]; then
-    log_write "Suppresion de ${APPSELECTED}, données supprimées"
+    ks_log_write "Suppresion de ${APPSELECTED}, données supprimées"
     sudo rm -rf ${SETTINGS_STORAGE}/docker/${USER}/$APPSELECTED
   else
-    log_write "Suppresion de ${APPSELECTED}, données conservées"
+    ks_log_write "Suppresion de ${APPSELECTED}, données conservées"
   fi
 
   rm ${SETTINGS_STORAGE}/conf/$APPSELECTED.yml >/dev/null 2>&1
