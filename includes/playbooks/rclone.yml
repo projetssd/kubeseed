@@ -6,7 +6,7 @@
     - name: Import systemd rclone.service
       become: yes
       template:
-        src: "{{ settings.source }}/includes/playbook/templates/rclone.service.j2"
+        src: "{{ settings.source }}/includes/playbooks/templates/rclone.service.j2"
         dest: /etc/systemd/system/rclone.service
         owner: "root"
         group: "root"
