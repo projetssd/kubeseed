@@ -109,3 +109,6 @@ function menu() {
   esac
 }
 
+
+menu
+
