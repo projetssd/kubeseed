@@ -5,8 +5,8 @@ After=rclone.service
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/mergerfs {{ lookup('env','HOME') }}/local:{{ lookup('env','RCLONE_MNT_DIR') }} {{ lookup('env','HOME') }}/Medias -o rw,use_ino,allow_other,func.getattr=newest,category.action=all,category.create=ff,cache.files=auto-full
-ExecStop=/bin/fusermount -u {{ lookup('env','HOME') }}/Medias
+ExecStart=/usr/bin/mergerfs {{ lookup('env','HOME') }}/seedbox/local:{{ lookup('env','RCLONE_MNT_DIR') }} {{ lookup('env','HOME') }}/seedbox/Medias -o rw,use_ino,allow_other,func.getattr=newest,category.action=all,category.create=ff,cache.files=auto-full
+ExecStop=/bin/fusermount -u {{ lookup('env','HOME') }}/seedbox/Medias
 KillMode=process
 Restart=on-failure
 

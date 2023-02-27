@@ -263,7 +263,7 @@ function ks_install_rclone() {
 function ks_mergerfs() {
   echo -e "${BLUE}### Unionfs-Fuse ###${NC}"
   echo -e " ${BWHITE}* Installation Mergerfs${NC}"
-  ks_create_dir "${HOME}/Medias"
+  ks_create_dir "${HOME}/seedbox/Medias"
   sudo apt install -y mergerfs
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/mergerfs.yml"
   echo ""
@@ -283,7 +283,7 @@ function ks_subdomain_unitaire() {
   else
     SUBDOMAIN=${line}
   fi
-  ks_manage_account_yml sub.${line}.${line} $SUBDOMAIN
+  ks_manage_account_yml applis.${line}.subdomain $SUBDOMAIN
 }
 
 function ks_auth_unitaire() {
@@ -317,7 +317,7 @@ function ks_auth_unitaire() {
     ;;
   esac
 
-  ks_manage_account_yml sub.${line}.auth ${TYPE_AUTH}
+  ks_manage_account_yml applis.${line}.auth ${TYPE_AUTH}
 
 }
 
@@ -484,11 +484,11 @@ function ks_launch_service() {
 
   log_write "Installation de ${line}"
   error=0
-  tempsubdomain=$(ks_get_from_account_yml sub.${line}.${line})
+  tempsubdomain=$(ks_get_from_account_yml applis.${line}.subdomain)
   if [ "${tempsubdomain}" = notfound ]; then
     ks_subdomain_unitaire ${line}
   fi
-  tempauth=$(ks_get_from_account_yml sub.${line}.auth)
+  tempauth=$(ks_get_from_account_yml applis.${line}.auth)
   if [ "${tempauth}" = notfound ]; then
     ks_auth_unitaire ${line}
   fi
@@ -518,7 +518,7 @@ function ks_launch_service() {
       ansible-playbook "${SETTINGS_STORAGE}/conf/${line}.yml"
     elif [[ -f "${SETTINGS_STORAGE}/vars/${line}.yml" ]]; then
       # il y a des variables persos, on les lance
-      ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/generique.yml" --extra-vars "@${SETTINGS_STORAGE}/vars/${line}.yml"
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_STORAGE}/vars/${line}.yml"
 
     elif [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml" ]]; then
       # pas de playbook perso ni de vars perso
@@ -526,7 +526,7 @@ function ks_launch_service() {
       ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml"
     elif [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/vars/${line}.yml" ]]; then
       # puis on lance le générique avec ce qu'on vient de copier
-      ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/generique.yml" --extra-vars "@${SETTINGS_SOURCE}/includes/dockerapps/vars/${line}.yml"
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_SOURCE}/containers/${line}.yml"
     else
       log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
       error=1

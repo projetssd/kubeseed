@@ -1,0 +1,134 @@
+#
+# A lancer avec un fichier vars
+# Ex :
+# ansible-playbook ${settings.source}/includes/dockerapps/generique.yml --extra-vars "@${BASEDIR}/includes/dockerapps/vars/calibre.yml"
+#
+
+---
+- hosts: localhost
+  gather_facts: false
+#  vars_files:
+#    - "{{ settings.source }}/includes/dockerapps/templates/generique/generique.yml"
+
+
+  tasks:
+    # PRE TASKS ###################################################################
+    - name: Check that pretasks file exists
+      stat:
+        path: "{{ settings.source }}/includes/dockerapps/pretasks/{{ application }}.yml"
+      register: stat_result
+
+    - name: Launch Pretask
+      include_tasks: "{{ settings.source }}/includes/dockerapps/pretasks/{{ application }}.yml"
+      when: stat_result.stat.exists
+
+    - name: Launch Pretasks from yml
+      include_tasks: "{{ settings.source }}/includes/dockerapps/pretasks/{{ item }}.yml"
+      with_items: "{{ pretasks }}"
+      when: pretasks is defined
+        
+    # FACTS #######################################################################
+
+    - name: "Set DNS Record on CloudFlare"
+      include_tasks: "{{ settings.source }}/includes/playbook/cloudflare_domain.yml"
+      vars:
+        subdomain: "{{  applis[application].subdomain}}"
+      when: cloudflare_enabled
+
+#    - name: Creating paths
+#      become: yes
+#      file: "path={{item}} state=directory mode=0775 owner={{ lookup('env','MYUID') }} group={{ lookup('env','MYGID') }}"
+#      with_items:
+#        - "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}"
+    
+
+
+    # LABELS ######################################################################
+
+
+#    - name: Create temp file
+#      tempfile:
+#        state: file
+#      register: tempfile_1
+#
+#    - name: fill temp file with labels
+#      template:
+#        src: "{{ settings.source }}/includes/dockerapps/templates/generique/traefik_labels.yml.j2"
+#        dest: "{{ tempfile_1.path }}"
+#        force: yes
+#
+#    - name: Import traefik labels
+#      include_vars:
+#        file: "{{ tempfile_1.path }}"
+#        name: pg_labels
+#
+#    - name: Delete temp file
+#      file:
+#        path: "{{ tempfile_1.path }}"
+#        state: absent
+    
+    # DEPLOY ######################################################################
+    - name: "Launch {{ appliction }} - Deployment"
+      kubernetes.core.k8s:
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        kind: Deployment
+        namespace: kubeseed
+        name: "{{ application }}"
+        definition:
+          metadata:
+            labels:
+              app: "{{ application }}"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: "{{ application }}"
+            template:
+              metadata:
+                labels:
+                  app: "{{ application }}"
+              spec:
+                containers:
+                  - name: "{{ application }}"
+                    image: '{{image}}'
+                    ports:
+                      - containerPort: "{{ app_port }}"
+                    env: "{{ application_env }}"
+
+
+
+
+
+    - name: Add spécific docker info
+      set_fact:
+        docker_info: "{{ docker_info | combine(specific_docker_info) }}"
+      when: specific_docker_info is defined
+
+    - name: 'Deploying {{pgrole}}'
+      docker_container: "{{ docker_info }}"
+
+    
+    # POST TASKS ###################################################################
+
+    - name: Check that posttasks file exists
+      stat:
+        path: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
+      register: stat_result_post
+      
+    - name: Launch Posttask
+      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
+      when: stat_result_post.stat.exists
+
+    - name: Launch Posttask from yml
+      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ item }}.yml"
+      with_items: "{{ posttasks }}"
+      when: posttasks is defined
+
+#    - name: "Insert {{ pgrole}} into database"
+#      shell :
+#        cmd: |
+#          sqlite3 {{  settings.source }}/ssddb << EOF
+#              replace into applications (name,status,subdomain,port)
+#              values
+#              ('{{ pgrole }}',2,'{{sub[pgrole][pgrole] if sub_enabled else pgrole}}',{{ intport }});
+#          EOF
