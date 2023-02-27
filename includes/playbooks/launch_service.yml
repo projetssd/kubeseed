@@ -33,7 +33,7 @@
       include_tasks: "{{ settings.source }}/includes/playbook/cloudflare_domain.yml"
       vars:
         subdomain: "{{  applis[application].subdomain}}"
-      when: cloudflare_enabled
+
 
 #    - name: Creating paths
 #      become: yes
