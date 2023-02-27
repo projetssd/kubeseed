@@ -264,7 +264,7 @@ function ks_mergerfs() {
   echo -e "${BLUE}### Unionfs-Fuse ###${NC}"
   echo -e " ${BWHITE}* Installation Mergerfs${NC}"
   ks_create_dir "${HOME}/Medias"
-  sudo apt install mergerfs
+  sudo apt install -y mergerfs
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/mergerfs.yml"
   echo ""
 }
