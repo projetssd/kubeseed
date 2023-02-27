@@ -515,7 +515,7 @@ function ks_launch_service() {
 
     if [[ -f "${SETTINGS_STORAGE}/conf/${line}.yml" ]]; then
       # il y a déjà un playbook "perso", on le lance
-      ansible-playbook "${SETTINGS_STORAGE}/conf/${line}.yml"
+      ansible-playbook "${SETTINGS_STORAGE}/containers/${line}.yml"
     elif [[ -f "${SETTINGS_STORAGE}/vars/${line}.yml" ]]; then
       # il y a des variables persos, on les lance
       ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_STORAGE}/vars/${line}.yml"
@@ -524,7 +524,7 @@ function ks_launch_service() {
       # pas de playbook perso ni de vars perso
       # puis on le lance
       ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml"
-    elif [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/vars/${line}.yml" ]]; then
+    elif [[ -f "${SETTINGS_SOURCE}/containers/${line}.yml" ]]; then
       # puis on lance le générique avec ce qu'on vient de copier
       ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_SOURCE}/containers/${line}.yml"
     else
