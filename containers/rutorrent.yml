@@ -10,10 +10,15 @@ pg_volumes:
   - '/etc/localtime:/etc/localtime:ro'
 
 application_env:
-  UID: '{{user.userid}}'
-  GID: '{{user.groupid}}'
-  TZ: 'Europe/Paris'
-  DOWNLOAD_DIRECTORY: "{{ lookup('env','HOME') }}/local/rutorrent"
+  - name: UID
+    value: '{{user.userid}}'
+  - name: GID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+  - name: DOWNLOAD_DIRECTORY
+    value: "{{ lookup('env','HOME') }}/local/rutorrent"
+
 # tags spécifiques à ajouter à la construction du docker
 specific_docker_info:
   ports:
