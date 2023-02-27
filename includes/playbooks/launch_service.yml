@@ -30,7 +30,7 @@
     # FACTS #######################################################################
 
     - name: "Set DNS Record on CloudFlare"
-      include_tasks: "{{ settings.source }}/includes/playbooks/cloudflare_domain.yml"
+      include_tasks: "{{ settings.source }}/includes/playbooks/tasks/cloudflare_domain.yml"
       vars:
         subdomain: "{{  applis[application].subdomain}}"
 
