@@ -68,7 +68,7 @@
 #        state: absent
     
     # DEPLOY ######################################################################
-    - name: "Launch {{ appliction }} - Deployment"
+    - name: "Launch {{ application }} - Deployment"
       kubernetes.core.k8s:
         api_version: apps/v1
         kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
