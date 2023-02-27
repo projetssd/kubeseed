@@ -98,7 +98,7 @@
 
     - name: debug
       debug:
-        vars: mondebug
+        msg: "{{ mondebug }}"
 
     
     # DEPLOY ######################################################################
