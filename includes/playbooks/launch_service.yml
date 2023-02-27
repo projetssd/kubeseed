@@ -93,7 +93,7 @@
                     - name: "{{ application }}"
                       image: '{{image}}'
                       ports:
-                        - containerPort: "{{ app_port }}"
+                        - containerPort: "{{ app_port | string}}"
                       env: "{{ application_env }}"
 
     - name: debug
