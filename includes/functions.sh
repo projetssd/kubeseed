@@ -254,7 +254,7 @@ function ks_install_rclone() {
   echo -e "${BLUE}### RCLONE ###${NC}"
   fusermount -uz "${RCLONE_MNT_DIR}" >>/dev/null 2>&1
   ks_create_dir "${RCLONE_MNT_DIR}"
-  "${SETTINGS_SOURCE}/includes/config/rclone.sh"
+  "${SETTINGS_SOURCE}/includes/scripts/rclone.sh"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/rclone.yml"
   ks_checking_errors $?
   echo ""
