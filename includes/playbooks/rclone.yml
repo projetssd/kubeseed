@@ -27,6 +27,10 @@
         name: rclone
         enabled: yes
 
+    - name: Wait for service to be up
+      pause:
+        seconds: 10
+
     - name: Check if rclone is running
       shell: pgrep rclone
       ignore_errors: yes
