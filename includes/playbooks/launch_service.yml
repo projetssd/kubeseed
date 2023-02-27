@@ -93,7 +93,7 @@
                     - name: "{{ application }}"
                       image: '{{image}}'
                       ports:
-                        - containerPort: "{{ app_port }}" #TODO : voir pourquoi ça ne marche pas ici ?
+                        - containerPort: "{{ app_port }}"
                       env: "{{ application_env }}"
 
     - name: debug
@@ -110,13 +110,13 @@
 
 
 
-    - name: Add spécific docker info
-      set_fact:
-        docker_info: "{{ docker_info | combine(specific_docker_info) }}"
-      when: specific_docker_info is defined
-
-    - name: 'Deploying {{pgrole}}'
-      docker_container: "{{ docker_info }}"
+#    - name: Add spécific docker info
+#      set_fact:
+#        docker_info: "{{ docker_info | combine(specific_docker_info) }}"
+#      when: specific_docker_info is defined
+#
+#    - name: 'Deploying {{pgrole}}'
+#      docker_container: "{{ docker_info }}"
 
     
     # POST TASKS ###################################################################
