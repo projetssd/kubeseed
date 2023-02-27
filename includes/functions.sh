@@ -924,6 +924,8 @@ EOF
 
   # Instalation rclone
   ks_log_statusbar "Installation/configuration de rclone"
+  ks_create_dir ${HOME}/local
+  ks_create_dir ${HOME}/Medias
   read -rp "Voulez vous utiliser rclone ? [O] : " INSTALL_RCLONE
   INSTALL_RCLONE=${INSTALL_RCLONE:-O}
   if [[ ${INSTALL_RCLONE} == "O" || ${INSTALL_RCLONE} == "o" ]]
