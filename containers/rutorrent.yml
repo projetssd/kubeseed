@@ -21,11 +21,13 @@ application_env:
     value: 'Europe/Paris'
   - name: DOWNLOAD_DIRECTORY
     value: "{{ lookup('env','HOME') }}/local/rutorrent"
+  - name: PORT_RTORRENT
+    value: 30000
 
 # tags spécifiques à ajouter à la construction du docker
 specific_container_info:
   ports:
-    - 45000
+    - 30000
 #  Pour contourner l'authentification pour des outils de style nzb360, décommentez le pavé ci dessous
 #extra_labels:
 #  traefik.http.routers.rutorrent-rtr-bypass.rule: 'Path(`/RPC2`)'
