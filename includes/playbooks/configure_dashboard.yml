@@ -45,6 +45,10 @@
       state: present
       src : "/tmp/dash.yml"
 
+  - name: delete temp file
+    file:
+      path: "/tmp/dash.yml"
+      state: absent
 
 
 
