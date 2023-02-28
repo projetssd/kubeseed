@@ -72,7 +72,7 @@
         host_volumes: []
 
     - name: loop
-      include_task : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
+      include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
       loop: application_volumes
       loop_control:
         loop_var: detail_volume
