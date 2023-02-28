@@ -3,11 +3,11 @@ application: 'rutorrent'
 app_port: 8080  # doit être un entier, sans les quotes !
 image: 'mondedie/rutorrent:latest'
 application_volumes:
-  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{pgrole}}/config"
+  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config"
     container_path: "/config"
-  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{pgrole}}/data"
+  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/data"
     container_path: "/data"
-  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{ pgrole }}/sock"
+  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{ application }}/sock"
     container_path: "/run/rtorrent"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"

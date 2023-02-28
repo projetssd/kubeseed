@@ -73,7 +73,7 @@
 
     - name: loop
       include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
-      loop: application_volumes
+      loop: "{{ application_volumes }}"
       loop_control:
         loop_var: detail_volume
 

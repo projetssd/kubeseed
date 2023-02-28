@@ -8,4 +8,4 @@
 
 - name: append volume
   set_fact:
-    host_volumes: {{ host_volumes + temp_dict }}
+    host_volumes: "{{ host_volumes + temp_dict }}"
