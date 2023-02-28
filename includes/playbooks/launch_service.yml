@@ -17,34 +17,21 @@
 
   tasks:
     # PRE TASKS ###################################################################
-    - name: Check that pretasks file exists
-      stat:
-        path: "{{ settings.source }}/includes/dockerapps/pretasks/{{ application }}.yml"
-      register: stat_result
-
-    - name: Launch Pretask
-      include_tasks: "{{ settings.source }}/includes/dockerapps/pretasks/{{ application }}.yml"
-      when: stat_result.stat.exists
-
     - name: Launch Pretasks from yml
-      include_tasks: "{{ settings.source }}/includes/dockerapps/pretasks/{{ item }}.yml"
+      include_tasks: "{{ settings.source }}/containers/tasks/{{ item }}.yml"
       with_items: "{{ pretasks }}"
       when: pretasks is defined
         
-    # FACTS #######################################################################
+    # DNS #######################################################################
 
     - name: "Set DNS Record on CloudFlare"
       include_tasks: "{{ settings.source }}/includes/playbooks/tasks/cloudflare_domain.yml"
       vars:
         subdomain: "{{  applis[application].subdomain}}"
 
-
-#    - name: Creating paths
-#      become: yes
-#      file: "path={{item}} state=directory mode=0775 owner={{ lookup('env','MYUID') }} group={{ lookup('env','MYGID') }}"
-#      with_items:
-#        - "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}"
-
+    # Volumes ###################################################################
+    # Prépare un dictionnaire des volumes qui vont être mappés sur le container
+    # ce dictionnaire sera appelé lors de la créationd du Deployment
     - name: Prepare volumes
       include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
       loop: "{{ application_volumes }}"
@@ -52,6 +39,7 @@
         loop_var: detail_volume
 
     # DEPLOY ######################################################################
+    # Déploiement : lancement du pod principal
     - name: "Launch {{ application }} - Deployment"
       kubernetes.core.k8s:
         api_version: apps/v1
@@ -64,7 +52,6 @@
             labels:
               app: "{{ application }}"
           spec:
-
             replicas: 1
             selector:
               matchLabels:
@@ -82,9 +69,9 @@
                       - containerPort: "{{ app_port }}"
                     env: "{{ application_env }}"
                     volumeMounts: "{{ container_volumes }}"
-
                 volumes: "{{ host_volumes }}"
 
+    # Lancement du service de connexion
     - name: "Launch {{ application }} - Service"
       kubernetes.core.k8s:
         kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
@@ -100,6 +87,7 @@
               - protocol: TCP
                 port: "{{ app_port }}"
 
+    # Lancement des services spécifiques (équivalent ports pour docker)
     - name: "Launch {{ application }} - SPECIFIC Service"
       kubernetes.core.k8s:
         kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
@@ -115,10 +103,10 @@
             ports:
               - port: "{{ item }}"
                 nodePort: "{{ item }}"
-
       when: specific_container_info.ports is defined
       loop: "{{ specific_container_info.ports }}"
 
+    # Lancement de l'ingress (règle traefik)
     - name: "Launch {{ application }} - Ingress "
       kubernetes.core.k8s:
         api_version: networking.k8s.io/v1
@@ -141,6 +129,7 @@
                         port:
                           number: "{{ app_port }}"
 
+    # modif de l'ingress si auth basique
     - name: Modify ingress on basic auth
       kubernetes.core.k8s:
         api_version: networking.k8s.io/v1
@@ -154,7 +143,6 @@
             annotations:
               kubernetes.io/ingress.class: traefik
               traefik.ingress.kubernetes.io/router.middlewares: kubeseed-my-basic-auth@kubernetescrd
-
           spec:
             rules:
               - host: "{{ applis[application].subdomain }}.{{ user.domain }}"
@@ -167,7 +155,6 @@
                           name: "{{ application }}"
                           port:
                             number: "{{ app_port }}"
-
       when: applis[application].auth == "basique"
 
 
