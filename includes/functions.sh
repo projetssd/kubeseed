@@ -779,7 +779,8 @@ function ks_install() {
     software-properties-common \
     apt-transport-https \
     lsb-release \
-    python3-kubernetes
+    python3-kubernetes \
+    fuse
 
   sudo rm -f /usr/bin/python
 
