@@ -1,0 +1,11 @@
+- name: prepare volume
+  set_fact:
+    temp_dict:
+      - name: "{{ detail_volume.container_path| replace('/','')  }}"
+        hostPath:
+          path: "{{ detail_volume.local_path }}"
+          type: DirectoryOrCreate }}
+
+- name: append volume
+  set_fact:
+    host_volumes: {{ host_volumes + temp_dict }}

@@ -66,14 +66,18 @@
 #      file:
 #        path: "{{ tempfile_1.path }}"
 #        state: absent
-    - name: prepare volumes
+
+    - name: prepare list
       set_fact:
-        host_volumes:
-          - name: "{{ item.container_path| replace('/','')  }}"
-            hostPath:
-              path: "{{ item.local_path }}"
-              type: DirectoryOrCreate
-        loop: application_volumes
+        host_volumes: []
+
+    - name: loop
+      include_task : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
+      loop: application_volumes
+      loop_control:
+        loop_var: detail_volume
+
+
 
 
     - name: debug
