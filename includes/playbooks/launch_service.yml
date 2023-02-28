@@ -89,7 +89,7 @@
         state: present
         kind: Service
         namespace: kubeseed
-        name: "svc-{{ application }}"
+        name: "{{ application }}"
         definition:
           spec:
             selector:
@@ -135,7 +135,7 @@
                     path: "/"
                     backend:
                       service:
-                        name: "svc-{{ application }}"
+                        name: "{{ application }}"
                         port:
                           number: "{{ app_port }}"
 
