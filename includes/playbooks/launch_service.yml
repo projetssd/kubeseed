@@ -149,7 +149,7 @@
         definition:
           spec:
             rules:
-            - host: "{{ applis[application].subdomain }}"
+            - host: "{{ applis[application].subdomain }}.{{ user.domain }}"
               http:
                 paths:
                   - pathType: Prefix
