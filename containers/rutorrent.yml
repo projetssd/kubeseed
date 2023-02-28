@@ -2,12 +2,15 @@
 application: 'rutorrent'
 app_port: 8080  # doit être un entier, sans les quotes !
 image: 'mondedie/rutorrent:latest'
-pg_volumes:
-  - "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{pgrole}}/config:/config"
-  - "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{pgrole}}/data:/data"
-  - "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{ pgrole }}/sock:/run/rtorrent"
-  - "{{ lookup('env','HOME') }}:{{ lookup('env','HOME') }}"
-  - '/etc/localtime:/etc/localtime:ro'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{pgrole}}/config"
+    container_path: "/config"
+  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{pgrole}}/data"
+    container_path: "/data"
+  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{ pgrole }}/sock"
+    container_path: "/run/rtorrent"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
 
 application_env:
   - name: UID

@@ -66,6 +66,23 @@
 #      file:
 #        path: "{{ tempfile_1.path }}"
 #        state: absent
+    - name: prepare volumes
+      set_fact:
+        host_volumes:
+          - name: "{{ detail_volume.container_path| replace('/','')  }}"
+            hostPath:
+              path: "{{ detail_volume.local_path }}"
+              type: DirectoryOrCreate
+        loop: application_volumes
+        loop_control:
+          loop_var: detail_volume
+
+    - name: debug
+      debug:
+        msg: "{{ host_volumes }}"
+
+    - name: pause
+      pause:
 
     - name: set_fact
       set_fact:
@@ -95,6 +112,8 @@
                       ports:
                         - containerPort: "{{ app_port }}"
                       env: "{{ application_env }}"
+
+
 
     - name: debug
       debug:
