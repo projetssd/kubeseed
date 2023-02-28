@@ -41,10 +41,12 @@
       namespace: kubernetes-dashboard
       name: mytransport
       kind: ServersTransport
+      api_version: traefik.containo.us/v1alpha1
       definition:
-        serverName: "dashboard.{{ user.domain }}"
-        insecureSkipVerify: true
-        apiVersion: traefik.containo.us/v1alpha1
+        spec:
+          serverName: "{{ app.dashboard.domain}}.{{ user.domain }}"
+          insecureSkipVerify: true
+
 
 
   - name: Create IngressRoute
