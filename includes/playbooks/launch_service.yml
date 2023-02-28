@@ -153,7 +153,7 @@
               - protocol: TCP
                 port: "{{ item }}"
       when: specific_container_info.ports is defined
-      loop: specific_container_info.ports
+      loop: "{{ specific_container_info.ports }}"
 
     - name: "Launch {{ application }} - Ingress "
       kubernetes.core.k8s:
