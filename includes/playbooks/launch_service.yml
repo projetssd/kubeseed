@@ -138,6 +138,23 @@
               - protocol: TCP
                 port: "{{ app_port }}"
 
+    - name: "Launch {{ application }} - SPECIFIC Service"
+      kubernetes.core.k8s:
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        kind: Service
+        namespace: kubeseed
+        name: "svc-{{ application }}-{{ item }}"
+        definition:
+          spec:
+            selector:
+              app: "{{ application }}"
+            ports:
+              - protocol: TCP
+                port: "{{ item }}"
+      when: specific_container_info.ports is defined
+      loop: specific_container_info.ports
+
     - name: "Launch {{ application }} - Ingress "
       kubernetes.core.k8s:
         api_version: networking.k8s.io/v1
