@@ -48,13 +48,6 @@
 
 
 
-    - name: prepare auth
-      set_fact:
-        type_auth:
-          middlewares:
-            - name: my-basic-auth
-      when: applis[application].auth == "basique"
-
     - name: Prepare volumes
       include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
       loop: "{{ application_volumes }}"
@@ -187,7 +180,7 @@
                           port:
                             number: "{{ app_port }}"
 
-      when: applis[application].subdomain = "basique"
+      when: applis[application].auth == "basique"
 
 
 
