@@ -164,7 +164,7 @@
                       path: "/"
                       backend:
                         service:
-                          name: "svc-{{ application }}"
+                          name: "{{ application }}"
                           port:
                             number: "{{ app_port }}"
 
@@ -174,7 +174,7 @@
     # POST TASKS ###################################################################
 
     - name: Launch Posttask from yml
-      include_tasks: "{{ settings.source }}/includes/containers/tasks/{{ item }}.yml"
+      include_tasks: "{{ settings.source }}/containers/tasks/{{ item }}.yml"
       with_items: "{{ posttasks }}"
       when: posttasks is defined
 

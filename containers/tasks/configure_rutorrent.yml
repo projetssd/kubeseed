@@ -14,7 +14,7 @@
     state: present
 
 - name: Change port
-  lineinefile:
+  lineinfile:
     path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*network.port_range.set\s*=.*'
     line: "network.port_range.set = 30000-30000"
