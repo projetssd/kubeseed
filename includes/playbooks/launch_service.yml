@@ -67,9 +67,14 @@
 #        path: "{{ tempfile_1.path }}"
 #        state: absent
 
-    - name: prepare list
+    - name: prepare list host volumes
       set_fact:
         host_volumes: []
+    - name: prepare list host volumes
+      set_fact:
+        container_volumes: [ ]
+
+
 
     - name: loop
       include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
@@ -115,6 +120,9 @@
                       ports:
                         - containerPort: "{{ app_port }}"
                       env: "{{ application_env }}"
+                      volumeMounts: "{{ container_volumes }}"
+
+                  volumes: "{{ host_volumes }}"
 
 
 
