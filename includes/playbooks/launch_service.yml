@@ -44,9 +44,6 @@
 #      file: "path={{item}} state=directory mode=0775 owner={{ lookup('env','MYUID') }} group={{ lookup('env','MYGID') }}"
 #      with_items:
 #        - "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}"
-    
-
-
 
     - name: Prepare volumes
       include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
@@ -54,48 +51,37 @@
       loop_control:
         loop_var: detail_volume
 
-    - name: set_fact
-      set_fact:
-        mondebug:
-          api_version: apps/v1
-          kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-          kind: Deployment
-          namespace: kubeseed
-          name: "{{ application }}"
-          definition:
-            metadata:
-              labels:
-                app: "{{ application }}"
-            spec:
-              replicas: 1
-              selector:
-                matchLabels:
-                  app: "{{ application }}"
-              template:
-                metadata:
-                  labels:
-                    app: "{{ application }}"
-                spec:
-                  containers:
-                    - name: "{{ application }}"
-                      image: '{{image}}'
-                      ports:
-                        - containerPort: "{{ app_port }}"
-                      env: "{{ application_env }}"
-                      volumeMounts: "{{ container_volumes }}"
-
-                  volumes: "{{ host_volumes }}"
-
-
-
-    - name: debug
-      debug:
-        msg: "{{ mondebug }}"
-
-    
     # DEPLOY ######################################################################
     - name: "Launch {{ application }} - Deployment"
-      kubernetes.core.k8s: "{{ mondebug }}"
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        kind: Deployment
+        namespace: kubeseed
+        name: "{{ application }}"
+        definition:
+          metadata:
+            labels:
+              app: "{{ application }}"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: "{{ application }}"
+            template:
+              metadata:
+                labels:
+                  app: "{{ application }}"
+              spec:
+                containers:
+                  - name: "{{ application }}"
+                    image: '{{image}}'
+                    ports:
+                      - containerPort: "{{ app_port }}"
+                    env: "{{ application_env }}"
+                    volumeMounts: "{{ container_volumes }}"
+
+                volumes: "{{ host_volumes }}"
 
     - name: "Launch {{ application }} - Service"
       kubernetes.core.k8s:
