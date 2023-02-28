@@ -1,1 +1,3 @@
 - gérer les sources list
+- gérer l'auth sur les ingress
+- 

@@ -7,6 +7,10 @@
 ---
 - hosts: localhost
   gather_facts: false
+  vars:
+    host_volumes: []
+    container_volumes: []
+    type_auth: {}
 #  vars_files:
 #    - "{{ settings.source }}/includes/dockerapps/templates/generique/generique.yml"
 
@@ -43,36 +47,13 @@
     
 
 
-    # LABELS ######################################################################
 
-
-#    - name: Create temp file
-#      tempfile:
-#        state: file
-#      register: tempfile_1
-#
-#    - name: fill temp file with labels
-#      template:
-#        src: "{{ settings.source }}/includes/dockerapps/templates/generique/traefik_labels.yml.j2"
-#        dest: "{{ tempfile_1.path }}"
-#        force: yes
-#
-#    - name: Import traefik labels
-#      include_vars:
-#        file: "{{ tempfile_1.path }}"
-#        name: pg_labels
-#
-#    - name: Delete temp file
-#      file:
-#        path: "{{ tempfile_1.path }}"
-#        state: absent
-
-    - name: prepare list host volumes
+    - name: prepare auth
       set_fact:
-        host_volumes: []
-    - name: prepare list host volumes
-      set_fact:
-        container_volumes: []
+        type_auth:
+          middlewares:
+            - name: my-basic-auth
+      when: applis[application].subdomain = "basique"
 
     - name: Prepare volumes
       include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
@@ -178,6 +159,31 @@
                         name: "svc-{{ application }}"
                         port:
                           number: "{{ app_port }}"
+
+    - name: Modify ingress on basic auth
+      kubernetes.core.k8s:
+        api_version: networking.k8s.io/v1
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        kind: Ingress
+        namespace: kubeseed
+        name: "ing-{{ application }}"
+        definition:
+          spec:
+            rules:
+              - host: "{{ applis[application].subdomain }}.{{ user.domain }}"
+                http:
+                  paths:
+                    - pathType: Prefix
+                      path: "/"
+                      backend:
+                        service:
+                          name: "svc-{{ application }}"
+                          port:
+                            number: "{{ app_port }}"
+                        middlewares:
+                          - name: my-basic-auth
+      when: applis[application].subdomain = "basique"
 
 
 
