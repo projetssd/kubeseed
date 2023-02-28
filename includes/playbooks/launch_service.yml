@@ -138,7 +138,26 @@
               - protocol: TCP
                 port: "{{ app_port }}"
 
-
+    - name: "Launch {{ application }} - Ingress "
+      kubernetes.core.k8s:
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        kind: Ingress
+        namespace: kubeseed
+        name: "ing-{{ application }}"
+        definition:
+          spec:
+            rules:
+              - host: "{{ applis[application].subdomain }}"
+                http:
+                  paths:
+                    - pathType: Prefix
+                      path: "/"
+                      backend:
+                        service:
+                          name: "svc-{{ application }}"
+                          port:
+                            number: "{{ app_port }}"
 
 
 
