@@ -140,6 +140,7 @@
 
     - name: "Launch {{ application }} - Ingress "
       kubernetes.core.k8s:
+        api_version: networking.k8s.io/v1
         kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
         state: present
         kind: Ingress
@@ -148,16 +149,16 @@
         definition:
           spec:
             rules:
-              - host: "{{ applis[application].subdomain }}"
-                http:
-                  paths:
-                    - pathType: Prefix
-                      path: "/"
-                      backend:
-                        service:
-                          name: "svc-{{ application }}"
-                          port:
-                            number: "{{ app_port }}"
+            - host: "{{ applis[application].subdomain }}"
+              http:
+                paths:
+                  - pathType: Prefix
+                    path: "/"
+                    backend:
+                      service:
+                        name: "svc-{{ application }}"
+                        port:
+                          number: "{{ app_port }}"
 
 
 
