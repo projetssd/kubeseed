@@ -147,11 +147,13 @@
         name: "svc-{{ application }}-{{ item }}"
         definition:
           spec:
+            type: NodePort
             selector:
               app: "{{ application }}"
             ports:
-              - protocol: TCP
-                port: "{{ item }}"
+              - port: "{{ item }}"
+                nodePort: "{{ item }}"
+
       when: specific_container_info.ports is defined
       loop: "{{ specific_container_info.ports }}"
 
