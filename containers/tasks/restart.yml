@@ -1,0 +1,8 @@
+---
+- name: "Restart {{ application }}"
+  shell: /bin/bash -c "kubectl rollout restart deployment {{ application }}"
+  environment:
+    KUBECONFIG: "{{ settings.storage }}/k3s/k3s.yaml"
+
+
+

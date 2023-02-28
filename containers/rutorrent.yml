@@ -28,6 +28,10 @@ application_env:
 specific_container_info:
   ports:
     - 30000
+
+posttasks:
+  - configure_rutorrent
+  - restart
 #  Pour contourner l'authentification pour des outils de style nzb360, décommentez le pavé ci dessous
 #extra_labels:
 #  traefik.http.routers.rutorrent-rtr-bypass.rule: 'Path(`/RPC2`)'

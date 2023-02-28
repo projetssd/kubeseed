@@ -64,6 +64,7 @@
             labels:
               app: "{{ application }}"
           spec:
+
             replicas: 1
             selector:
               matchLabels:
@@ -76,6 +77,7 @@
                 containers:
                   - name: "{{ application }}"
                     image: '{{image}}'
+                    imagePullPolicy: "Always"
                     ports:
                       - containerPort: "{{ app_port }}"
                     env: "{{ application_env }}"
@@ -169,31 +171,12 @@
       when: applis[application].auth == "basique"
 
 
-
-#    - name: Add spécific docker info
-#      set_fact:
-#        docker_info: "{{ docker_info | combine(specific_docker_info) }}"
-#      when: specific_docker_info is defined
-#
-#    - name: 'Deploying {{pgrole}}'
-#      docker_container: "{{ docker_info }}"
-
-    
     # POST TASKS ###################################################################
 
-#    - name: Check that posttasks file exists
-#      stat:
-#        path: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
-#      register: stat_result_post
-#
-#    - name: Launch Posttask
-#      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
-#      when: stat_result_post.stat.exists
-#
-#    - name: Launch Posttask from yml
-#      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ item }}.yml"
-#      with_items: "{{ posttasks }}"
-#      when: posttasks is defined
+    - name: Launch Posttask from yml
+      include_tasks: "{{ settings.source }}/includes/containers/tasks/{{ item }}.yml"
+      with_items: "{{ posttasks }}"
+      when: posttasks is defined
 
 #    - name: "Insert {{ pgrole}} into database"
 #      shell :
