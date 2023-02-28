@@ -18,5 +18,5 @@
 
 - name: append container volume
   set_fact:
-    container_volumes: "{{ host_volumes + temp_dict }}"
+    container_volumes: "{{ container_volumes + temp_dict }}"
 
