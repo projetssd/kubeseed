@@ -169,6 +169,11 @@
         namespace: kubeseed
         name: "ing-{{ application }}"
         definition:
+          metadata:
+            annotations:
+              kubernetes.io/ingress.class: traefik
+              traefik.ingress.kubernetes.io/router.middlewares: my-basic-auth@kubernetescrd
+
           spec:
             rules:
               - host: "{{ applis[application].subdomain }}.{{ user.domain }}"
@@ -181,9 +186,8 @@
                           name: "svc-{{ application }}"
                           port:
                             number: "{{ app_port }}"
-                        middlewares:
-                          - name: my-basic-auth
-      when: applis[application].auth == "basique"
+
+      when: applis[application].subdomain = "basique"
 
 
 
