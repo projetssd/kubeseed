@@ -133,7 +133,7 @@
         definition:
           spec:
             selector:
-              app.kubernetes.io/name: "{{ application }}"
+              app: "{{ application }}"
             ports:
               - protocol: TCP
                 port: "{{ app_port }}"
@@ -153,19 +153,19 @@
     
     # POST TASKS ###################################################################
 
-    - name: Check that posttasks file exists
-      stat:
-        path: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
-      register: stat_result_post
-      
-    - name: Launch Posttask
-      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
-      when: stat_result_post.stat.exists
-
-    - name: Launch Posttask from yml
-      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ item }}.yml"
-      with_items: "{{ posttasks }}"
-      when: posttasks is defined
+#    - name: Check that posttasks file exists
+#      stat:
+#        path: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
+#      register: stat_result_post
+#
+#    - name: Launch Posttask
+#      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ pgrole }}.yml"
+#      when: stat_result_post.stat.exists
+#
+#    - name: Launch Posttask from yml
+#      include_tasks: "{{ settings.source }}/includes/dockerapps/posttasks/{{ item }}.yml"
+#      with_items: "{{ posttasks }}"
+#      when: posttasks is defined
 
 #    - name: "Insert {{ pgrole}} into database"
 #      shell :
