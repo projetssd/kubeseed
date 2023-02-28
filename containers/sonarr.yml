@@ -1,6 +1,6 @@
 ---
 application: 'sonarr'
-app_port: '8989'
+app_port: 8989
 image: 'lscr.io/linuxserver/sonarr:latest'
 application_volumes:
   - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{ application }}/config"
