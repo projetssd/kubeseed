@@ -151,7 +151,7 @@
           metadata:
             annotations:
               kubernetes.io/ingress.class: traefik
-              traefik.ingress.kubernetes.io/router.middlewares: my-basic-auth@kubernetescrd
+              traefik.ingress.kubernetes.io/router.middlewares: kubeseed-my-basic-auth@kubernetescrd
 
           spec:
             rules:
