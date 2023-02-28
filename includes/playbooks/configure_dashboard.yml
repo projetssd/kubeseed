@@ -34,38 +34,17 @@
             name: admin-user
             namespace: kubernetes-dashboard
 
+  - name: Transport and Ingress template
+    template:
+      src: "{{ settings.source }}/includes/playbooks/templates/dashboard-ingress.yml.j2"
+      dest: "/tmp/dash.yml"
+
   - name: Create Server transport
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
-      namespace: kubernetes-dashboard
-      name: mytransport
-      kind: ServersTransport
-      api_version: traefik.containo.us/v1alpha1
-      definition:
-        spec:
-          serverName: "{{ appli.dashboard.domain}}.{{ user.domain }}"
-          insecureSkipVerify: true
+      src : "/tmp/dash.yml"
 
-
-
-  - name: Create IngressRoute
-    kubernetes.core.k8s:
-      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-      kind: IngressRoute
-      name: kubernetes-dashboard-ingress
-      namespace: kubernetes-dashboard
-      definition:
-        entryPoints:
-          - websecure
-        apiVersion: traefik.containo.us/v1alpha1
-        routes:
-          - match: "host(`{{ appli.dashboard.domain}}.{{ user.domain }}`)"
-            kind: Rule
-            services:
-              - name: kubernetes-dashboard
-                port: 443
-                serversTransport: mytransport
 
 
 
