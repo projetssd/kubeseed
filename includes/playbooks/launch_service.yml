@@ -69,13 +69,12 @@
     - name: prepare volumes
       set_fact:
         host_volumes:
-          - name: "{{ detail_volume.container_path| replace('/','')  }}"
+          - name: "{{ item.container_path| replace('/','')  }}"
             hostPath:
-              path: "{{ detail_volume.local_path }}"
+              path: "{{ item.local_path }}"
               type: DirectoryOrCreate
         loop: application_volumes
-        loop_control:
-          loop_var: detail_volume
+
 
     - name: debug
       debug:
