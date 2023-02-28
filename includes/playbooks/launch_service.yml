@@ -72,25 +72,13 @@
         host_volumes: []
     - name: prepare list host volumes
       set_fact:
-        container_volumes: [ ]
+        container_volumes: []
 
-
-
-    - name: loop
+    - name: Prepare volumes
       include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
       loop: "{{ application_volumes }}"
       loop_control:
         loop_var: detail_volume
-
-
-
-
-    - name: debug
-      debug:
-        msg: "{{ host_volumes }}"
-
-    - name: pause
-      pause:
 
     - name: set_fact
       set_fact:
@@ -135,6 +123,20 @@
     - name: "Launch {{ application }} - Deployment"
       kubernetes.core.k8s: "{{ mondebug }}"
 
+    - name: "Launch {{ application }} - Service"
+      kubernetes.core.k8s:
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        kind: Service
+        namespace: kubeseed
+        name: "svc-{{ application }}"
+        definition:
+          spec:
+            selector:
+              app.kubernetes.io/name: "{{ application }}"
+            ports:
+              - protocol: TCP
+                port: "{{ app_port }}"
 
 
 
