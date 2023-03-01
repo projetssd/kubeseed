@@ -38,7 +38,7 @@ specific_container_info:
   # Liste des ports à ouvrir en direct sur l'hôte
   # Correspond à ports: -3000:3000 dans docker
   # C'est une liste, donc chaque élément doit avoir un tiret
-  # seuls les ports 30000-32000 sont utilisables dans k3s
+  # seuls les ports 30000-32767 sont utilisables dans k3s
   # CE N'EST PAS LE PORT DE LA WEBUI DU SERVICE !
   ports:
     - 30000
