@@ -3,11 +3,11 @@ application: 'rutorrent'
 app_port: 8080  # doit être un entier, sans les quotes !
 image: 'mondedie/rutorrent:latest'
 application_volumes:
-  - local_path: "{{ settings.storage }}docker/{{ lookup('env','USER') }}/{{application}}/config"
+  - local_path: "{{ settings.storage }}docker/{{application}}/config"
     container_path: "/config"
-  - local_path: "{{ settings.storage }}docker/{{ lookup('env','USER') }}/{{application}}/data"
+  - local_path: "{{ settings.storage }}docker/{{application}}/data"
     container_path: "/data"
-  - local_path: "{{ settings.storage }}docker/{{ lookup('env','USER') }}/{{ application }}/sock"
+  - local_path: "{{ settings.storage }}docker/{{ application }}/sock"
     container_path: "/run/rtorrent"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
@@ -32,10 +32,4 @@ specific_container_info:
 posttasks:
   - configure_rutorrent
   - restart
-#  Pour contourner l'authentification pour des outils de style nzb360, décommentez le pavé ci dessous
-#extra_labels:
-#  traefik.http.routers.rutorrent-rtr-bypass.rule: 'Path(`/RPC2`)'
-#  traefik.http.routers.rutorrent-rtr-bypass.priority: '100'
-#  traefik.http.routers.rutorrent-rtr-bypass.tls: 'true'
-#  traefik.http.routers.rutorrent-rtr-bypass.middlewares: 'chain-basic-auth@file'
-#  traefik.http.routers.rutorrent-rtr-bypass.service: 'rutorrent-svc'
+
