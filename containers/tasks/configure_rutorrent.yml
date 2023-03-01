@@ -1,4 +1,9 @@
 ---
+- name: wait for files to be present
+  wait_for:
+    path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config/rtorrent/.rtorrent.rc"
+
+    
 - name: Set download location
   lineinfile:
     path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config/rtorrent/.rtorrent.rc"
