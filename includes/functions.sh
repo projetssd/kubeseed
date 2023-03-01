@@ -913,10 +913,12 @@ EOF
   # Installation dashboard
   ks_log_statusbar "Installation du dashboard Kubernetes"
   "${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh"
+  ks_pause
 
   # Dashboard traefik
   ks_log_statusbar "Installation du dashboard Traefik"
   "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
+  ks_pause
 
   # Letsencrypt
   ks_log_statusbar "Installation du mode letsencrypt"
@@ -964,7 +966,7 @@ EOF
 
 function ks_log_write() {
   DATE=$(date +'%F %T')
-  FILE=${SETTINGS_SOURCE}/logs/seedbox.log
+  FILE=${SETTINGS_STORAGE}/logs/seedbox.log
   echo "${DATE} - ${1}" >>${FILE}
   echo "${1}"
 }

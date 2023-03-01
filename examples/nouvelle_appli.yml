@@ -7,6 +7,7 @@
 ---
 application: 'nom_appli'            # Nom de l'application, doit correspondre au nom de fichier
 app_port: 8080                      # port de la webui - doit être un entier, sans les quotes !
+description: "Une description courte de l'application" # sera utilisé dans whiptail, une seule ligne
 image: 'repo/image:latest'          # image docker de l'application
 application_volumes:                # liste de volumes à monter
   # chaque élément commence par un tiret
