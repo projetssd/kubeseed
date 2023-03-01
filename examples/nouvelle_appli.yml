@@ -13,9 +13,9 @@ application_volumes:                # liste de volumes à monter
   # chaque élément commence par un tiret
   # On doit avoir un local_path (chemin sur l'hôte)
   # et on container_path (chemin sur le container)
-  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config"
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
     container_path: "/config"
-  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/data"
+  - local_path: "{{ settings.storage }}/docker/{{application}}/data"
     container_path: "/data"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"

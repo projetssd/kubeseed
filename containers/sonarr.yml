@@ -3,7 +3,7 @@ application: 'sonarr'
 app_port: 8989
 image: 'lscr.io/linuxserver/sonarr:latest'
 application_volumes:
-  - local_path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{ application }}/config"
+  - local_path: "{{ settings.storage }}/docker/{{ application }}/config"
     container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
@@ -21,13 +21,4 @@ application_env:
   - name: TP_THEME
     value: 'plex'
 
-  
-# Pour contourner l'authentification pour des outils de style nzb360, décommentez le pavé ci dessous
-# et remplacer CHANGEME par votre API sonarr
-#extra_labels:
-#  traefik.http.routers.sonarr-rtr-bypass.entrypoints: 'https'
-#  traefik.http.routers.sonarr-rtr-bypass.rule: 'Headers(`X-Api-Key`, `CHANGEME`)'
-#  traefik.http.routers.sonarr-rtr-bypass.priority: '100'
-#  traefik.http.routers.sonarr-rtr-bypass.tls: 'true'
-#  traefik.http.routers.sonarr-rtr-bypass.middlewares: 'chain-no-auth@file'
-#  traefik.http.routers.sonarr-rtr-bypass.service: 'sonarr-svc'
+
