@@ -34,23 +34,23 @@ application_env:                     # Variables d'environnement du container
 ############# OPTIONS ###################################
 # A partir d'ici, tout est optionnel
 
-specific_container_info:
+#specific_container_info:
   # Liste des ports à ouvrir en direct sur l'hôte
   # Correspond à ports: -3000:3000 dans docker
   # C'est une liste, donc chaque élément doit avoir un tiret
   # seuls les ports 30000-32767 sont utilisables dans k3s
   # CE N'EST PAS LE PORT DE LA WEBUI DU SERVICE !
-  ports:
-    - 30000
+#  ports:
+#    - 30000
 
 # liste des pretasks (lancées avant le déploiement)
 # Doit correspondre a un fichier yml dans le répertoire containers/tasks
-pretasks:
-  - first_pretask
+#pretasks:
+#  - first_pretask
 
 # liste des posttasks (lancées après le déploiement)
 # Doit correspondre a un fichier yml dans le répertoire containers/tasks
-posttasks:
-  - configure_rutorrent
-  - restart
+#posttasks:
+#  - configure_rutorrent
+#  - restart
 
