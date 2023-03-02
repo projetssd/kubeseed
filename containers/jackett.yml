@@ -17,6 +17,6 @@ application_env:
     value: '{{user.groupid}}'
 
 posttasks:
-- flaresolverr
+  - flaresolverr
 
 
