@@ -1,0 +1,48 @@
+# DEPLOY ######################################################################
+# Déploiement : lancement du pod principal
+- name: "Launch flaresolverr - Deployment"
+  kubernetes.core.k8s:
+    api_version: apps/v1
+    kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+    kind: Deployment
+    namespace: kubeseed
+    name: "flaresolverr"
+    definition:
+      metadata:
+        labels:
+          app: "flaresolverr"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: "flaresolverr"
+        template:
+          metadata:
+            labels:
+              app: "flaresolverr"
+          spec:
+            containers:
+              - name: "flaresolverr"
+                image: 'ghcr.io/flaresolverr/flaresolverr:latest'
+                imagePullPolicy: "Always"
+                ports:
+                  - containerPort: 8191
+                env: 
+                  - name: "LOG_LEVEL"
+                    value: "info"
+
+# Lancement du service de connexion
+- name: "Launch flaresolverr - Service"
+  kubernetes.core.k8s:
+    kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+    state: present
+    kind: Service
+    namespace: kubeseed
+    name: "flaresolverr"
+    definition:
+      spec:
+        selector:
+          app: "flaresolverr"
+        ports:
+          - protocol: TCP
+            port: 8191
