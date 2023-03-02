@@ -1,26 +1,26 @@
 ---
 - name: wait for files to be present
   wait_for:
-    path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config/rtorrent/.rtorrent.rc"
+    path: "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
 
     
 - name: Set download location
   lineinfile:
-    path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config/rtorrent/.rtorrent.rc"
+    path: "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*directory.default.set\s*=.*'
     line: "directory.default.set = /home/{{ lookup('env','USER') }}/local/{{application}}"
     state: present
 
 - name: Set download location
   lineinfile:
-    path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config/rutorrent/conf/config.php"
+    path: "{{ settings.storage }}/docker/{{application}}/config/rutorrent/conf/config.php"
     regexp: '\$topDirectory\s*=.*'
     line: "$topDirectory = '/home/{{ lookup('env','USER') }}';"
     state: present
 
 - name: Change port
   lineinfile:
-    path: "{{ settings.storage }}/docker/{{ lookup('env','USER') }}/{{application}}/config/rtorrent/.rtorrent.rc"
+    path: "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*network.port_range.set\s*=.*'
     line: "network.port_range.set = 30000-30000"
     state: present
