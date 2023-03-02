@@ -1,5 +1,4 @@
-# DEPLOY ######################################################################
-# Déploiement : lancement du pod principal
+---
 - name: "Launch flaresolverr - Deployment"
   kubernetes.core.k8s:
     api_version: apps/v1

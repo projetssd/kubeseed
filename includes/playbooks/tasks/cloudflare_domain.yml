@@ -1,11 +1,12 @@
-  - name: Set DNS Record
-    cloudflare_dns:
-      account_api_token: "{{ cloudflare.api }}"
-      account_email: "{{ cloudflare.login }}"
-      zone: "{{ user.domain }}"
-      state: present
-      solo: true
-      proxied: yes
-      type: A
-      value: "{{ network.ipv4 }}"
-      record: "{{ subdomain }}"
+ ---
+- name: Set DNS Record
+  cloudflare_dns:
+    account_api_token: "{{ cloudflare.api }}"
+    account_email: "{{ cloudflare.login }}"
+    zone: "{{ user.domain }}"
+    state: present
+    solo: true
+    proxied: yes
+    type: A
+    value: "{{ network.ipv4 }}"
+    record: "{{ subdomain }}"

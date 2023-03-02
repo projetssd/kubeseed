@@ -5,18 +5,15 @@
 # A déposer dans le dossier "containers"
 ##################################################
 ---
-application: 'changedetection'            
-app_port: 5000                            
-description: "Website change detection."  
-image: 'lscr.io/linuxserver/changedetection.io:latest'         
-application_volumes:                      
-# chaque élément commence par un tiret
-# On doit avoir un local_path (chemin sur l'hôte)
-# et on container_path (chemin sur le container)
+application: 'changedetection'
+app_port: 5000
+description: "Website change detection."
+image: 'lscr.io/linuxserver/changedetection.io:latest'
+application_volumes:
   - local_path: "{{ settings.storage }}/docker/{{application}}/config"
     container_path: "/config"
 
-application_env:                     
+application_env:
 # chaque élément commence par un tiret
 # on doit avoir name (nom de la variable)
 # et value (nom de la variable)
