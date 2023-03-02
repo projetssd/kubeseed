@@ -1,52 +1,16 @@
-##################################################
-# Exemple de fichier pour ajouter une nouvelle
-# application
-##################################################
-# A déposer dans le dossier "containers"
-##################################################
 ---
-application: 'ombi'                        # Nom de l'application, doit correspondre au nom de fichier
-app_port: 3579                             # port de la webui - doit être un entier, sans les quotes !
-description: "Ombi is a self-hosted web application that automatically gives your shared Plex or Emby users the ability to request content by themselves!" # sera utilisé dans whiptail, une seule ligne
-image: 'lscr.io/linuxserver/ombi'          # image docker de l'application
-application_volumes:                       # liste de volumes à monter
-  # chaque élément commence par un tiret
-  # On doit avoir un local_path (chemin sur l'hôte)
-  # et on container_path (chemin sur le container)
+application: 'ombi'
+app_port: 3579
+description: "Ombi is an ugly self-hosted web application that automatically gives your shared Plex or Emby users the ability to request content by themselves!"
+image: 'lscr.io/linuxserver/ombi'
+application_volumes:
   - local_path: "{{ settings.storage }}/docker/{{application}}/config"
     container_path: "/config"
-#  - local_path: "{{ settings.storage }}/docker/{{ application }}/appsettings.json"
-#    container_path: "/opt/{{ application }}/appsettings.json"
 
-application_env:                     # Variables d'environnement du container
-  # chaque élément commence par un tiret
-  # on doit avoir name (nom de la variable)
-  # et value (nom de la variable)
+
+application_env:
   - name: PUID
     value: '{{user.userid}}'
   - name: PGID
     value: '{{user.groupid}}'
-
-############# OPTIONS ###################################
-# A partir d'ici, tout est optionnel
-
-#specific_container_info:
-  # Liste des ports à ouvrir en direct sur l'hôte
-  # Correspond à ports: -3000:3000 dans docker
-  # C'est une liste, donc chaque élément doit avoir un tiret
-  # seuls les ports 30000-32767 sont utilisables dans k3s
-  # CE N'EST PAS LE PORT DE LA WEBUI DU SERVICE !
-#  ports:
-#    - 30000
-
-# liste des pretasks (lancées avant le déploiement)
-# Doit correspondre a un fichier yml dans le répertoire containers/tasks
-#pretasks:
-#  - pre_ombi
-
-# liste des posttasks (lancées après le déploiement)
-# Doit correspondre a un fichier yml dans le répertoire containers/tasks
-#posttasks:
-#  - configure_rutorrent
-#  - restart
 

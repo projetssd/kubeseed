@@ -22,10 +22,6 @@ plex:
    token:
    ident:
    sesame:
-   open_main_ports: yes
-   open_extra_ports: yes
-   force_auto_adjust_quality: no
-   force_high_output_bitrates: no
    db_cache_size: 1000000
    transcodes: /mnt/transcodes
 sub:

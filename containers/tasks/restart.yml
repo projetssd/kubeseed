@@ -1,9 +1,7 @@
 ---
 # Permet de redémarrer le déploiement (i.e. tous les pods d'un déploiement)
 - name: "Restart {{ application }}"
-  shell: /bin/bash -c "kubectl rollout restart deployment {{ application }} -n kubeseed"
+  shell: 
+    /bin/bash -c "kubectl rollout restart deployment {{ application }} -n kubeseed"
   environment:
     KUBECONFIG: "{{ settings.storage }}/k3s/k3s.yaml"
-
-
-

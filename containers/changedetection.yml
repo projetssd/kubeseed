@@ -17,6 +17,3 @@ application_env:
     value: '{{user.groupid}}'
   - name: TZ
     value: 'Europe/Paris'
-
-
-

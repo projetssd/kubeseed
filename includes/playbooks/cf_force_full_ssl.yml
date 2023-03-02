@@ -1,24 +1,23 @@
 ---
 - hosts: localhost
   gather_facts: false
-    
-  
-  
+  vars:
+    cf_url: "https://api.cloudflare.com/client/v4/zones"
+
   tasks:
-  
   - name: Get CF zone id 
     uri:
-      url: "https://api.cloudflare.com/client/v4/zones?name={{ user.domain }}&status=active&match=all"
+      url: "{{ cf_url }}?name={{ user.domain }}&status=active&match=all"
       method: GET
       headers:
         X-Auth-Email: "{{ cloudflare.login }}"
         X-Auth-Key: "{{ cloudflare.api }}"
-      return_content: yes
+      return_content: true
     register: cf_zone_id
       
   - name: Force ssl on the zone
     uri:
-      url: "https://api.cloudflare.com/client/v4/zones/{{ (cf_zone_id.content| from_json).result[0].id }}/settings/ssl"
+      url: "{{ cf_url }}/{{ (cf_zone_id.content| from_json).result[0].id }}/settings/ssl"
       method: PATCH
       headers:
         X-Auth-Email: "{{ cloudflare.login }}"
@@ -26,5 +25,3 @@
         Content-Type: application/json
       body: '{"value":"full"}'
       body_format: json
-      
-      

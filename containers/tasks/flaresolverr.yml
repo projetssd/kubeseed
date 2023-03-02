@@ -26,7 +26,7 @@
                 imagePullPolicy: "Always"
                 ports:
                   - containerPort: 8191
-                env: 
+                env:
                   - name: "LOG_LEVEL"
                     value: "info"
 

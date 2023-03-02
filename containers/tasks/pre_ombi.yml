@@ -11,10 +11,11 @@
 
 - name: 'Download {{ application }} appsettings.json config file'
   get_url:
-    url: https://raw.githubusercontent.com/tidusjar/Ombi/master/src/Ombi/appsettings.json
+    url: 
+      https://raw.githubusercontent.com/tidusjar/Ombi/master/src/Ombi/appsettings.json
     dest: "{{ settings.storage }}/docker/{{ application }}/appsettings.json"
     owner: '{{ user.userid }}'
     group: '{{ user.groupid }}'
-    force: no
-  ignore_errors: True
+    force: false
+  ignore_errors: true
   when: not jsonfile.stat.exists
