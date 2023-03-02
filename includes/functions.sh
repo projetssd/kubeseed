@@ -820,7 +820,9 @@ function ks_install() {
     netaddr \
     dnspython \
     configparser \
-    kubernetes
+    kubernetes \
+    inquirer \
+    pyyaml
 
   mkdir -p ~/.ansible/inventories
 

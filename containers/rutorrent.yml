@@ -2,6 +2,7 @@
 application: 'rutorrent'
 app_port: 8080  # doit être un entier, sans les quotes !
 image: 'mondedie/rutorrent:latest'
+description: "A torrent manager"
 application_volumes:
   - local_path: "{{ settings.storage }}docker/{{application}}/config"
     container_path: "/config"
