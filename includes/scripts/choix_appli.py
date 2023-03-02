@@ -35,6 +35,6 @@ questions = [
 ]
 answers = inquirer.prompt(questions)
 
-print(answers)
-for my_appli in answers[']applications']:
-    subprocess.run(["ks_launch_service",my_appli])
+
+for my_appli in answers['applications']:
+    subprocess.run([os.environ['SETTINGS_SOURCE'] + "/includes/scripts/launch_appli.sh", my_appli])
