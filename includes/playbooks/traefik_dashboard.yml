@@ -1,7 +1,7 @@
 ---
 - hosts: localhost
   gather_facts: false
-    
+
   tasks:
   - name: Create ClusterIP service
     kubernetes.core.k8s:
@@ -46,10 +46,3 @@
                   kind: TraefikService
               middlewares:
                 - name: my-basic-auth
-
-
-
-
-
-
-

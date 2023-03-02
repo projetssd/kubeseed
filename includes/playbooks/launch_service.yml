@@ -12,7 +12,7 @@
       include_tasks: "{{ settings.source }}/containers/tasks/{{ item }}.yml"
       with_items: "{{ pretasks }}"
       when: pretasks is defined
-        
+
     # DNS #######################################################################
 
     - name: "Set DNS Record on CloudFlare"
@@ -24,7 +24,7 @@
     # Prépare un dictionnaire des volumes qui vont être mappés sur le container
     # ce dictionnaire sera appelé lors de la créationd du Deployment
     - name: Prepare volumes
-      include_tasks : "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
+      include_tasks: "{{ settings.source }}/includes/playbooks/tasks/prepare_volume.yml"
       loop: "{{ application_volumes }}"
       loop_control:
         loop_var: detail_volume
@@ -109,16 +109,16 @@
         definition:
           spec:
             rules:
-            - host: "{{ applis[application].subdomain }}.{{ user.domain }}"
-              http:
-                paths:
-                  - pathType: Prefix
-                    path: "/"
-                    backend:
-                      service:
-                        name: "{{ application }}"
-                        port:
-                          number: "{{ app_port }}"
+              - host: "{{ applis[application].subdomain }}.{{ user.domain }}"
+                http:
+                  paths:
+                    - pathType: Prefix
+                      path: "/"
+                      backend:
+                        service:
+                          name: "{{ application }}"
+                          port:
+                            number: "{{ app_port }}"
 
     # modif de l'ingress si auth basique
     - name: Modify ingress on basic auth

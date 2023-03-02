@@ -14,10 +14,10 @@
 
     - name: loop block
       block:
-      - name: set variables
-        set_fact:
-          myresult: "{{ myresult[item] }}"
-        with_items: "{{ myindexes }}"
+        - name: set variables
+          set_fact:
+            myresult: "{{ myresult[item] }}"
+          with_items: "{{ myindexes }}"
 
       rescue:
         - name: set empty var

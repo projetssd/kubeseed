@@ -3,7 +3,7 @@
   wait_for:
     path:
       "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
- 
+
 - name: Set download location
   lineinfile:
     path:
