@@ -1,9 +1,3 @@
-##################################################
-# Exemple de fichier pour ajouter une nouvelle
-# application
-##################################################
-# A déposer dans le dossier "containers"
-##################################################
 ---
 application: 'changedetection'
 app_port: 5000
@@ -14,9 +8,9 @@ application_volumes:
     container_path: "/config"
 
 application_env:
-# chaque élément commence par un tiret
-# on doit avoir name (nom de la variable)
-# et value (nom de la variable)
+  # chaque élément commence par un tiret
+  # on doit avoir name (nom de la variable)
+  # et value (nom de la variable)
   - name: PUID
     value: '{{user.userid}}'
   - name: PGID
