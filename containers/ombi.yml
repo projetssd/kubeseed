@@ -1,7 +1,7 @@
 ---
 application: 'ombi'
 app_port: 3579
-description: "Ombi is an ugly self-hosted web application that automatically gives your shared Plex or Emby users the ability to request content by themselves!"
+description: "Gives your shared Plex/Emby users the ability to request content by themselves!"
 image: 'lscr.io/linuxserver/ombi'
 application_volumes:
   - local_path: "{{ settings.storage }}/docker/{{application}}/config"
@@ -13,4 +13,3 @@ application_env:
     value: '{{user.userid}}'
   - name: PGID
     value: '{{user.groupid}}'
-

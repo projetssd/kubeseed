@@ -1,12 +1,12 @@
 ---
 - name: wait for files to be present
   wait_for:
-    path: 
+    path:
       "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
-    
+ 
 - name: Set download location
   lineinfile:
-    path: 
+    path:
       "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*directory.default.set\s*=.*'
     line: "directory.default.set = /home/{{ lookup('env','USER') }}/local/{{application}}"
@@ -14,7 +14,7 @@
 
 - name: Set download location
   lineinfile:
-    path: 
+    path:
       "{{ settings.storage }}/docker/{{application}}/config/rutorrent/conf/config.php"
     regexp: '\$topDirectory\s*=.*'
     line: "$topDirectory = '/home/{{ lookup('env','USER') }}';"
@@ -22,7 +22,7 @@
 
 - name: Change port
   lineinfile:
-    path: 
+    path:
       "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*network.port_range.set\s*=.*'
     line: "network.port_range.set = 30000-30000"

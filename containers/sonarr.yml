@@ -20,5 +20,3 @@ application_env:
     value: 'theme-park.dev'
   - name: TP_THEME
     value: 'plex'
-
-

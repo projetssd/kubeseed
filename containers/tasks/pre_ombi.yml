@@ -11,7 +11,7 @@
 
 - name: 'Download {{ application }} appsettings.json config file'
   get_url:
-    url: 
+    url:
       https://raw.githubusercontent.com/tidusjar/Ombi/master/src/Ombi/appsettings.json
     dest: "{{ settings.storage }}/docker/{{ application }}/appsettings.json"
     owner: '{{ user.userid }}'

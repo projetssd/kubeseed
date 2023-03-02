@@ -1,7 +1,6 @@
 ---
 - hosts: localhost
   gather_facts: false
-    
   tasks:
   - name: Create admin user
     kubernetes.core.k8s:
@@ -43,13 +42,9 @@
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
-      src : "/tmp/dash.yml"
+      src: "/tmp/dash.yml"
 
   - name: delete temp file
     file:
       path: "/tmp/dash.yml"
       state: absent
-
-
-
-

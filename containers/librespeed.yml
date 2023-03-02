@@ -14,4 +14,3 @@ application_env:
     value: '{{user.groupid}}'
   - name: PASSWORD
     value: '{{user.pass}}'
-

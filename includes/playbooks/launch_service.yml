@@ -1,9 +1,3 @@
-#
-# A lancer avec un fichier vars
-# Ex :
-# ansible-playbook ${settings.source}/includes/dockerapps/generique.yml --extra-vars "@${BASEDIR}/includes/dockerapps/vars/calibre.yml"
-#
-
 ---
 - hosts: localhost
   gather_facts: false
@@ -11,9 +5,6 @@
     host_volumes: []
     container_volumes: []
     type_auth: {}
-#  vars_files:
-#    - "{{ settings.source }}/includes/dockerapps/templates/generique/generique.yml"
-
 
   tasks:
     # PRE TASKS ###################################################################
@@ -164,12 +155,3 @@
       include_tasks: "{{ settings.source }}/containers/tasks/{{ item }}.yml"
       with_items: "{{ posttasks }}"
       when: posttasks is defined
-
-#    - name: "Insert {{ pgrole}} into database"
-#      shell :
-#        cmd: |
-#          sqlite3 {{  settings.source }}/ssddb << EOF
-#              replace into applications (name,status,subdomain,port)
-#              values
-#              ('{{ pgrole }}',2,'{{sub[pgrole][pgrole] if sub_enabled else pgrole}}',{{ intport }});
-#          EOF

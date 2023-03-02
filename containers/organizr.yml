@@ -12,4 +12,3 @@ application_env:
     value: '{{user.userid}}'
   - name: PGID
     value: '{{user.groupid}}'
-

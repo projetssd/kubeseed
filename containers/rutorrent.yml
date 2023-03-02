@@ -32,4 +32,3 @@ specific_container_info:
 posttasks:
   - configure_rutorrent
   - restart
-

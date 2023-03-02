@@ -1,31 +1,31 @@
 ---
 - hosts: localhost
-  become: yes
+  become: true
   gather_facts: false
   tasks:
     - name: user_allow_other in fuse.conf
-      become: yes
+      become: true
       lineinfile:
         path: /etc/fuse.conf
         line: user_allow_other
 
     - name: Import systemd rclone.service
-      become: yes
+      become: true
       template:
         src: "{{ settings.source }}/includes/playbooks/templates/rclone.service.j2"
         dest: /etc/systemd/system/rclone.service
         owner: "root"
         group: "root"
         mode: 0775
-        force: yes
+        force: true
 
     - name: Start rclone (Please Wait)
-      become: yes
+      become: true
       systemd:
-        daemon_reload: yes
+        daemon_reload: true
         state: started
         name: rclone
-        enabled: yes
+        enabled: true
 
     - name: Wait for service to be up
       pause:
@@ -33,7 +33,7 @@
 
     - name: Check if rclone is running
       shell: pgrep rclone
-      ignore_errors: yes
+      ignore_errors: true
       changed_when: false
       register: service_rclone_status
 
@@ -45,6 +45,6 @@
 
     - debug:
         msg:
-        - "L'installation de rclone s'est déroulée avec succés"
-        - "Le lancement de rclone s'est effectué avec succés"
+          - "L'installation de rclone s'est déroulée avec succés"
+          - "Le lancement de rclone s'est effectué avec succés"
       when: service_rclone_status.rc == 0
