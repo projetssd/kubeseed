@@ -1,4 +1,4 @@
- ---
+---
 - name: Set DNS Record
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
