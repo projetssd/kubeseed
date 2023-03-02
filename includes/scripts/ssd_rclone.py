@@ -7,6 +7,8 @@ d'interaction avec rclone pour ssd
 import configparser
 import os
 
+rclone_config_file = os.environ['HOME'] + '/.config/rclone/rclone.conf'
+
 
 def detect_td():
     """
@@ -14,7 +16,7 @@ def detect_td():
     Génère une liste des td
     """
     config = configparser.ConfigParser()
-    config.read(os.environ['HOME'] + '/.config/rclone/rclone.conf')
+    config.read(rclone_config_file)
 
     mytd = []  # la liste des td
 
@@ -31,7 +33,7 @@ def detect_gd():
     Génère une liste des gd
     """
     config = configparser.ConfigParser()
-    config.read(os.environ['HOME'] + '/.config/rclone/rclone.conf')
+    config.read(rclone_config_file)
 
     mytd = []  # la liste des td
 
@@ -64,7 +66,7 @@ def recherche_crypt(myremote):
     :return: remote chiffré associé
     """
     config = configparser.ConfigParser()
-    config.read(os.environ['HOME'] + '/.config/rclone/rclone.conf')
+    config.read(rclone_config_file)
     for section in config.sections():
         if config[section]['type'] == 'crypt':
             if myremote in config[section]['remote']:
@@ -79,7 +81,7 @@ def get_id_teamdrive(myremote):
     :return: nom du team drive|False
     """
     config = configparser.ConfigParser()
-    config.read(os.environ['HOME'] + '/.config/rclone/rclone.conf')
+    config.read(rclone_config_file)
     try:
         id_teamdrive = config[myremote]['team_drive']
     except:
