@@ -781,7 +781,8 @@ function ks_install() {
     lsb-release \
     python3-kubernetes \
     fuse \
-    ansible-runner
+    ansible-runner \
+    console-menu
 
   sudo rm -f /usr/bin/python
 
@@ -1378,5 +1379,10 @@ EOF
 
 function ks_choix_appli_lance() {
   ks_log_statusbar "Choix des applications à lancer"
-  python3 ${SETTINGS_SOURCE}/includes/scripts/choix_appli.py
+  python3 "${SETTINGS_SOURCE}/includes/scripts/choix_appli.py"
+  unset_window
+}
+
+function ks_generate_dashboard_token() {
+  kubectl -n kubernetes-dashboard create token admin-user
 }
