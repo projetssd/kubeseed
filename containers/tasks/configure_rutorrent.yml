@@ -4,6 +4,11 @@
     path:
       "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
 
+- name: Create directory
+  file:
+    path: "/home/{{ lookup('env','USER') }}/local/{{application}}"
+    state: directory
+
 - name: Set download location
   lineinfile:
     path:
@@ -27,3 +32,9 @@
     regexp: '#*network.port_range.set\s*=.*'
     line: "network.port_range.set = 30000-30000"
     state: present
+
+- name: Clone Ratio Color plugin
+  git:
+    repo: https://github.com/Micdu70/rutorrent-ratiocolor.git
+    dest: "{{ settings.storage }}/docker/{{application}}/config/custom_plugins/ratiocolor"
+    clone: yes
