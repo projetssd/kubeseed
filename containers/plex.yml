@@ -1,0 +1,23 @@
+---
+application: 'plex'
+app_port: 32400
+description: "A powerfule media server"
+image: 'plexinc/pms-docker'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{lookup('env','HOME')}}"
+    container_path: "{{lookup('env','HOME')}}"
+application_env:
+  - name: PLEX_UID
+    value: '{{user.userid}}'
+  - name: PLEX_GID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: "Europe/Paris"
+  - name: PLEX_CLAIM
+    value: "{{ plex_claim_code }}"
+
+pretasks:
+  - claim_plex_server
+

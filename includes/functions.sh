@@ -482,6 +482,10 @@ function ks_launch_service() {
 
   line=$1
 
+  if [ "${line}" == "plex" ]; then
+    "${SETTINGS_SOURCE}/includes/scripts/plex_token.sh"
+  fi
+
   ks_log_write "Installation de ${line}"
   error=0
   tempsubdomain=$(ks_get_from_account_yml applis.${line}.subdomain)
@@ -493,54 +497,27 @@ function ks_launch_service() {
     ks_auth_unitaire ${line}
   fi
 
-  if [[ "${line}" == "plex" ]]; then
-    echo ""
-    echo -e "${BLUE}### CONFIG POST COMPOSE PLEX ###${NC}"
-    echo -e " ${BWHITE}* Processing plex config file...${NC}"
-    echo ""
-    echo -e " ${GREEN}ATTENTION IMPORTANT - NE PAS FAIRE D'ERREUR - SINON DESINSTALLER ET REINSTALLER${NC}"
-    "${SETTINGS_SOURCE}/includes/config/roles/plex_autoscan/plex_token.sh"
+  # On est dans le cas générique
+  # on regarde s'i y a un playbook existant
 
-    choose_media_folder_plexdrive
-    if [[ -f "${SETTINGS_STORAGE}/conf/plex.yml" ]]; then
-      :
-    else
-      cp "${SETTINGS_SOURCE}/includes/dockerapps/plex.yml" "${SETTINGS_STORAGE}/conf/plex.yml" >/dev/null 2>&1
-    fi
-    ansible-playbook "${SETTINGS_STORAGE}/conf/plex.yml"
-    echo "2" >"${SETTINGS_STORAGE}/status/plex"
+  if [[ -f "${SETTINGS_STORAGE}/conf/${line}.yml" ]]; then
+    # il y a déjà un playbook "perso", on le lance
+    ansible-playbook "${SETTINGS_STORAGE}/containers/${line}.yml"
+  elif [[ -f "${SETTINGS_STORAGE}/vars/${line}.yml" ]]; then
+    # il y a des variables persos, on les lance
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_STORAGE}/vars/${line}.yml"
+
+  elif [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml" ]]; then
+    # pas de playbook perso ni de vars perso
+    # puis on le lance
+    ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml"
+  elif [[ -f "${SETTINGS_SOURCE}/containers/${line}.yml" ]]; then
+    # puis on lance le générique avec ce qu'on vient de copier
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_SOURCE}/containers/${line}.yml"
   else
-    # On est dans le cas générique
-    # on regarde s'i y a un playbook existant
-
-    if [[ -f "${SETTINGS_STORAGE}/conf/${line}.yml" ]]; then
-      # il y a déjà un playbook "perso", on le lance
-      ansible-playbook "${SETTINGS_STORAGE}/containers/${line}.yml"
-    elif [[ -f "${SETTINGS_STORAGE}/vars/${line}.yml" ]]; then
-      # il y a des variables persos, on les lance
-      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_STORAGE}/vars/${line}.yml"
-
-    elif [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml" ]]; then
-      # pas de playbook perso ni de vars perso
-      # puis on le lance
-      ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml"
-    elif [[ -f "${SETTINGS_SOURCE}/containers/${line}.yml" ]]; then
-      # puis on lance le générique avec ce qu'on vient de copier
-      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_SOURCE}/containers/${line}.yml"
-    else
-      ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
-      error=1
-    fi
+    ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
+    error=1
   fi
-  if [ ${error} = 0 ]; then
-    temp_subdomain=$(ks_get_from_account_yml "sub.${line}.${line}")
-    DOMAIN=$(ks_get_from_account_yml user.domain)
-    echo "2" >"${SETTINGS_STORAGE}/status/${line}"
-
-    FQDNTMP="${temp_subdomain}.$DOMAIN"
-
-  fi
-  FQDNTMP=""
 }
 
 function ks_copie_yml() {
@@ -871,7 +848,6 @@ EOF
     sudo chown -R "${USER}": "${HOME}/.ansible"
   fi
 
-
   # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
   temppath=$(ls "${VENV_DIR}/lib")
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
@@ -936,17 +912,11 @@ EOF
   ks_create_dir ${HOME}/Medias
   read -rp "Voulez vous utiliser rclone ? [O] : " INSTALL_RCLONE
   INSTALL_RCLONE=${INSTALL_RCLONE:-O}
-  if [[ ${INSTALL_RCLONE} == "O" || ${INSTALL_RCLONE} == "o" ]]
-  then
+  if [[ ${INSTALL_RCLONE} == "O" || ${INSTALL_RCLONE} == "o" ]]; then
     ks_install_rclone
     ks_log_statusbar "Configuration de mergerfs"
     ks_mergerfs
   fi
-
-
-
-
-
 
   # On finit par la database
   echo "Création de la configuration en cours"
@@ -1168,8 +1138,7 @@ unset_window() {
 ks_log_statusbar() {
   COLS=$(tput cols)
   # si en debug
-  if [ -n "$DEBUG" ]
-  then
+  if [ -n "$DEBUG" ]; then
     echo "###### MODE DEBUG ######"
     ks_pause
   fi
@@ -1177,9 +1146,8 @@ ks_log_statusbar() {
   set_window
   # Move cursor to last line in your screen
   tput cup $(($LINES - 2)) 0
-  for (( i=0; i<=${COLS}; i++ ))
-  do
-      echo -n "="
+  for ((i = 0; i <= ${COLS}; i++)); do
+    echo -n "="
   done
   echo -e "\n"
   echo -en "===== $1 ====="

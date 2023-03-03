@@ -1,0 +1,12 @@
+---
+- name: "Get Plex Media Server claim code"
+  uri:
+    url: https://plex.tv/api/claim/token.json
+    user: "{{ plex.ident }}"
+    password: "{{ plex.sesame }}"
+    force_basic_auth: yes
+  register: plex_claim
+
+- name: "Claim Server | Set 'plex_claim_code' variable"
+  set_fact:
+    plex_claim_code: "{{ plex_claim.json.token }}"
