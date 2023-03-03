@@ -3,51 +3,26 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Install letsencrypt ClusterIssuer
+  - name: Deploy from template
+    template:
+      src: "{{ settings.source }}/includes/playbooks/templates/letsencrypt.yml.j2"
+      dest: "/tmp/le.yml"
+
+  - name: Apply template
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
-      namespace: cert-manager
-      name: letsencrypt-production
-      kind: ClusterIssuer
-      definition:
-        apiVersion: cert-manager.io/v1
-        spec:
-          acme:
-            email: "{{ user.mail }}"
-            server: https://acme-v02.api.letsencrypt.org/directory
-            privateKeySecretRef:
-              name: issuer-letsencrypt-production
-            solvers:
-              - dns01:
-                  cloudflare:
-                    apiTokenSecretRef:
-                      key: "{{ cloudflare.api }}"
-                      name: cloudflare-api-token-secret
-                    email: "{{ user.mail }}"
-  - name: Install letsencrypt Certificate
+      src: "/tmp/le.yml"
+
+  - name: delete temp file
+    file:
+      path: "/tmp/le.yml"
+      state: absent
+
+  - name: Apply redirect
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-      kind: Certificate
-      namespace: cert-manager
-      name: wildcard-cert
-      definition:
-        apiVersion: cert-manager.io/v1
-        spec:
-          secretName: wildcard-secret
-          dnsNames:
-            - "*.{{ user.domain }}"
-          issuerRef:
-            kind: ClusterIssuer
-            name: letsencrypt-production
-  - name: Force Certificate
-    kubernetes.core.k8s:
-      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-      kind: TLSStore
-      namespace: kube-system
-      name: default
-      definition:
-        apiVersion: traefik.containo.us/v1alpha1
-        spec:
-          defaultCertificate:
-            secretName: wildcard-secret
+      state: present
+      src: "{{ settings.source }}/includes/files/redirect.yml"
+
+

@@ -903,7 +903,7 @@ EOF
   # Letsencrypt
   ks_log_statusbar "Installation du mode letsencrypt"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=cert-manager
-  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yaml
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
   # Instalation rclone
