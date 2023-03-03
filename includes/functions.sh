@@ -780,7 +780,8 @@ function ks_install() {
     apt-transport-https \
     lsb-release \
     python3-kubernetes \
-    fuse
+    fuse \
+    ansible-runner
 
   sudo rm -f /usr/bin/python
 
@@ -1373,4 +1374,9 @@ select name from applications;
 EOF
 
   ks_install_services
+}
+
+function ks_choix_appli_lance() {
+  ks_log_statusbar "Choix des applications à lancer"
+  python3 ${SETTINGS_SOURCE}/includes/scripts/choix_appli.py
 }
