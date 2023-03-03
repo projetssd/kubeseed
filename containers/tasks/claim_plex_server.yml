@@ -4,7 +4,7 @@
     url: https://plex.tv/api/claim/token.json
     user: "{{ plex.ident }}"
     password: "{{ plex.sesame }}"
-    force_basic_auth: yes
+    force_basic_auth: true
   register: plex_claim
 
 - name: "Claim Server | Set 'plex_claim_code' variable"
