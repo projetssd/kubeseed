@@ -20,4 +20,3 @@ application_env:
 
 pretasks:
   - claim_plex_server
-
