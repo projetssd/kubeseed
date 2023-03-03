@@ -748,6 +748,7 @@ function ks_install() {
     dnsutils \
     python3-apt-dbg \
     python3-apt \
+    python3-venv \
     python-apt-doc \
     python-apt-common \
     ca-certificates \
@@ -757,9 +758,7 @@ function ks_install() {
     apt-transport-https \
     lsb-release \
     python3-kubernetes \
-    fuse \
-    ansible-runner \
-    console-menu
+    fuse 
 
   sudo rm -f /usr/bin/python
 
@@ -801,7 +800,9 @@ function ks_install() {
     configparser \
     kubernetes \
     inquirer \
-    pyyaml
+    pyyaml \
+    ansible-runner \
+    console-menu
 
   mkdir -p ~/.ansible/inventories
 
