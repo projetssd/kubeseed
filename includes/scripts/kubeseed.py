@@ -11,8 +11,8 @@ from yaml.loader import SafeLoader
 # menus
 from simple_term_menu import TerminalMenu
 
-#settings_source = os.environ['SETTINGS_SOURCE']
-settings_source = "/home/steph/kubeseed"
+settings_source = os.environ['SETTINGS_SOURCE']
+
 
 def choix_appli_lance():
     """

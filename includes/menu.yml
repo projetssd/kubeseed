@@ -1,3 +1,4 @@
+---
 - menu: Ajout/Suppression/Sauvegarde des applications
   type_dest: sousmenu
   sousmenu:
@@ -19,4 +20,3 @@
         - menu: Changement de mot de passe pour auth basique
           type_dest: bash
           dest: echo 'pas encore codé'
-

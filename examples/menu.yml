@@ -14,7 +14,7 @@
 ################################################
 # Les élements seront affichés dans l'ordre de la liste
 ################################################
-
+---
 - menu: Mon premier menu niveau 1
   type_dest: sousmenu
   sousmenu:
@@ -36,4 +36,3 @@
         - menu: ous menu 2 - 1 - 2
           type_dest: bash
           dest: echo 'pas encore codé'
-
