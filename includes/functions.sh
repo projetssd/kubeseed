@@ -802,7 +802,7 @@ function ks_install() {
     inquirer \
     pyyaml \
     ansible-runner \
-    console-menu
+    simple-term-menu \
 
   mkdir -p ~/.ansible/inventories
 
