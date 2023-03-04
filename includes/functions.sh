@@ -758,7 +758,7 @@ function ks_install() {
     apt-transport-https \
     lsb-release \
     python3-kubernetes \
-    fuse 
+    fuse
 
   sudo rm -f /usr/bin/python
 
@@ -802,7 +802,7 @@ function ks_install() {
     inquirer \
     pyyaml \
     ansible-runner \
-    simple-term-menu \
+    simple-term-menu
 
   mkdir -p ~/.ansible/inventories
 
@@ -891,11 +891,6 @@ EOF
   export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
   ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml -e ns=kubeseed
 
-  # Installation dashboard
-  ks_log_statusbar "Installation du dashboard Kubernetes"
-  "${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh"
-  ks_pause
-
   # Dashboard traefik
   ks_log_statusbar "Installation du dashboard Traefik"
   "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
@@ -906,6 +901,11 @@ EOF
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=cert-manager
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
+
+  # Installation dashboard
+  ks_log_statusbar "Installation du dashboard Kubernetes"
+  "${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh"
+  ks_pause
 
   # Instalation rclone
   ks_log_statusbar "Installation/configuration de rclone"

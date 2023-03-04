@@ -134,7 +134,7 @@
                           port:
                             number: "{{ app_port }}"
             tls:
-              - secretName: whoami-tls
+              - secretName: "{{ application }}-tls"
                 hosts:
                   - "{{ applis[application].subdomain }}.{{ user.domain }}"
 

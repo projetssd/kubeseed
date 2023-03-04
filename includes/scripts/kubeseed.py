@@ -86,7 +86,6 @@ def create_menu(mylist):
     if menu_entry_index is None:
         print('Sortie sur echap')
         exit()
-    print(menu_entry_index)
     if menu_entry_index == 0:
         menu_principal()
     else:
