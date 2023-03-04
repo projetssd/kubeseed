@@ -7,6 +7,9 @@
     force_basic_auth: true
   register: plex_claim
 
+- name: debug
+  debug:
+    msg: "Claim token : {{ plex_claim.json.token }}"
 
 - name: "Claim Server | Set 'plex_claim_code' variable"
   set_fact:
