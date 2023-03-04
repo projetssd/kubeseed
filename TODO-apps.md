@@ -1,126 +1,126 @@
-NOK authelia.yml
-NOK autoindex.yml
-NOK baikal.yml
-OK bazarr.yml
-NOK benphelps.yml
-NOK bookstack.yml
-NOK cadvisor.yml
-NOK calibre.yml
-NOK calibreweb.yml
-OK changedetection.yml
-NOK chevereto.yml
-NOK cloudcmd.yml
-NOK codif.yml
-NOK cops.yml
-NOK cypht.yml
-NOK davos.yml
-NOK deemixrr.yml
-NOK deluge.yml
-NOK digikam.yml
-NOK dozzle.yml
-NOK duplicati.yml
-NOK emby.yml
-NOK fenrus.yml
-NOK filebot.yml
-NOK filebrowser.yml
-NOK filerun.yml
-NOK firefox.yml
-NOK firefoxsyncserver.yml
-NOK foptimum.yml
-NOK freshrss.yml
-NOK gethomepage.yml
-NOK gitea.yml
-NOK gitlab.yml
-NOK gotify.yml
-NOK grocy.yml
-NOK guacamole.yml
-NOK handbrake.yml
-NOK heimdall.yml
-OK jackett.yml
-NOK jackettvpn.yml
-NOK jdownloader.yml
-NOK jellyfin.yml
-NOK jfago.yml
-NOK kavita.yml
-NOK kitana.yml
-NOK komga.yml
-NOK kresus.yml
-OK kuma.yml
-OK librespeed.yml
-NOK lidarr.yml
-NOK logarr.yml
-NOK mango.yml
-NOK mattermost.yml
-NOK mediawiki.yml
-NOK medusa.yml
-NOK mellow.yml
-NOK metube.yml
-NOK microbin.yml
-NOK minecraft.yml
-NOK mkvtoolnix.yml
-NOK monicahq.yml
-NOK monitorr.yml
-NOK myhomepage.yml
-NOK n8nio.yml
-NOK navidrome.yml
-NOK netdata.yml
-NOK nocodb.yml
-NOK nowshowing.yml
-NOK ntopng.yml
-NOK nzbhydra.yml
-OK ombi.yml
-NOK openvpn.yml
-OK organizr.yml
-OK overseerr.yml
-NOK pastebin.yml
-NOK petio.yml
-NOK picapport.yml
-NOK piwigo.yml
-OK plex.yaml
-NOK plexautolanguages.yml
-NOK portainer.yml
-OK prowlarr.yml
-NOK pyload.yml
-NOK qbittorrent.yml
-NOK qflood.yml
-OK radarr.yml
-NOK radarr4k.yml
-NOK readarr.yml
-NOK rflood.yml
-NOK rtorrentvpn.yml
-OK rutorrent.yml
-NOK rutorrent_2.yml
-NOK rutorrent_3.yml
-NOK rutorrent_4.yml
-NOK rutorrentcm.yml
-NOK sabnzbd.yml
-NOK scrutiny.yml
-NOK sensorr.yml
-NOK shaarli.yml
-NOK sickchill.yml
-NOK sickgear.yml
-NOK sismicsreader.yml
-OK sonarr.yml
-NOK sonarr4k.yml
-NOK speedtest.yml
-NOK statping.yml
-NOK subsonic.yml
-NOK syncthing.yml
-NOK tautulli.yml
-NOK transmission.yml
-NOK transmissionvpn.yml
-NOK ttrss.yml
-NOK ubooquity.yml
-NOK vaultwarden.yml
-NOK vikunja.yml
-NOK vnstat.yml
-NOK webdav.yml
-NOK wetty.yml
-NOK whisparr.yml
-NOK wikijs.yml
-NOK wireguard.yml
-NOK wizarr.yml
-NOK wordpress.yml
-NOK xteve.yml
-NOK yacht.yml
-NOK yourls.yml
+- NOK authelia.yml
+- NOK autoindex.yml
+- NOK baikal.yml
++ OK bazarr.yml
+- NOK benphelps.yml
+- NOK bookstack.yml
+- NOK cadvisor.yml
+- NOK calibre.yml
+- NOK calibreweb.yml
++ OK changedetection.yml
+- NOK chevereto.yml
+- NOK cloudcmd.yml
+- NOK codif.yml
+- NOK cops.yml
+- NOK cypht.yml
+- NOK davos.yml
+- NOK deemixrr.yml
+- NOK deluge.yml
+- NOK digikam.yml
+- NOK dozzle.yml
+- NOK duplicati.yml
+- NOK emby.yml
+- NOK fenrus.yml
+- NOK filebot.yml
+- NOK filebrowser.yml
+- NOK filerun.yml
+- NOK firefox.yml
+- NOK firefoxsyncserver.yml
+- NOK foptimum.yml
+- NOK freshrss.yml
+- NOK gethomepage.yml
+- NOK gitea.yml
+- NOK gitlab.yml
+- NOK gotify.yml
+- NOK grocy.yml
+- NOK guacamole.yml
+- NOK handbrake.yml
+- NOK heimdall.yml
++ OK jackett.yml
+- NOK jackettvpn.yml
+- NOK jdownloader.yml
+- NOK jellyfin.yml
+- NOK jfago.yml
+- NOK kavita.yml
+- NOK kitana.yml
+- NOK komga.yml
+- NOK kresus.yml
+- NOK kuma.yml
++ OK librespeed.yml
+- NOK lidarr.yml
+- NOK logarr.yml
+- NOK mango.yml
+- NOK mattermost.yml
+- NOK mediawiki.yml
+- NOK medusa.yml
+- NOK mellow.yml
+- NOK metube.yml
+- NOK microbin.yml
+- NOK minecraft.yml
+- NOK mkvtoolnix.yml
+- NOK monicahq.yml
+- NOK monitorr.yml
+- NOK myhomepage.yml
+- NOK n8nio.yml
+- NOK navidrome.yml
+- NOK netdata.yml
+- NOK nocodb.yml
+- NOK nowshowing.yml
+- NOK ntopng.yml
+- NOK nzbhydra.yml
++ OK ombi.yml
+- NOK openvpn.yml
++ OK organizr.yml
++ OK overseerr.yml
+- NOK pastebin.yml
+- NOK petio.yml
+- NOK picapport.yml
+- NOK piwigo.yml
++ OK plex.yaml
+- NOK plexautolanguages.yml
+- NOK portainer.yml
++ OK prowlarr.yml
+- NOK pyload.yml
+- NOK qbittorrent.yml
+- NOK qflood.yml
++ OK radarr.yml
+- NOK radarr4k.yml
+- NOK readarr.yml
+- NOK rflood.yml
+- NOK rtorrentvpn.yml
++ OK rutorrent.yml
+- NOK rutorrent_2.yml
+- NOK rutorrent_3.yml
+- NOK rutorrent_4.yml
+- NOK rutorrentcm.yml
+- NOK sabnzbd.yml
+- NOK scrutiny.yml
+- NOK sensorr.yml
+- NOK shaarli.yml
+- NOK sickchill.yml
+- NOK sickgear.yml
+- NOK sismicsreader.yml
++ OK sonarr.yml
+- NOK sonarr4k.yml
+- NOK speedtest.yml
+- NOK statping.yml
+- NOK subsonic.yml
+- NOK syncthing.yml
+- NOK tautulli.yml
+- NOK transmission.yml
+- NOK transmissionvpn.yml
+- NOK ttrss.yml
+- NOK ubooquity.yml
+- NOK vaultwarden.yml
+- NOK vikunja.yml
+- NOK vnstat.yml
+- NOK webdav.yml
+- NOK wetty.yml
+- NOK whisparr.yml
+- NOK wikijs.yml
+- NOK wireguard.yml
+- NOK wizarr.yml
+- NOK wordpress.yml
+- NOK xteve.yml
+- NOK yacht.yml
+- NOK yourls.yml
