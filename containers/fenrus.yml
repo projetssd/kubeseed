@@ -1,0 +1,21 @@
+---
+application: 'fenrus'
+app_port: 3000
+description: "Fenrus is a magical gateway to the wonderful wizardly world."
+image: 'revenz/fenrus'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/images"
+    container_path: "/app/wwwroot/images"
+  - local_path: "{{ settings.storage }}/docker/{{application}}/data"
+    container_path: "/app/data"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+
