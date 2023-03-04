@@ -1,0 +1,17 @@
+---
+application: 'bazarr'
+app_port: 6767
+description: "Bazarr is a companion application to Sonarr and Radarr. It can manage and download subtitles based on your requirements."
+image: 'lscr.io/linuxserver/bazarr'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+
