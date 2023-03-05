@@ -1,0 +1,18 @@
+---
+application: 'lidarr'
+app_port: 8686
+description: "Lidarr is a music collection manager for Usenet and BitTorrent users."
+image: 'lscr.io/linuxserver/lidarr'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
