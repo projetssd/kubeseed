@@ -5,6 +5,8 @@
     host_volumes: []
     container_volumes: []
     type_auth: {}
+  vars_files:
+    - "{{ var_file }}"
 
   tasks:
     # PRE TASKS ###################################################################
@@ -41,15 +43,18 @@
         definition:
           metadata:
             labels:
+              ksapp: "{{ application }}"
               app: "{{ application }}"
           spec:
             replicas: 1
             selector:
               matchLabels:
+                ksapp: "{{ application }}"
                 app: "{{ application }}"
             template:
               metadata:
                 labels:
+                  ksapp: "{{ application }}"
                   app: "{{ application }}"
               spec:
                 containers:
@@ -64,8 +69,8 @@
                       httpGet:
                         path: /
                         port: "{{ app_port }}"
-                      initialDelaySeconds: 3
-                      periodSeconds: 3
+                      initialDelaySeconds: 30
+                      periodSeconds: 30
                 volumes: "{{ host_volumes }}"
 
     # Lancement du service de connexion
@@ -79,9 +84,11 @@
         definition:
           metadata:
             labels:
+              ksapp: "{{ application }}"
               app: "{{ application }}"
           spec:
             selector:
+              ksapp: "{{ application }}"
               app: "{{ application }}"
             ports:
               - protocol: TCP
@@ -98,10 +105,12 @@
         definition:
           metadata:
             labels:
+              ksapp: "{{ application }}"
               app: "{{ application }}"
           spec:
             type: NodePort
             selector:
+              ksapp: "{{ application }}"
               app: "{{ application }}"
             ports:
               - port: "{{ item }}"
@@ -129,6 +138,9 @@
         name: "ing-{{ application }}"
         definition:
           metadata:
+            labels:
+              ksapp: "{{ application }}"
+              app: "{{ application }}"
             annotations:
               kubernetes.io/ingress.class: traefik
               traefik.ingress.kubernetes.io/router.middlewares: "{{ k3s_middlewares }}"

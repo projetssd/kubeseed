@@ -1,0 +1,85 @@
+---
+- name: "Launch {{ application }} database"
+  kubernetes.core.k8s:
+    api_version: apps/v1
+    kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+    kind: Deployment
+    namespace: kubeseed
+    name: "db-{{ application }}"
+    definition:
+      metadata:
+        labels:
+          ksapp: "{{ application }}"
+          app: "db.{{ application }}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            ksapp: "{{ application }}"
+            app: "db.{{ application }}"
+        template:
+          metadata:
+            labels:
+              app: "db.{{ application }}"
+              ksapp: "{{ application }}"
+          spec:
+            containers:
+              - name: "db-{{ application }}"
+                image: '{{ dbimage }}'
+                imagePullPolicy: "Always"
+                ports:
+                  - containerPort: "{{ db_app_port }}"
+                env: "{{ db_application_env }}"
+                volumeMounts:
+                  - mountPath: "{{ db_persistent_path }}"
+                    name: "db-{{ application}}-persistent"
+            volumes:
+              - name: "db-{{ application }}-persistent"
+                hostPath:
+                  path: "{{ settings.storage }}/docker/{{application}}/db/persistent"
+                  type: DirectoryOrCreate
+
+- name: "Launch {{ application }} - Service"
+  kubernetes.core.k8s:
+    kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+    state: present
+    kind: Service
+    namespace: kubeseed
+    name: "db-{{ application }}"
+    definition:
+      metadata:
+        labels:
+          ksapp: "{{ application }}"
+          app: "db.{{ application }}"
+          role: "db.{{ application }}"
+      spec:
+        selector:
+          ksapp: "{{ application }}"
+          app: "db.{{ application }}"
+        ports:
+          - protocol: TCP
+            port: "{{ db_app_port }}"
+
+- name: "Launch {{ application }} - Network policy"
+  kubernetes.core.k8s:
+    kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+    kind: NetworkPolicy
+    namespace: kubeseed
+    api_version: networking.k8s.io/v1
+    definition:
+      metadata:
+        name: "db-{{ application }}-backend-access"
+      spec:
+        podSelector:
+          matchLabels:
+            app: "db.{{ application }}"
+            ksapp: "{{ application }}"
+        ingress:
+          - from:
+              - podSelector:
+                  matchLabels:
+                    app: '{{ application }}'
+                    ksapp: "{{ application }}"
+            ports:
+              - protocol: TCP
+                port: "{{ db_app_port }}"

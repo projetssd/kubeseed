@@ -513,7 +513,7 @@ function ks_launch_service() {
     ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml"
   elif [[ -f "${SETTINGS_SOURCE}/containers/${line}.yml" ]]; then
     # puis on lance le générique avec ce qu'on vient de copier
-    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_SOURCE}/containers/${line}.yml"
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "var_file=${SETTINGS_SOURCE}/containers/${line}.yml"
   else
     ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
     error=1
@@ -1140,7 +1140,7 @@ ks_log_statusbar() {
   COLS=$(tput cols)
   # si en debug
   if [ -n "$DEBUG" ]; then
-    echo "###### MODE DEBUG ######"
+    echo "###### MODE DEBUG ######"s
     ks_pause
   fi
   clear
@@ -1357,7 +1357,7 @@ function ks_restart_deployment() {
 }
 
 function ks_delete_deployment() {
-  kubectl -n kubeseed delete deployment,service,ingress -l app="${1}"
+  kubectl -n kubeseed delete deployment,service,ingress -l ksapp="${1}"
 }
 
 function ks_generate_dashboard_token() {
