@@ -1,0 +1,22 @@
+---
+application: 'wordpress'
+app_port: 80
+description: "Wordpress"
+image: 'wordpress'
+application_volumes:
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: WORDPRESS_DB_HOST
+    value: "db-{{application}}"
+  - name: WORDPRESS_DB_USER
+    value: "{{ application }}"
+  - name: WORDPRESS_DB_PASSWORD
+    value: "{{ application }}"
+  - name: WORDPRESS_DB_NAME
+    value: "{{ application }}"
+
+pretasks:
+  - mariadb
+

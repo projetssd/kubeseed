@@ -56,11 +56,11 @@ IS_INSTALLED=$(ks_select_seedbox_param "installed")
 #update_logrotate
 ks_log_statusbar "Check de la dernière version sur git"
 git_branch=$(git rev-parse --abbrev-ref HEAD)
-if [ ${git_branch} == 'master' ]; then
+if [ ${git_branch} == 'main' ]; then
   cd ${SETTINGS_SOURCE}
   git fetch >>/dev/null 2>&1
   current_hash=$(git rev-parse HEAD)
-  distant_hash=$(git rev-parse master@{upstream})
+  distant_hash=$(git rev-parse main@{upstream})
   if [ ${current_hash} != ${distant_hash} ]; then
     clear
     echo "==============================================="
@@ -73,9 +73,9 @@ if [ ${git_branch} == 'master' ]; then
 else
   clear
   echo "==============================================="
-  echo "= Attention, vous n'êtes pas sur la branche master !"
-  echo "= Pour repasser sur master, sortez du script, puis tapez "
-  echo "= git checkout master"
+  echo "= Attention, vous n'êtes pas sur la branche main !"
+  echo "= Pour repasser sur main, sortez du script, puis tapez "
+  echo "= git checkout main"
   echo "==============================================="
   ks_pause
 fi

@@ -6,11 +6,13 @@
 # type_dest : quelle action doit être faite quand on choisit ce menu ?
 #   - sousmenu : afficher un sous menu
 #   - bash : lancer un script
+#   - python : lancer une fonction python (présente dans kubeseed.py)
 # Si sous menu, il faut un élément "sousmenu" qui va lui aussi contenir
 # une liste d'entrée, comme celle du menu principal
 # Si bash, il faut un element dest
 # soit le nom d'une fonction, soit un script exécutable
 # avec ses parametres
+# Si python, le nom de la fonction et parmetres entre parentheses
 ################################################
 # Les élements seront affichés dans l'ordre de la liste
 ################################################
@@ -22,8 +24,8 @@
       type_dest: bash
       dest: ks_choix_appli_lance
     - menu: Sous menu 1-2
-      type_dest: bash
-      dest: lq
+      type_dest: python
+      dest: choix_appli
 - menu: Mon premier menu niveau 2
   type_dest: sousmenu
   sousmenu:
