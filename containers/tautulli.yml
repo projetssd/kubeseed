@@ -1,0 +1,20 @@
+---
+application: 'tautulli'
+app_port: 8181
+description: "Tautulli is a 3rd party application that you can run alongside your Plex Media Server to monitor activity and track various statistics."
+image: 'tautulli/tautulli'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ settings.storage }}/docker/{{application}}/data"
+    container_path: "/data"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'

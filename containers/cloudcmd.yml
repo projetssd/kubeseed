@@ -1,0 +1,19 @@
+---
+application: 'cloudcmd'
+app_port: 8000
+description: "Cloud Commander a file manager for the web with console and editor."
+image: 'coderaiser/cloudcmd'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}"
+    container_path: "/root"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+  - local_path: "/"
+    container_path: "/SERVER"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+

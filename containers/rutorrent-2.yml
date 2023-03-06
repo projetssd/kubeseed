@@ -1,5 +1,5 @@
 ---
-application: 'rutorrent'
+application: 'rutorrent-2'
 app_port: 8080
 image: 'mondedie/rutorrent:latest'
 description: "A torrent manager"
@@ -23,11 +23,11 @@ application_env:
   - name: DOWNLOAD_DIRECTORY
     value: "{{ lookup('env','HOME') }}/local/{{application}}"
   - name: PORT_RTORRENT
-    value: "30000"
+    value: "30002"
 
 specific_container_info:
   ports:
-    - 30000
+    - 30002
 
 posttasks:
   - configure_rutorrent

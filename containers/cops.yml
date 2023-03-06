@@ -1,0 +1,18 @@
+---
+application: 'cops'
+app_port: 80
+description: "COPS links to your Calibre library database and allows downloading and emailing of books directly from a web browser and provides a OPDS feed to connect to your devices."
+image: 'lscr.io/linuxserver/cops'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
