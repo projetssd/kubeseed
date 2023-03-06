@@ -30,7 +30,7 @@
     path:
       "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*network.port_range.set\s*=.*'
-    line: "network.port_range.set = {{ specific_container_info.port[0] }}-{{ specific_container_info.port[0] }}"
+    line: "network.port_range.set = {{ specific_container_info.ports[0] }}-{{ specific_container_info.ports[0] }}"
     state: present
 
 - name: Clone Ratio Color plugin

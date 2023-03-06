@@ -1,5 +1,5 @@
 ---
-application: 'rutorrent_2'
+application: 'rutorrent-2'
 app_port: 8080
 image: 'mondedie/rutorrent:latest'
 description: "A torrent manager"
