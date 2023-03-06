@@ -1357,7 +1357,7 @@ function ks_restart_deployment() {
 }
 
 function ks_delete_deployment() {
-  kubectl rollout delete deployment "${1}" -n kubeseed
+  kubectl -n kubeseed delete deployment,service,ingress -l app="${1}"
 }
 
 function ks_generate_dashboard_token() {

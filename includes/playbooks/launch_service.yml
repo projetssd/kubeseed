@@ -60,6 +60,12 @@
                       - containerPort: "{{ app_port }}"
                     env: "{{ application_env }}"
                     volumeMounts: "{{ container_volumes }}"
+                    livenessProbe:
+                      httpGet:
+                        path: /
+                        port: "{{ app_port }}"
+                      initialDelaySeconds: 3
+                      periodSeconds: 3
                 volumes: "{{ host_volumes }}"
 
     # Lancement du service de connexion
@@ -71,6 +77,9 @@
         namespace: kubeseed
         name: "{{ application }}"
         definition:
+          metadata:
+            labels:
+              app: "{{ application }}"
           spec:
             selector:
               app: "{{ application }}"
@@ -87,6 +96,9 @@
         namespace: kubeseed
         name: "svc-{{ application }}-{{ item }}"
         definition:
+          metadata:
+            labels:
+              app: "{{ application }}"
           spec:
             type: NodePort
             selector:
