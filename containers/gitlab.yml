@@ -1,6 +1,6 @@
 ---
 application: 'gitlab'
-app_port: 8080
+app_port: 80
 description: "Gitlab alternative of Github"
 image: 'gitlab/gitlab-ce:latest'
 application_volumes:
