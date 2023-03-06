@@ -16,3 +16,5 @@ application_env:
     value: '{{user.userid}}'
   - name: PGID
     value: '{{user.groupid}}'
+  - name: EXTERNAL_URL
+    value: "https://{{subdomain}}.{{user.domain}}"
