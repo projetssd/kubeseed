@@ -1,0 +1,14 @@
+---
+application: 'speedtest'
+app_port: 80
+description: "A Docker image to check your internet speed using Ookla's Speedtest service."
+image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/config"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'

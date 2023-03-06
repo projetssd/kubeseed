@@ -1,0 +1,17 @@
+---
+application: 'medusa'
+app_port: 8081
+description: "Medusa is an automatic Video Library Manager for TV Shows."
+image: 'lscr.io/linuxserver/medusa'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+
