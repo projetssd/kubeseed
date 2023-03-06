@@ -1,0 +1,34 @@
+---
+application: 'rutorrent-3'
+app_port: 8080
+image: 'mondedie/rutorrent:latest'
+description: "A torrent manager"
+application_volumes:
+  - local_path: "{{ settings.storage }}docker/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ settings.storage }}docker/{{application}}/data"
+    container_path: "/data"
+  - local_path: "{{ settings.storage }}docker/{{ application }}/sock"
+    container_path: "/run/rtorrent"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: UID
+    value: '{{user.userid}}'
+  - name: GID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+  - name: DOWNLOAD_DIRECTORY
+    value: "{{ lookup('env','HOME') }}/local/{{application}}"
+  - name: PORT_RTORRENT
+    value: "30003"
+
+specific_container_info:
+  ports:
+    - 30003
+
+posttasks:
+  - configure_rutorrent
+  - restart
