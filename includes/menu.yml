@@ -5,12 +5,21 @@
     - menu: Ajout d'application
       type_dest: bash
       dest: ks_choix_appli_lance
-    - menu: suppression d'une application
-      type_dest: bash
-      dest: echo 'pas encore codé'
+    - menu: Redémarrage d'une application
+      type_dest: python
+      dest: choix_restart_appli
+    - menu: Suppression d'une application
+      type_dest: python
+      dest: choix_delete_appli
 - menu: Gestion
   type_dest: sousmenu
   sousmenu:
+    - menu: Gestion Kubernetes
+      type_dest: sousmenu
+      sousmenu:
+        - menu: Générer un token pour le dashboard
+          type_dest: bash
+          dest: ks_generate_dashboard_token
     - menu: Sécurisation système
       type_dest: sousmenu
       sousmenu:

@@ -10,8 +10,15 @@ import yaml
 from yaml.loader import SafeLoader
 # menus
 from simple_term_menu import TerminalMenu
+# Kubernetes
+from kubernetes import client, config
+from kubernetes.client.rest import ApiException
+import datetime
+
+
 
 settings_source = os.environ['SETTINGS_SOURCE']
+settings_storage = os.environ['SETTINGS_STORAGE']
 
 
 def choix_appli_lance():
@@ -91,11 +98,18 @@ def create_menu(mylist):
     else:
         menu_entry_index = menu_entry_index - 2
         type_dest = mylist[menu_entry_index]['type_dest']
-        if type_dest == "bash":
-            subprocess.run(
-                [settings_source + "/includes/scripts/generique.sh", mylist[menu_entry_index]['dest']])
         if type_dest == "sousmenu":
             create_menu(mylist[menu_entry_index]['sousmenu'])
+        else:
+            if type_dest == "bash":
+                subprocess.run(
+                    [settings_source + "/includes/scripts/generique.sh", mylist[menu_entry_index]['dest']])
+
+            if type_dest == "python":
+                print('OK ' + mylist[menu_entry_index]['dest'])
+                eval(mylist[menu_entry_index]['dest'] + '()')
+        input("Appuyez sur une touche pour continuer...")
+        create_menu(mylist)
 
 
 def menu_principal():
@@ -104,4 +118,60 @@ def menu_principal():
         datamenu = yaml.load(f, Loader=SafeLoader)
 
     create_menu(datamenu)
+
+
+def list_deployments():
+    output_list = []
+    config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')
+    apis_api = client.AppsV1Api()
+    resp = apis_api.list_namespaced_deployment(namespace="kubeseed")
+    for item in resp.items:
+        output_list.append(item.metadata.name)
+    return output_list
+
+
+def restart_deployment(list_deployment):
+    config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')
+    for deployment in list_deployment:
+        subprocess.run(
+            [settings_source + "/includes/scripts/generique.sh", "ks_restart_deployment", deployment])
+
+
+def delete_deployment(list_deployment):
+    config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')
+    for deployment in list_deployment:
+        subprocess.run(
+            [settings_source + "/includes/scripts/generique.sh", "ks_delete_deployment", deployment])
+
+
+def choix_running_appli():
+    list_applis = list_deployments()
+    list_applis.sort()
+    questions = [
+        inquirer.Checkbox('applications',
+                          message="Sélectionner les applications à Redémarrer",
+                          choices=list_applis,
+                          ),
+    ]
+    result = inquirer.prompt(questions)['applications']
+    return result
+
+
+def choix_restart_appli():
+    """
+    Affiche une liste de choix (checkbox) des applis à installer
+    Installe les applis choisies une à une
+    """
+    result = choix_running_appli()
+    restart_deployment(result)
+
+
+def choix_delete_appli():
+    """
+    Affiche une liste de choix (checkbox) des applis à installer
+    Installe les applis choisies une à une
+    """
+    result = choix_running_appli()
+    delete_deployment(result)
+
 

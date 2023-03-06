@@ -1352,6 +1352,14 @@ function ks_choix_appli_lance() {
   unset_window
 }
 
+function ks_restart_deployment() {
+  kubectl rollout restart deployment "${1}" -n kubeseed
+}
+
+function ks_delete_deployment() {
+  kubectl rollout delete deployment "${1}" -n kubeseed
+}
+
 function ks_generate_dashboard_token() {
   kubectl -n kubernetes-dashboard create token admin-user
 }
