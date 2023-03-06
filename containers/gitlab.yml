@@ -1,0 +1,18 @@
+---
+application: 'gitlab'
+app_port: 8080
+description: "Gitlab alternative of Github"
+image: 'gitlab/gitlab-ce:latest'
+application_volumes:
+  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+    container_path: "/etc/gitlab"
+  - local_path: "{{ settings.storage }}/docker/{{application}}/logs"
+    container_path: "/var/log/gitlab"
+  - local_path: "{{ settings.storage }}/docker/{{application}}/data"
+    container_path: "/var/opt/gitlab"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
