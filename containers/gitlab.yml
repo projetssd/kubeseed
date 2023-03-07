@@ -17,7 +17,7 @@ application_env:
   - name: PGID
     value: '{{user.groupid}}'
   - name: EXTERNAL_URL
-    value: '{{fqdn}}'
+    value: 'https://{{fqdn}}'
 
 pretasks:
   - external_url
