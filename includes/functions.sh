@@ -1312,7 +1312,7 @@ function ks_install_block_public_tracker() {
 
 
 function ks_choix_appli_lance() {
-  python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_appli
+  python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_appli_lance
 }
 
 function ks_restart_deployment() {

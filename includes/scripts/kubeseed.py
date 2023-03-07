@@ -134,10 +134,10 @@ def restart_deployment(list_deployment):
             [generique_bash, "ks_restart_deployment", deployment])
 
 
-def delete_deployment(list_deployment):
+def choix_appli_lance(list_deployment):
     for deployment in list_deployment:
         subprocess.run(
-            [generique_bash, "ks_delete_deployment", deployment])
+            [generique_bash, "ks_launch_service", deployment])
 
 
 def delete_deployment(list_deployment):
