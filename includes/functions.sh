@@ -640,14 +640,6 @@ function ks_suppression_appli() {
   echo -e "${BLUE}### $APPSELECTED a été supprimé ###${NC}"
   echo ""
 
-  req1="delete from applications where name='"
-  req2="'"
-  req=${req1}${APPSELECTED}${req2}
-  sqlite3 ${SETTINGS_SOURCE}/kubeseeddb <<EOF
-$req
-
-EOF
-
 }
 
 function ks_pause() {
@@ -657,28 +649,6 @@ function ks_pause() {
   echo ""
 }
 
-ks_select_seedbox_param() {
-  if [ ! -f ${SETTINGS_SOURCE}/kubeseeddb ]; then
-    # le fichier de base de données n'est pas là
-    # on sort avant de faire une requête, sinon il va se créer
-    # et les tests ne seront pas bons
-    return 0
-  fi
-  request="select value from seedbox_params where param ='"${1}"'"
-  RETURN=$(sqlite3 ${SETTINGS_SOURCE}/kubeseeddb "${request}")
-  if [ $? != 0 ]; then
-    echo 0
-  else
-    echo $RETURN
-  fi
-
-}
-
-function ks_update_seedbox_param() {
-  # shellcheck disable=SC2027
-  request="replace into seedbox_params (param,value) values ('"${1}"','"${2}"')"
-  sqlite3 "${SETTINGS_SOURCE}/kubeseeddb" "${request}"
-}
 
 function ks_manage_account_yml() {
   # usage
@@ -1339,13 +1309,7 @@ function ks_install_block_public_tracker() {
   ks_pause
 }
 
-function ks_relance_tous_services() {
-  sqlite3 ${SETTINGS_SOURCE}/kubeseeddb <<EOF >$SERVICESPERUSER
-select name from applications;
-EOF
 
-  ks_install_services
-}
 
 function ks_choix_appli_lance() {
   python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_appli

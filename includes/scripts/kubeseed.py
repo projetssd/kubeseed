@@ -123,7 +123,8 @@ def list_deployments():
     apis_api = client.AppsV1Api()
     resp = apis_api.list_namespaced_deployment(namespace="kubeseed")
     for item in resp.items:
-        output_list.append(item.metadata.name)
+        if not item.metadata.name.startswith('db.'):
+            output_list.append(item.metadata.name)
     return output_list
 
 

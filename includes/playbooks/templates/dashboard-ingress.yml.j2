@@ -4,7 +4,7 @@ metadata:
   name: mytransport
   namespace: kubernetes-dashboard
 spec:
-  serverName: "{{ appli.dashboard.domain}}.{{ user.domain }}"
+  serverName: "{{ applis.dashboard.domain}}.{{ user.domain }}"
   insecureSkipVerify: true
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -17,7 +17,7 @@ spec:
   - web
   - websecure
   routes:
-  - match: host(`{{ appli.dashboard.domain}}.{{ user.domain }}`)
+  - match: host(`{{ applis.dashboard.domain}}.{{ user.domain }}`)
     kind: Rule
     services:
     - name: kubernetes-dashboard
