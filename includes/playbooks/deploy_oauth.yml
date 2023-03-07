@@ -1,0 +1,136 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+    - name: "Set DNS Record on CloudFlare"
+      include_tasks: "{{ settings.source }}/includes/playbooks/tasks/cloudflare_domain.yml"
+      vars:
+        subdomain: "{{  applis['oauth'].subdomain}}"
+
+    - name: "Launch Oauth deployment "
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        kind: Deployment
+        namespace: kubeseed
+        name: "oauth"
+        definition:
+          metadata:
+            labels:
+              ksapp: "oauth"
+              app: "oauth"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                ksapp: "oauth"
+                app: "oauth"
+            template:
+              metadata:
+                labels:
+                  ksapp: "oauth"
+                  app: "oauth"
+              spec:
+                containers:
+                  - name: "oauth"
+                    image: "thomseddon/traefik-forward-auth"
+                    imagePullPolicy: "Always"
+                    ports:
+                      - containerPort: 4181
+                    env:
+                      - name: PROVIDERS_GOOGLE_CLIENT_ID
+                        value: "{{ oauth.client_id }}"
+                      - name: PROVIDERS_GOOGLE_CLIENT_SECRET
+                        value: "{{ oauth.client_secret }}"
+                      - name: SECRET
+                        value: "{{ oauth.secret }}"
+                      - name: COOKIE_DOMAIN
+                        value: "{{ user.domain }}"
+                      - name: INSECURE_COOKIE
+                        value: "false"
+                      - name: AUTH_HOST
+                        value: "{{  applis['oauth'].subdomain}}.{{ user.domain }}"
+                      - name: URL_PATH
+                        value: "/oauth"
+                      - name: WHITELIST
+                        value: "{{ oauth.account }}"
+                      - name: LOG_LEVEL
+                        value: 'trace'
+                      - name: LOG_FORMAT
+                        value: 'text'
+                      - name: LIFETIME
+                        value: '2592000' # 30 days
+
+
+
+    - name: "Launch oauth - Service"
+      kubernetes.core.k8s:
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        kind: Service
+        namespace: kubeseed
+        name: "oauth"
+        definition:
+          metadata:
+            labels:
+              ksapp: "oauth"
+              app: "oauth"
+          spec:
+            selector:
+              ksapp: "oauth"
+              app: "oauth"
+            ports:
+              - protocol: TCP
+                port: 4181
+
+    - name: "Launch oauth - Ingress "
+      kubernetes.core.k8s:
+        api_version: networking.k8s.io/v1
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        kind: Ingress
+        namespace: kubeseed
+        name: "ing-oauth"
+        definition:
+          metadata:
+            labels:
+              ksapp: "oauth"
+              app: "oauth"
+            annotations:
+              kubernetes.io/ingress.class: traefik
+              traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
+              cert-manager.io/cluster-issuer: letsencrypt-prod
+          spec:
+            rules:
+              - host: "{{ applis['oauth'].subdomain }}.{{ user.domain }}"
+                http:
+                  paths:
+                    - pathType: Prefix
+                      path: "/"
+                      backend:
+                        service:
+                          name: "oauth"
+                          port:
+                            number: 4181
+            tls:
+              - secretName: "oauth-tls"
+                hosts:
+                  - "{{ applis['oauth'].subdomain }}.{{ user.domain }}"
+
+
+    - name: Deploy from template
+      template:
+        src: "{{ settings.source }}/includes/playbooks/templates/middleware-oauth.yml.j2"
+        dest: "/tmp/oauth.yml"
+
+    - name: Apply template
+      kubernetes.core.k8s:
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        src: "/tmp/oauth.yml"
+
+    - name: delete temp file
+      file:
+        path: "/tmp/oauth.yml"
+        state: absent
