@@ -3,6 +3,10 @@
   gather_facts: false
   become: true
   tasks:
+  - name: Wait 10 secondes for cert manager to be up
+    pause:
+      seconds: 10
+
   - name: Deploy from template
     template:
       src: "{{ settings.source }}/includes/playbooks/templates/letsencrypt.yml.j2"
