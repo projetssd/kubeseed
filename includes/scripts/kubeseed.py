@@ -85,7 +85,8 @@ def create_menu(mylist):
     menu_list=["Menu principal", ""]
     for element in mylist:
         menu_list.append(element['menu'])
-    terminal_menu = TerminalMenu(menu_list, title="Menu KubeSeed\n\nAppuyez sur echap pour sortir",skip_empty_entries=True)
+    terminal_menu = TerminalMenu(menu_list, title="Menu KubeSeed\n\nAppuyez sur echap pour sortir", skip_empty_entries=True,
+                                 status_bar="Menu Kubeseed")
     menu_entry_index = terminal_menu.show()
     # le menu_entry_index est l'index choisi
     if menu_entry_index is None:
@@ -163,15 +164,6 @@ def choix_running_appli():
     ]
     result = inquirer.prompt(questions)['applications']
     return result
-
-
-def choix_lance_appli():
-    """
-    Affiche une liste de choix (checkbox) des applis à installer
-    Installe les applis choisies une à une
-    """
-    result = choix_running_appli()
-    lance_appli(result)
 
 
 def choix_restart_appli():
