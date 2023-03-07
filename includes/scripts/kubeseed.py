@@ -134,7 +134,7 @@ def restart_deployment(list_deployment):
             [generique_bash, "ks_restart_deployment", deployment])
 
 
-def choix_appli_lance(list_deployment):
+def lance_appli(list_deployment):
     for deployment in list_deployment:
         subprocess.run(
             [generique_bash, "ks_launch_service", deployment])
@@ -163,6 +163,15 @@ def choix_running_appli():
     ]
     result = inquirer.prompt(questions)['applications']
     return result
+
+
+def choix_lance_appli():
+    """
+    Affiche une liste de choix (checkbox) des applis à installer
+    Installe les applis choisies une à une
+    """
+    result = choix_running_appli()
+    lance_appli(result)
 
 
 def choix_restart_appli():
