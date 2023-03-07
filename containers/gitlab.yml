@@ -16,8 +16,12 @@ application_env:
     value: '{{user.userid}}'
   - name: PGID
     value: '{{user.groupid}}'
-  - name: EXTERNAL_URL
-    value: '{{fqdn}}'
+### A FINIR
+#  - name: EXTERNAL_URL
+#    value: '{{fqdn}}'
+#  - name: GITLAB_HOST
+#    value: 'https://{{fqdn}}'
+### 
 
-pretasks:
-  - external_url
+#pretasks:
+#  - external_url
