@@ -85,7 +85,6 @@ function ks_install_oauth() {
 
   if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
 
-
     while [ -z "$oauth_client" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_client: ${CEND}"
       read oauth_client
@@ -649,7 +648,6 @@ function ks_pause() {
   echo ""
 }
 
-
 function ks_manage_account_yml() {
   # usage
   # ks_manage_account_yml key value
@@ -700,8 +698,36 @@ function ks_install() {
 
   ks_log_statusbar "Gestion du source list"
   # TODO : gérer ça un peu mieux, c'est moche
-  sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-  sudo cp "${SETTINGS_SOURCE}/includes/files/debian.sources.list.bullseye" /etc/apt/sources.list
+  version_ok=0
+  if grep "NAME=" /etc/os-release | grep -qi debian; then
+    # Debian
+    if grep "VERSION_ID=" /etc/os-release | grep -q 11; then
+      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
+      sudo cp "${SETTINGS_SOURCE}/includes/files/debian11.sources.list" /etc/apt/sources.list
+      version_ok=1
+    else
+      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 11 de Debian"
+      exit 1
+    fi
+  fi
+
+    if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
+    # Debian
+    if grep "VERSION_ID=" /etc/os-release | grep -q "22.04"; then
+      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
+      sudo cp "${SETTINGS_SOURCE}/includes/files/ubuntu2204.sources.list" /etc/apt/sources.list
+      version_ok=1
+    else
+      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 22.04 d'Ubuntu'"
+      exit 1
+    fi
+  fi
+
+  if [ ${version_ok} == 0 ];
+  then
+    echo "Aucune version compatible pour l'installation, abandon..."
+    exit 1
+  fi
 
   ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
@@ -1308,8 +1334,6 @@ function ks_install_block_public_tracker() {
   echo "Block_public_tracker a été installé avec succès"
   ks_pause
 }
-
-
 
 function ks_choix_appli_lance() {
   python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_appli_lance

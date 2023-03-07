@@ -1,2 +1,1 @@
-- gérer les sources list
 - mettre un cron pour l'update des images (kubectl rollout restart deployment myapp)
