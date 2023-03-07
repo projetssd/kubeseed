@@ -44,14 +44,12 @@ if [ ! -f "${SETTINGS_STORAGE}/kubeseeddb" ]; then
 fi
 
 # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy
-source "${SETTINGS_SOURCE}/venv/bin/activate"
-temppath=$(ls ${SETTINGS_SOURCE}/venv/lib)
-pythonpath=${SETTINGS_SOURCE}/venv/lib/${temppath}/site-packages
+source "${VENV_DIR}/bin/activate"
+temppath=$(ls ${VENV_DIR}/lib)
+pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
 export PYTHONPATH=${pythonpath}
 
-IS_INSTALLED=$(ks_select_seedbox_param "installed")
-
-#clear
+clear
 
 #update_logrotate
 ks_log_statusbar "Check de la dernière version sur git"
