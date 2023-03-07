@@ -25,7 +25,7 @@
       sousmenu:
         - menu: Installer Oauth
           type_dest: bash
-          dest: echo 'pas encore codé'
+          dest: ks_install_oauth
         - menu: Changement de mot de passe pour auth basique
           type_dest: bash
           dest: echo 'pas encore codé'

@@ -117,7 +117,6 @@ def menu_principal():
 
     create_menu(datamenu)
 
-
 def list_deployments():
     output_list = []
     config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')

@@ -22,7 +22,7 @@ function ks_logo() {
   printf "${color3}$(lsb_release -sd)${nocolor}"
   printf "${color3}$(uname -srmo) - Uptime: $(/usr/bin/uptime -p)${nocolor}\n"
 }
-
+o
 function ks_get_cloudflare_infos() {
   #####################################
   # Récupère les infos de cloudflare
