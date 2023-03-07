@@ -11,7 +11,7 @@ function ks_logo() {
   colora='\033[1;32m' # Bold GREEN
   projetname='KubeSeed'
   authors='Author: Merrick'
-  printf " \n"
+  printf " \n"o
   printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
   printf " ${colorp} ██║ ██╔╝${colora}██║   ██║██╔══██╗██╔════╝${colorp}██╔════╝${colora}██╔════╝██╔════╝██╔══██╗${nocolor}\n"
   printf " ${colorp} █████╔╝ ${colora}██║   ██║██████╔╝█████╗  ${colorp}███████╗${colora}█████╗  █████╗  ██║  ██║${nocolor}\n"
@@ -78,28 +78,24 @@ function ks_install_oauth() {
   echo ""
   echo -e "${CRED}-------------------------------------------------------------------${CEND}"
   echo -e "${CRED}    /!\ IMPORTANT: Au préalable créer un projet et vos identifiants${CEND}"
-  echo -e "${CRED}    https://github.com/laster13/patxav/wiki /!\ 		   ${CEND}"
+  echo -e "${CRED}    https://github.com/projetssd/ssdv2/wiki/Google-OAuth /!\ 		   ${CEND}"
   echo -e "${CRED}-------------------------------------------------------------------${CEND}"
   echo ""
   read -rp $'\e[33mSouhaitez vous sécuriser vos Applis avec Google OAuth2 ? (o/n)\e[0m :' OUI
 
   if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
-    if [ -z "$oauth_client" ] || [ -z "$oauth_secret" ] || [ -z "$email" ]; then
-      oauth_client=$1
-      oauth_secret=$2
-      email=$3
-    fi
+
 
     while [ -z "$oauth_client" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_client: ${CEND}"
       read oauth_client
-      ks_manage_account_yml oauth.client "$oauth_client"
+      ks_manage_account_yml oauclient_id "$oauth_client"
     done
 
     while [ -z "$oauth_secret" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_secret: ${CEND}"
       read oauth_secret
-      ks_manage_account_yml oauth.secret "$oauth_secret"
+      ks_manage_account_yml oauclient_secret "$oauth_secret"
     done
 
     while [ -z "$email" ]; do
@@ -109,7 +105,7 @@ function ks_install_oauth() {
     done
 
     openssl=$(openssl rand -hex 16)
-    ks_manage_account_yml oauth.openssl "$openssl"
+    ks_manage_account_yml oauth.secret "$openssl"
 
     echo ""
     echo -e "${CRED}---------------------------------------------------------------${CEND}"
@@ -120,6 +116,11 @@ function ks_install_oauth() {
     echo ""
     echo -e "\nAppuyer sur ${CCYAN}[ENTREE]${CEND} pour continuer..."
     read -r
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/deploy_oauth.yml"
+    echo "==============================================="
+    echo "= Choisissez les applications à réinitialiser ="
+    echo "= Choisissez les applications à réinitialiser ="
+    python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_reinit_appli
   fi
 
   echo ""
@@ -1347,9 +1348,7 @@ EOF
 }
 
 function ks_choix_appli_lance() {
-  ks_log_statusbar "Choix des applications à lancer"
-  python3 "${SETTINGS_SOURCE}/includes/scripts/choix_appli.py"
-  unset_window
+  python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_appli
 }
 
 function ks_restart_deployment() {
@@ -1358,6 +1357,12 @@ function ks_restart_deployment() {
 
 function ks_delete_deployment() {
   kubectl -n kubeseed delete deployment,service,ingress -l ksapp="${1}"
+  ks_manage_account_yml "applis.${1}" " "
+}
+
+function ks_reinit_deployment() {
+  ks_manage_account_yml "applis.${1}" " "
+  ks_launch_service "${1}"
 }
 
 function ks_generate_dashboard_token() {

@@ -12,13 +12,11 @@ from yaml.loader import SafeLoader
 from simple_term_menu import TerminalMenu
 # Kubernetes
 from kubernetes import client, config
-from kubernetes.client.rest import ApiException
-import datetime
-
 
 
 settings_source = os.environ['SETTINGS_SOURCE']
 settings_storage = os.environ['SETTINGS_STORAGE']
+generique_bash = settings_source + "/includes/scripts/generique.sh"
 
 
 def choix_appli_lance():
@@ -80,7 +78,7 @@ def lance_applis(list_applis):
     """
     for my_appli in list_applis:
         subprocess.run(
-            [settings_source + "/includes/scripts/generique.sh", "ks_launch_service", my_appli])
+            [generique_bash, "ks_launch_service", my_appli])
 
 
 def create_menu(mylist):
@@ -131,17 +129,27 @@ def list_deployments():
 
 
 def restart_deployment(list_deployment):
-    config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')
     for deployment in list_deployment:
         subprocess.run(
-            [settings_source + "/includes/scripts/generique.sh", "ks_restart_deployment", deployment])
+            [generique_bash, "ks_restart_deployment", deployment])
 
 
 def delete_deployment(list_deployment):
-    config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')
     for deployment in list_deployment:
         subprocess.run(
-            [settings_source + "/includes/scripts/generique.sh", "ks_delete_deployment", deployment])
+            [generique_bash, "ks_delete_deployment", deployment])
+
+
+def delete_deployment(list_deployment):
+    for deployment in list_deployment:
+        subprocess.run(
+            [generique_bash, "ks_delete_deployment", deployment])
+
+
+def reinit_deployment(list_deployment):
+    for deployment in list_deployment:
+        subprocess.run(
+            [generique_bash, "ks_reinit_deployment", deployment])
 
 
 def choix_running_appli():
@@ -174,4 +182,12 @@ def choix_delete_appli():
     result = choix_running_appli()
     delete_deployment(result)
 
+
+def choix_reinit_appli():
+    """
+    Affiche une liste de choix (checkbox) des applis à installer
+    Installe les applis choisies une à une
+    """
+    result = choix_running_appli()
+    reinit_deployment(result)
 

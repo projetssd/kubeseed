@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   gather_facts: false
+  vars:
+    application: traefik
 
   tasks:
   - name: Create ClusterIP service
@@ -26,6 +28,9 @@
             app.kubernetes.io/instance: traefik
             app.kubernetes.io/name: traefik
 
+  - name: set middleware
+    include_tasks: "{{ settings.source }}/includes/playbooks/tasks/set_middleware.yml"
+
   - name: Create Ingress rule
     kubernetes.core.k8s:
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
@@ -45,4 +50,4 @@
                 - name: api@internal
                   kind: TraefikService
               middlewares:
-                - name: my-basic-auth
+                - name: "{{ k3s_middlewares }}"
