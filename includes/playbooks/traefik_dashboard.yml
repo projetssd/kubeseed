@@ -28,8 +28,8 @@
             app.kubernetes.io/instance: traefik
             app.kubernetes.io/name: traefik
 
-  - name: set middleware
-    include_tasks: "{{ settings.source }}/includes/playbooks/tasks/set_middleware.yml"
+#  - name: set middleware
+#    include_tasks: "{{ settings.source }}/includes/playbooks/tasks/set_middleware.yml"
 
   - name: Create Ingress rule
     kubernetes.core.k8s:
@@ -50,4 +50,4 @@
                 - name: api@internal
                   kind: TraefikService
               middlewares:
-                - name: "{{ k3s_middlewares }}"
+                - name: my-basic-auth
