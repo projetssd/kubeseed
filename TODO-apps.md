@@ -2,7 +2,7 @@
 - NOK autoindex.yml
 - NOK baikal.yml
 + OK  bazarr.yml
-- NOK benphelps.yml
+- NOK benphelps.yml <-- DOUBLON AVEC GETHOMEPAGE / BENPHELPS
 - NOK bookstack.yml
 - NOK cadvisor.yml
 + OK  calibre.yml
@@ -30,7 +30,7 @@
 - NOK freshrss.yml
 - NOK gethomepage.yml
 - NOK gitea.yml
-- NOK gitlab.yml
++ OK  gitlab.yml
 - NOK gotify.yml
 - NOK grocy.yml
 - NOK guacamole.yml
