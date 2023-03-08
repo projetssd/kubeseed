@@ -8,7 +8,7 @@ source "${SETTINGS_SOURCE}/includes/variables.sh"
 #
 ks_log_statusbar "Installation du dashboard Traefik"
 read -rp $'\e[33mQuel sous domaine pour le dashboard Traefik [traefik]\e[0m :' traefik_domain
-traefik_domain=${dtraefik_domain:-traefik}
+traefik_domain=${traefik_domain:-traefik}
 ks_manage_account_yml applis.traefik.domain "${traefik_domain}"
 ks_auth_unitaire traefik
 ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cloudflare_domain.yml" -e "subdomain=${traefik_domain}"
