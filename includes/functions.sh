@@ -1,4 +1,4 @@
-#!/bin/bash
+i#!/bin/bash
 ##########
 
 function ks_logo() {
@@ -697,7 +697,6 @@ function ks_install() {
   echo "=================================================================="
 
   ks_log_statusbar "Gestion du source list"
-  # TODO : gérer ça un peu mieux, c'est moche
   version_ok=0
   if grep "NAME=" /etc/os-release | grep -qi debian; then
     # Debian
@@ -876,6 +875,11 @@ EOF
 
   #  On part à la pêche aux infos....
   ks_log_statusbar "Gestion des infos utilisateur"
+  # on regarde s'il un fichier kickstart
+  if [ -f "${SETTINGS_SOURCE}/kickstart" ]
+  then
+    source "${SETTINGS_SOURCE}/kickstart"
+  fi
   "${SETTINGS_SOURCE}/includes/scripts/get_infos.sh"
 
   # Installation de k3s

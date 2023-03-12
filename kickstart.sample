@@ -1,0 +1,33 @@
+##############################################
+# Copier de fichier en kickstart
+# pour qu'il soit pris en compte
+##############################################
+# Commenter les variables si vous ne voulez pas
+# qu'elles soient prises en compte
+##############################################
+
+###############################################
+# Permet de mettre en pause entre chaque
+# élement lors de l'install
+# Peu importe la valeur, si il est présent, on sera en mode debug
+KS_DEBUG=1
+
+################################################
+# Password pour l'auth basique
+KS_PASSWORD=raidisnotabackup
+
+#################################################
+# Email de l'utilisateur
+KS_MAIL=monemail@kuebseed.com
+
+#################################################
+# Domaine de l'utilisateur
+KS_DOMAIN=kubeseed.com
+
+#################################################
+# Adresse mail cloudflare
+KS_CF_MAIL=monemail@kuebseed.com
+
+#################################################
+# Adresse mail cloudflare
+KS_CF_API=xxxxxxxxxxxxxxxxxxxxxxxxx

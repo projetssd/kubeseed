@@ -29,8 +29,13 @@ else
 fi
 
 PASSWORD=$(ks_get_from_account_yml user.pass)
-if [ ${PASSWORD} == notfound ]; then
-  read -p $'\e[32m↘️ Mot de passe | Appuyer sur [Enter]: \e[0m' pass </dev/tty
+if [ "${PASSWORD}" == notfound ]; then
+  if [ -n "$KS_PASSWORD" ]; then
+    echo -e "${BLUE}Password déjà renseigné dans le fichier kickstart${CEND}"
+    pass=${KS_PASSWORD}
+  else
+    read -p $'\e[32m↘️ Mot de passe | Appuyer sur [Enter]: \e[0m' pass </dev/tty
+  fi
   ks_manage_account_yml user.pass "$pass"
 else
   echo -e "${BLUE}Password déjà renseigné${CEND}"
@@ -39,15 +44,25 @@ fi
 
 MAIL=$(ks_get_from_account_yml user.mail)
 if [ ${MAIL} == notfound ]; then
-  read -p $'\e[32m↘️ Mail | Appuyer sur [Enter]: \e[0m' mail </dev/tty
+  if [ -n "$KS_MAIL" ]; then
+    echo -e "${BLUE}Mail déjà renseigné dans le fichier kickstart${CEND}"
+    mail="${KS_MAIL}"
+  else
+    read -p $'\e[32m↘️ Mail | Appuyer sur [Enter]: \e[0m' mail </dev/tty
+  fi
   ks_manage_account_yml user.mail $mail
 else
   echo -e "${BLUE}Email déjà renseigné${CEND}"
 fi
 
 DOMAINE=$(ks_get_from_account_yml user.domain)
-if [ ${DOMAINE} == notfound ]; then
-  read -p $'\e[32m↘️ Domaine | Appuyer sur [Enter]: \e[0m' domain </dev/tty
+if [ "${DOMAINE}" == notfound ]; then
+  if [ -n "$KS_DOMAIN" ]; then
+    echo -e "${BLUE}Domaine déjà renseigné dans le fichier kickstart${CEND}"
+    domain="${KS_DOMAIN}"
+  else
+    read -p $'\e[32m↘️ Domaine | Appuyer sur [Enter]: \e[0m' domain </dev/tty
+  fi
   ks_manage_account_yml user.domain "$domain"
 else
   echo -e "${BLUE}Domaine déjà renseigné${CEND}"
@@ -55,22 +70,28 @@ fi
 
 CLOUD_EMAIL=$(ks_get_from_account_yml cloudflare.login)
 if [ "$CLOUD_EMAIL" == notfound ]; then
-  while [ -z "$cloud_email" ]; do
+  if [ -n "$KS_CF_MAIL" ]; then
+    echo -e "${BLUE}Mail cloudflare déjà renseigné dans le fichier kickstart${CEND}"
+    cloud_email="${KS_CF_MAIL}"
+  else
     echo >&2 -n -e "${BWHITE}Votre Email Cloudflare: ${CEND}"
     read cloud_email
+  fi
 
-  done
   ks_manage_account_yml cloudflare.login "$cloud_email"
 else
   echo -e "${BLUE}Cloudflare login déjà renseigné${CEND}"
 fi
+
 CLOUD_API=$(ks_get_from_account_yml cloudflare.api)
 if [ "$CLOUD_API" == notfound ]; then
-  while [ -z "$cloud_api" ]; do
+  if [ -n "$KS_CF_API" ]; then
+    echo -e "${BLUE}API cloudflare déjà renseigné dans le fichier kickstart${CEND}"
+    cloud_api="${KS_CF_API}"
+  else
     echo >&2 -n -e "${BWHITE}Votre API Cloudflare: ${CEND}"
     read cloud_api
-
-  done
+  fi
   ks_manage_account_yml cloudflare.api "$cloud_api"
 else
   echo -e "${BLUE}Cloudflare api déjà renseigné${CEND}"
