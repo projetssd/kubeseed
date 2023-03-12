@@ -1140,7 +1140,7 @@ unset_window() {
 ks_log_statusbar() {
   COLS=$(tput cols)
   # si en debug
-  if [ -n "$DEBUG" ]; then
+  if [ -n "$KS_DEBUG" ]; then
     echo "###### MODE DEBUG ######"s
     ks_pause
   fi
