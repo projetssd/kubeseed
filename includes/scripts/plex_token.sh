@@ -1,8 +1,8 @@
 #!/bin/bash
-
-source "${SETTINGS_SOURCE}/includes/functions.sh"
-# shellcheck source=${BASEDIR}/includes/variables.sh
-source "${SETTINGS_SOURCE}/includes/variables.sh"
+#source "${SETTINGS_SOURCE}/profile.sh"
+#source "${SETTINGS_SOURCE}/includes/functions.sh"
+## shellcheck source=${BASEDIR}/includes/variables.sh
+#source "${SETTINGS_SOURCE}/includes/variables.sh"
 
 #########################################################################
 # Title:         Retrieve Plex Token                                    #

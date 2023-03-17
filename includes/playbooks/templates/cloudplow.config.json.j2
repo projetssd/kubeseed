@@ -5,7 +5,7 @@
         "rclone_config_path": "/home/{{ lookup('env','USER') }}/.config/rclone/rclone.conf"
     },
     "hidden": {
-        "/home/{{user.name}}/local/.unionfs-fuse": {
+        "{{ settings.storage }}/local/.unionfs-fuse": {
             "hidden_remotes": [
                 "{{rclone.remote}}"
             ]
@@ -78,9 +78,9 @@
             },
             "rclone_command": "move",
             "remove_empty_dir_depth": 2,
-            "sync_remote": "{{rclone.remote}}:/{{user.name}}",
-            "upload_folder": "/home/{{user.name}}/local",
-            "upload_remote": "{{rclone.remote}}:/{{user.name}}"
+            "sync_remote": "{{rclone.remote}}:",
+            "upload_folder": "{{ settings.storage }}/local",
+            "upload_remote": "{{rclone.remote}}:"
         }
     },
     "syncer": {

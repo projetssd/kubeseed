@@ -29,3 +29,6 @@
         - menu: Installer cloudplow
           type_dest: bash
           dest: ks_isntall_cloudplow
+        - menu: Installer autoscan
+          type_dest: bash
+          dest: ks_isntall_autoscan

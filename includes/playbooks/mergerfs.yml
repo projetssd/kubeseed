@@ -3,6 +3,16 @@
   become: true
   gather_facts: false
   tasks:
+    - name: create directory
+      file:
+        path: "{{ settings.source }}/{{ directory }}"
+        state: directory
+      loop:
+        - "local"
+        - "Medias"
+      loop_control:
+        loop_var: directory
+
     - name: "MergerFS | Import 'mergerfs.service'"
       become: true
       template:

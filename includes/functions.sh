@@ -176,8 +176,7 @@ function ks_install_autoscan() {
   #configuration autoscan avec ansible
   echo -e "${BLUE}### AUTOSCAN ###${NC}"
   echo -e " ${BWHITE}* Installation autoscan${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/autoscan/tasks/main.yml
-  checking_errors $?
+  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/autoscan.yml
 }
 
 function ks_install_cloudplow() {

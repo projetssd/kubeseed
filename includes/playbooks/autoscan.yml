@@ -1,0 +1,81 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Check if drive1.anchor exists
+      stat:
+        path: "{{ settings.storage }}/local/drive1.anchor"
+      register: anchor_service
+
+    - name: create file anchor
+      shell: |
+        touch {{ settings.storage }}/local/drive1.anchor
+      when: not anchor_service.stat.exists
+
+    - name: create directory
+      file:
+        path: "{{ settings.storage }}/scripts/autoscan"
+        state: directory
+
+    - name: Crete conf file
+      template:
+        src: "{{ settings.source }}/includes/playbooks/templates/autoscan.config.yaml.j2"
+        dest: "{{ settings.storage }}/scripts/autoscan/config.yml"
+
+
+    - name: "Launch Autoscan"
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        kind: Deployment
+        namespace: kubeseed
+        name: "autsocan"
+        definition:
+          metadata:
+            labels:
+              ksapp: "autsocan"
+              app: "autsocan"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                ksapp: "autsocan"
+                app: "autsocan"
+            template:
+              metadata:
+                labels:
+                  ksapp: "autsocan"
+                  app: "autsocan"
+              spec:
+                containers:
+                  - name: "autsocan"
+                    image: 'cloudb0x/autoscan'
+                    imagePullPolicy: "Always"
+                    env:
+                      - name: PUID
+                        value: "{{ user.userid }}"
+                      - name: PGID
+                        value: "{{ user.groupid }}"
+                      - name: AUTOSCAN_VERBOSITY
+                        value: "2"
+
+                    volumeMounts:
+                      - mountPath: "/config"
+                        name: "autoscan-config"
+                      - mountPath: "{{ lookup('env','HOME') }}"
+                        name: "autoscan-home"
+                      - mountPath: "{{ settings.storage }}"
+                        name: "autoscan-settings-storage"
+                volumes:
+                  - name: "autoscan-home"
+                    hostPath:
+                      path: "{{ lookup('env','HOME') }}"
+                      type: Directory
+                  - name: "autoscan-config"
+                    hostPath:
+                      path: "{{ settings.storage }}/scripts/autoscan"
+                      type: Directory
+                  - name: "autoscan-settings-storage"
+                    hostPath:
+                      path: "{{ settings.storage }}"
+                      type: Directory
