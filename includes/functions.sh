@@ -218,7 +218,7 @@ function ks_make_dir_writable() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/change_rights.yml" \
     --extra-vars '{"DIRECTORY":"'${1}'"}'
 
-}c
+}
 
 function ks_checking_errors() {
   if [[ "$1" == "0" ]]; then
@@ -706,7 +706,7 @@ function ks_install() {
     fi
   fi
 
-    if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
+  if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
     # Debian
     if grep "VERSION_ID=" /etc/os-release | grep -q "22.04"; then
       sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
@@ -718,8 +718,7 @@ function ks_install() {
     fi
   fi
 
-  if [ ${version_ok} == 0 ];
-  then
+  if [ ${version_ok} == 0 ]; then
     echo "Aucune version compatible pour l'installation, abandon..."
     exit 1
   fi
@@ -872,8 +871,7 @@ EOF
   #  On part à la pêche aux infos....
   ks_log_statusbar "Gestion des infos utilisateur"
   # on regarde s'il un fichier kickstart
-  if [ -f "${SETTINGS_SOURCE}/kickstart" ]
-  then
+  if [ -f "${SETTINGS_SOURCE}/kickstart" ]; then
     source "${SETTINGS_SOURCE}/kickstart"
   fi
   "${SETTINGS_SOURCE}/includes/scripts/get_infos.sh"
@@ -967,169 +965,18 @@ function ks_install_environnement() {
   ks_pause
 }
 
-function ks_debug_menu() {
-  if [ -z "$OLDIFS" ]; then
-    OLDIFS=${IFS}
-  fi
-  IFS=$'\n'
-  start_menu="is null"
-  precedent=""
-  if [[ $# -ne 0 ]]; then
-    if [ -z "$1" ]; then
-      :
-    else
-      start_menu="=${1}"
-      precedent="${1}"
-    fi
-  fi
-
-  ## chargement des menus
-  request="select * from menu where parent_id ${start_menu}"
-  sqlite3 "${SETTINGS_SOURCE}/menu" "${request}" | while read -a db_select; do
-    texte_sep=""
-    IFS='|'
-    read -ra db_select2 <<<"$db_select"
-    separateur=$(calcul_niveau_menu "${db_select2[0]}")
-    IFS=$'\n'
-    for i in $(seq 1 ${separateur}); do
-      texte_sep="${texte_sep} ==> "
-    done
-
-    echo -e "${texte_sep}${db_select2[0]}-${db_select2[3]}) ${db_select2[1]} | ${db_select2[4]}"
-
-    # on regarde s'il y a des menus enfants
-    request_cpt="select count(*) from menu where parent_id = ${db_select2[0]}"
-    cpt=$(sqlite3 ${SETTINGS_SOURCE}/menu "$request_cpt")
-    if [ "${cpt}" -eq 0 ]; then
-      # pas de sous menu, on va rester sur le même
-      :
-    else
-      ks_debug_menu "${db_select2[0]}"
-
-    fi
-    IFS=$'\n'
-  done
-
-  IFS=${OLDFIFS}
-}
-
-function ks_calcul_niveau_menu() {
-  if [[ $# -ne 0 ]]; then
-    niveau=${2}
-    if [ -z $niveau ]; then
-      niveau=1
-    fi
-    depart="${1}"
-    request_cpt="select parent_id from menu where id = ${depart}"
-    parent=$(sqlite3 "${SETTINGS_SOURCE}/menu" "$request_cpt")
-    if [ -z "$parent" ]; then
-
-      echo $niveau
-    else
-      request_cpt="select count(*) from menu where parent_id = ${parent}"
-      cpt=$(sqlite3 ${SETTINGS_SOURCE}/menu "$request_cpt")
-      if [ "${cpt}" -eq 0 ]; then
-        echo $niveau
-      else
-        niveau=$((niveau + 1))
-        request_cpt="select parent_id from menu where id = ${depart}"
-        parent2=$(sqlite3 ${SETTINGS_SOURCE}/menu "$request_cpt")
-        if [ -z "$parent2" ]; then
-          echo $niveau
-        fi
-        niveau=$(ks_calcul_niveau_menu ${parent} ${niveau})
-      fi
-      echo $niveau
-    fi
-  else
-    echo 0
-  fi
-}
-
-function ks_affiche_menu_db() {
-  if [ -z "$OLDIFS" ]; then
-    OLDIFS=${IFS}
-  fi
-  IFS=$'\n'
-  echo -e "${CGREEN}${CEND}"
-  start_menu="is null"
-  texte_sortie="Sortie du script"
-  precedent=""
-  if [[ $# -eq 1 ]]; then
-    if [ -z "$1" ]; then
-      :
-    else
-      start_menu="=${1}"
-      texte_sortie="Menu précédent"
-      precedent="${1}"
-    fi
-  fi
-  clear
-  ks_logo
-  ## chargement des menus
-  request="select * from menu where parent_id ${start_menu}"
-  sqlite3 "${SETTINGS_SOURCE}/menu" "${request}" | while read -a db_select; do
-    IFS='|'
-    read -ra db_select2 <<<"$db_select"
-    echo -e "${CGREEN}   ${db_select2[3]}) ${db_select2[1]}${CEND}"
-    IFS=$'\n'
-  done
-  echo -e "${CGREEN}---------------------------------------${CEND}"
-  if [ "${precedent}" = "" ]; then
-    :
-  else
-    echo -e "${CGREEN}   H) Retour au menu principal${CEND}"
-    echo -e "${CGREEN}   B) Retour au menu précédent${CEND}"
-  fi
-  echo -e "${CGREEN}   Q) Quitter${CEND}"
-  echo -e "${CGREEN}---------------------------------------${CEND}"
-  read -p "Votre choix : " PORT_CHOICE
-
-  if [ "${PORT_CHOICE,,}" == "b" ]; then
-
-    request2="select parent_id from menu where id ${start_menu}"
-    newchoice=$(sqlite3 ${SETTINGS_SOURCE}/menu $request2)
-    ks_affiche_menu_db ${newchoice}
-  elif [ "${PORT_CHOICE,,}" == "q" ]; then
-    exit 0
-  elif [ "${PORT_CHOICE,,}" == "h" ]; then
-    # retour au début
-    ks_affiche_menu_db
-  else
-    # on va voir s'il y a une action à faire
-    request_action="select action from menu where parent_id ${start_menu} and ordre = ${PORT_CHOICE}"
-    action=$(sqlite3 ${SETTINGS_SOURCE}/menu "$request_action")
-    if [ -z "$action" ]; then
-      : # pas d'action à effectuer
-    else
-      # on va lancer la fonction qui a été chargée
-      IFS=${OLDIFS}
-      ${action}
-    fi
-
-    req_new_choice="select id from menu where parent_id ${start_menu} and ordre = ${PORT_CHOICE}"
-    newchoice=$(sqlite3 ${SETTINGS_SOURCE}/menu "${req_new_choice}")
-    request_cpt="select count(*) from menu where parent_id = ${newchoice}"
-    cpt=$(sqlite3 ${SETTINGS_SOURCE}/menu "$request_cpt")
-    if [ "${cpt}" -eq 0 ]; then
-      # pas de sous menu, on va rester sur le même
-      newchoice=${precedent}
-    fi
-    ks_affiche_menu_db ${newchoice}
-
-  fi
-  IFS=${OLDFIFS}
-}
-
-LINES=$(tput lines)
-COLS=$(tput cols)
-
 set_window() {
+  LINES=$(tput lines)
+  COLS=$(tput cols)
+
   # Create a virtual window that is two lines smaller at the bottom.
   tput csr 0 $(($LINES - 3))
 }
 
 unset_window() {
+  LINES=$(tput lines)
+  COLS=$(tput cols)
+
   tput csr 0 $(($LINES))
 }
 
@@ -1152,187 +999,6 @@ ks_log_statusbar() {
 
   # Move cursor to home position, back in virtual window
   tput cup 0 0
-}
-
-function ks_choix_appli_sauvegarde() {
-  touch $SERVICESPERUSER
-  TABSERVICES=()
-  for SERVICEACTIVATED in $(docker ps --format "{{.Names}}"); do
-    SERVICE=$(echo $SERVICEACTIVATED | cut -d\. -f1)
-    TABSERVICES+=(${SERVICE//\"/} " ")
-  done
-
-  line=$(
-    whiptail --title "App Manager" --menu \
-      "Sélectionner le container à sauvegarder" 19 45 11 \
-      "${TABSERVICES[@]}" 3>&1 1>&2 2>&3
-  )
-  exitstatus=$?
-  if [ $exitstatus = 0 ]; then
-    sauve_one_appli ${line}
-  fi
-}
-
-function ks_sauve_one_appli() {
-  #############################
-  # Parametres :
-  # $1 = nom de l'appli
-  # $2 ((optionnel) : nombre de backups à garder
-  # si $2 = 0 => pas de suppression des vieux backups
-  # si $2 non renseigné, on reste à 3 backups à garder
-  ##############################
-
-  # Définition des variables de couleurs
-  CSI="\033["
-  CEND="${CSI}0m"
-  CRED="${CSI}1;31m"
-  CGREEN="${CSI}1;32m"
-  CYELLOW="${CSI}1;33m"
-  CCYAN="${CSI}0;36m"
-
-  # Variables
-  remote=$(ks_get_from_account_yml rclone.remote)
-  APPLI=$1
-
-  NB_MAX_BACKUP=3
-  ALL_RETENTION=0
-  if [ $# == 2 ]; then
-    if [ "$2" == 0 ]; then
-      ALL_RETENTION=1
-    else
-      NB_MAX_BACKUP=$2
-    fi
-  fi
-  SOURCE_DIR="${SETTINGS_STORAGE}/docker/${USER}"
-  remote_backups=BACKUPS
-
-  echo "Sauvegarde de l'application $1"
-  if [ $ALL_RETENTION -eq 0 ]; then
-    echo "Nombre de backups à garder : $NB_MAX_BACKUP"
-  else
-    echo "Pas de suppression des vieux backups"
-  fi
-
-  CDAY=$(date +%Y%m%d-%H%M)
-  BACKUP_PARTITION=/var/backup/local
-  #BACKUP_FOLDER=$BACKUP_PARTITION/$APPLI-$CDAY
-  ARCHIVE=$APPLI-$CDAY.tar.gz
-
-  echo ""
-  echo -e "${CRED}-------------------------------------------------------${CEND}"
-  echo -e "${CRED} /!\ ATTENTION : SAUVEGARDE DE ${APPLI} IMMINENTE /!\ ${CEND}"
-  echo -e "${CRED}-------------------------------------------------------${CEND}"
-
-  # Stop Plex
-  echo -e "${CCYAN}> Arrêt de ${APPLI}${CEND}"
-  #docker stop `docker ps -q`
-  docker stop ${APPLI}
-  sleep 5
-
-  echo ""
-  echo -e "${CCYAN}#########################################################${CEND}"
-  echo ""
-  echo -e "${CCYAN}          DEMARRAGE DU SCRIPT DE SAUVEGARDE              ${CEND}"
-  echo ""
-  echo -e "${CCYAN}#########################################################${CEND}"
-  echo ""
-
-  echo -e "${CCYAN}> Création de l'archive${CEND}"
-  sudo tar -I pigz -cf $BACKUP_PARTITION/$ARCHIVE -P $SOURCE_DIR/$APPLI
-  sleep 2s
-
-  # Si une erreur survient lors de la compression
-  if [[ -s "$ERROR_FILE" ]]; then
-    echo -e "\n${CRED}/!\ ERREUR: Echec de la compression des fichiers système.${CEND}" | tee -a $LOG_FILE
-    echo -e "" | tee -a $LOG_FILE
-    exit 1
-  fi
-
-  # Restart Plex
-  echo -e "${CCYAN}> Lancement de ${APPLI}${CEND}"
-  docker start $APPLI
-  sleep 5
-
-  echo -e "${CCYAN}> Envoie Archive vers Google Drive${CEND}"
-  # Envoie Archive vers Google Drive
-  rclone --config "/home/${USER}/.config/rclone/rclone.conf" copy "$BACKUP_PARTITION/$ARCHIVE" "${remote}:/${USER}/${remote_backups}/" -v --progress
-
-  # Nombre de sauvegardes effectuées
-  nbBackup=$(find $BACKUP_PARTITION -type f -name $APPLI-* | wc -l)
-  if [ $ALL_RETENTION -eq 0 ]; then
-    if [[ "$nbBackup" -gt "$NB_MAX_BACKUP" ]]; then
-
-      # Archive la plus ancienne
-      oldestBackupPath=$(find $BACKUP_PARTITION -type f -name $APPLI-* -printf '%T+ %p\n' | sort | head -n 1 | awk '{print $2}')
-      oldestBackupFile=$(find $BACKUP_PARTITION -type f -name $APPLI-* -printf '%T+ %p\n' | sort | head -n 1 | awk '{split($0,a,/\//); print a[5]}')
-
-      # Suppression du répertoire du backup
-      rm -rf "$oldestBackupPath"
-
-      # Suppression Archive Google Drive
-      echo -e "${CCYAN}> Suppression de l'archive la plus ancienne${CEND}"
-      rclone --config "/home/${USER}/.config/rclone/rclone.conf" purge "$remote:/$remote_backups/$oldestBackupFile" -v --log-file=/var/log/backup.log
-    fi
-  fi
-  echo ""
-  echo -e "${CRED}-------------------------------------------------------${CEND}"
-  echo -e "${CRED}        SAUVEGARDE ${APPLI}  TERMINEE                 ${CEND}"
-  echo -e "${CRED}-------------------------------------------------------${CEND}"
-
-}
-
-function ks_change_password() {
-  echo "#############################################"
-  echo "Cette procédure va redéarrer traefik "
-  echo "Pendant cette opération, les interfaces web seront inaccessibles"
-  read -rp $'\e[33mSaisissez le nouveau password\e[0m : ' NEWPASS
-  ks_manage_account_yml user.pass "${NEWPASS}"
-  ks_manage_account_yml user.htpwd $(htpasswd -nb ${USER} ${NEWPASS})
-  docker rm -f traefik
-  ks_launch_service traefik
-}
-
-function ks_relance_container() {
-  touch $SERVICESPERUSER
-  TABSERVICES=()
-  for SERVICEACTIVATED in $(docker ps --format "{{.Names}}"); do
-    SERVICE=$(echo $SERVICEACTIVATED | cut -d\. -f1)
-    TABSERVICES+=(${SERVICE//\"/} " ")
-  done
-  line=$(
-    whiptail --title "App Manager" --menu \
-      "Sélectionner le container à réinitialiser" 19 45 11 \
-      "${TABSERVICES[@]}" 3>&1 1>&2 2>&3
-  )
-  exitstatus=$?
-  if [ $exitstatus = 0 ]; then
-    ks_log_write "Relance du container ${line}"
-    echo "###############################################"
-    echo "# Relance du container ${line} "
-    echo "###############################################"
-    docker rm -f ${line}
-    ks_launch_service ${line}
-  fi
-}
-
-function ks_install_plextraktsync() {
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/plextraktsync/tasks/main.yml
-  echo "Préparation pour le premier lancement de configuration"
-  echo "Assurez vous d'avoir les api Trakt avant de continuer (https://trakt.tv/oauth/applications/new)"
-  ks_pause
-  /usr/local/bin/plextraktsync
-  echo "L'outil est installé et se lancera automatiquement toutes les heures"
-  ks_pause
-}
-
-function ks_install_block_public_tracker() {
-  echo "Block_public_tracker va bloquer les trackers publics (piratebay, etc...) sur votre machine au niveau réseau"
-  echo "Ces trackers ne seront plus accessibles"
-  echo "Appuyez sur entrée pour continer, ou ctrl+C pour sortir"
-  ks_pause
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/playbooks/block_public_tracker.yml
-  echo "Block_public_tracker a été installé avec succès"
-  ks_pause
 }
 
 function ks_choix_appli_lance() {
