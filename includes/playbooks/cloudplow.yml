@@ -1,0 +1,70 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: create directory
+      file:
+        path: "{{ settings.storage }}/scripts/cloudplow"
+        state: directory
+
+    - name: Create conf file
+      template:
+        src: "{{ settings.source }}/includes/playbooks/templates/cloudplow.config.json.j2"
+        dest: "{{ settings.storage }}/scripts/cloudplow/config.json"
+
+    - name: "Launch Cloudplow"
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        kind: Deployment
+        namespace: kubeseed
+        name: "cloudplow"
+        definition:
+          metadata:
+            labels:
+              ksapp: "cloudplow"
+              app: "cloudplow"
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                ksapp: "cloudplow"
+                app: "cloudplow"
+            template:
+              metadata:
+                labels:
+                  ksapp: "cloudplow"
+                  app: "cloudplow"
+              spec:
+                containers:
+                  - name: "cloudplow"
+                    image: 'ghcr.io/sabrsorensen/alpine-cloudplow'
+                    imagePullPolicy: "Always"
+                    env:
+                    - name: PUID
+                      value: "{{ user.userid }}"
+                    - name: PGID
+                      value: "{{ user.groupid }}"
+                    - name: CLOUDPLOW_CONFIG
+                      value: "/config/config.json"
+                    - name: CLOUDPLOW_LOGFILE
+                      value: "/config/cloudplow.log"
+                    - name: CLOUDPLOW_LOGLEVEL
+                      value: "DEBUG"
+                    - name: CLOUDPLOW_CACHEFILE
+                      value: "/config/cache.db"
+
+                    volumeMounts:
+                      - mountPath: "/config"
+                        name: "cloudplow-config"
+                      - mountPath: "{{ lookup('env','HOME') }}"
+                        name: "cloudplow-home"
+                volumes:
+                  - name: "cloudplow-home"
+                    hostPath:
+                      path: "{{ lookup('env','HOME') }}"
+                      type: Directory
+                  - name: "cloudplow-config"
+                    hostPath:
+                      path: "{{ settings.storage }}/scripts/cloudplow"
+                      type: Directory

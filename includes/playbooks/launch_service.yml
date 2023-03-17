@@ -119,7 +119,18 @@
       loop: "{{ specific_container_info.ports }}"
 
     - name: set middleware
-      include_tasks: "{{ settings.source }}/includes/playbooks/tasks/set_middleware.yml"
+      set_fact:
+        k3s_middlewares: default-redirect-https@kubernetescrd
+
+    - name: modify middleware if basic auth
+      set_fact:
+        k3s_middlewares: kubeseed-my-basic-auth@kubernetescrd, default-redirect-https@kubernetescrd
+      when: applis[application].auth == "basique"
+
+    - name: modify middleware if oauth
+      set_fact:
+        k3s_middlewares: kubeseed-traefik-forward-auth@kubernetescrd, default-redirect-https@kubernetescrd
+      when: applis[application].auth == "oauth"
 
     # Lancement de l'ingress (règle traefik)
     - name: "Launch {{ application }} - Ingress "

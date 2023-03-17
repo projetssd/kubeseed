@@ -1,4 +1,4 @@
-i#!/bin/bash
+#!/bin/bash
 ##########
 
 function ks_logo() {
@@ -181,12 +181,9 @@ function ks_install_autoscan() {
 }
 
 function ks_install_cloudplow() {
-  #configuration plex_autoscan avec ansible
   echo -e "${BLUE}### CLOUDPLOW ###${NC}"
   echo -e " ${BWHITE}* Installation cloudplow${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/cloudplow/tasks/main.yml
-  sudo chown -R ${USER} ${HOME}/scripts/cloudplow
-  checking_errors $?
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cloudplow.yml"
 }
 
 function ks_check_dir() {
@@ -222,7 +219,7 @@ function ks_make_dir_writable() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/change_rights.yml" \
     --extra-vars '{"DIRECTORY":"'${1}'"}'
 
-}
+}c
 
 function ks_checking_errors() {
   if [[ "$1" == "0" ]]; then
