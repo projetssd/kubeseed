@@ -20,5 +20,9 @@ application_env:
 
 no_liveness: true
 
+specific_container_info:
+  ports:
+    - 32400
+
 pretasks:
   - claim_plex_server
