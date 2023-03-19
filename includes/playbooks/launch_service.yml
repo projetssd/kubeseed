@@ -31,6 +31,42 @@
       loop_control:
         loop_var: detail_volume
 
+    # Specs #######################################################################
+    # Prépare un dictionnaire qui sera appelé lors du déploiement
+    - name: Prepare specs if liveness
+      set_fact:
+        specs:
+          containers:
+            - name: "{{ application }}"
+              image: '{{image}}'
+              imagePullPolicy: "Always"
+              ports:
+                - containerPort: "{{ app_port }}"
+              env: "{{ application_env }}"
+              volumeMounts: "{{ container_volumes }}"
+              livenessProbe:
+                httpGet:
+                  path: /
+                  port: "{{ app_port }}"
+                initialDelaySeconds: 30
+                periodSeconds: 30
+          volumes: "{{ host_volumes }}"
+      when: no_liveness is not defined
+
+    - name: Prepare specs if NO liveness
+      set_fact:
+        specs:
+          containers:
+            - name: "{{ application }}"
+              image: '{{image}}'
+              imagePullPolicy: "Always"
+              ports:
+                - containerPort: "{{ app_port }}"
+              env: "{{ application_env }}"
+              volumeMounts: "{{ container_volumes }}"
+          volumes: "{{ host_volumes }}"
+      when: no_liveness is defined and no_liveness is true
+
     # DEPLOY ######################################################################
     # Déploiement : lancement du pod principal
     - name: "Launch {{ application }} - Deployment"
@@ -56,22 +92,8 @@
                 labels:
                   ksapp: "{{ application }}"
                   app: "{{ application }}"
-              spec:
-                containers:
-                  - name: "{{ application }}"
-                    image: '{{image}}'
-                    imagePullPolicy: "Always"
-                    ports:
-                      - containerPort: "{{ app_port }}"
-                    env: "{{ application_env }}"
-                    volumeMounts: "{{ container_volumes }}"
-                    livenessProbe:
-                      httpGet:
-                        path: /
-                        port: "{{ app_port }}"
-                      initialDelaySeconds: 30
-                      periodSeconds: 30
-                volumes: "{{ host_volumes }}"
+              spec: "{{ specs }}"
+
 
     # Lancement du service de connexion
     - name: "Launch {{ application }} - Service"

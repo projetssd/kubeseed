@@ -18,5 +18,7 @@ application_env:
   - name: PLEX_CLAIM
     value: "{{ plex_claim_code }}"
 
+no_liveness: true
+
 pretasks:
   - claim_plex_server

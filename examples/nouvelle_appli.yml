@@ -34,6 +34,9 @@ application_env:                     # Variables d'environnement du container
 ############# OPTIONS ###################################
 # A partir d'ici, tout est optionnel
 
+no_liveness: true # Si positionné à true, ne mettra pas de check du liveness
+# Utile pour certaines applications (plex, on te regarde...)
+
 #specific_container_info:
   # Liste des ports à ouvrir en direct sur l'hôte
   # Correspond à ports: -3000:3000 dans docker
