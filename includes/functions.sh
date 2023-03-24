@@ -495,11 +495,12 @@ EOF
 
   # installation des dépendances
   ks_log_statusbar "Installation des paquets galaxy"
-  ansible-galaxy collection install community.general
-  # dépendence permettant de gérer les fichiers yml
-  ansible-galaxy install kwoodson.yedit
-  # kubernetes
-  ansible-galaxy collection install kubernetes.core
+  ansible-galaxy install -r "${SETTINGS_SOURCE}/requirements.txt"
+#  ansible-galaxy collection install community.general
+#  # dépendence permettant de gérer les fichiers yml
+#  ansible-galaxy install kwoodson.yedit
+#  # kubernetes
+#  ansible-galaxy collection install kubernetes.core
 
   ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
   ks_manage_account_yml settings.source "${SETTINGS_SOURCE}"
