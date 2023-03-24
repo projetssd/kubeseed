@@ -4,11 +4,11 @@ app_port: 8080
 image: 'mondedie/rutorrent:latest'
 description: "A torrent manager"
 application_volumes:
-  - local_path: "{{ settings.storage }}docker/{{application}}/config"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
-  - local_path: "{{ settings.storage }}docker/{{application}}/data"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/data"
     container_path: "/data"
-  - local_path: "{{ settings.storage }}docker/{{ application }}/sock"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{ application }}/sock"
     container_path: "/run/rtorrent"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"

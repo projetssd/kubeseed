@@ -2,7 +2,7 @@
 - name: wait for files to be present
   wait_for:
     path:
-      "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
+      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
 
 - name: Create directory
   file:
@@ -12,7 +12,7 @@
 - name: Set download location
   lineinfile:
     path:
-      "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
+      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*directory.default.set\s*=.*'
     line: "directory.default.set = /home/{{ lookup('env','USER') }}/local/{{application}}"
     state: present
@@ -20,7 +20,7 @@
 - name: Set download location
   lineinfile:
     path:
-      "{{ settings.storage }}/docker/{{application}}/config/rutorrent/conf/config.php"
+      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rutorrent/conf/config.php"
     regexp: '\$topDirectory\s*=.*'
     line: "$topDirectory = '/home/{{ lookup('env','USER') }}';"
     state: present
@@ -28,7 +28,7 @@
 - name: Change port
   lineinfile:
     path:
-      "{{ settings.storage }}/docker/{{application}}/config/rtorrent/.rtorrent.rc"
+      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
     regexp: '#*network.port_range.set\s*=.*'
     line: "network.port_range.set = {{ specific_container_info.ports[0] }}-{{ specific_container_info.ports[0] }}"
     state: present
@@ -36,5 +36,5 @@
 - name: Clone Ratio Color plugin
   git:
     repo: https://github.com/Micdu70/rutorrent-ratiocolor.git
-    dest: "{{ settings.storage }}/docker/{{application}}/config/custom_plugins/ratiocolor"
+    dest: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/custom_plugins/ratiocolor"
     clone: yes

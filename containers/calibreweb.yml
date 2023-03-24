@@ -4,7 +4,7 @@ app_port: 8083
 description: "Calibre-web is a web app providing a clean interface for browsing, reading and downloading eBooks using an existing Calibre database."
 image: 'lscr.io/linuxserver/calibre-web:latest'
 application_volumes:
-  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"

@@ -9,7 +9,7 @@ function ks_logo() {
   nocolor='\033[0m'   # no color
   colorp='\033[1;34m' # Bold BLUE
   colora='\033[1;32m' # Bold GREEN
-  projetname='KubeSeed'in
+  projetname='KubeSeed'
   authors='Author: Merrick'
   printf " \n"
   printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
@@ -237,14 +237,6 @@ function ks_install_fail2ban() {
   echo ""
 }
 
-function ks_install_watchtower() {
-  echo -e "${BLUE}### WATCHTOWER ###${NC}"
-  echo -e " ${BWHITE}* Installation Watchtower${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/dockerapps/watchtower.yml
-  ks_checking_errors $?
-  echo ""
-}
-
 function ks_install_rclone() {
   curl https://rclone.org/install.sh | sudo bash
   echo -e "${BLUE}### RCLONE ###${NC}"
@@ -268,27 +260,27 @@ function ks_mergerfs() {
 function ks_subdomain_unitaire() {
   line=$1
   echo ""
-  read -rp $'\e\033[1;37m --> Personnaliser le sous domaines pour '${line}' : (o/N) ? ' OUI
+  read -rp $'\e\033[1;37m --> Personnaliser le sous domaines pour '"${line}"' : (o/N) ? ' OUI
   echo ""
-  if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
+  if [[ "${OUI}" == "o" ]] || [[ "${OUI}" == "O" ]]; then
     echo -e " ${CRED}--> NE PAS SAISIR LE NOM DE DOMAINE - LES POINTS NE SONT PAS ACCEPTES${NC}"
     echo ""
 
-    read -rp $'\e[32m* Sous domaine pour\e[0m '${line}': ' SUBDOMAIN
+    read -rp $'\e[32m* Sous domaine pour\e[0m '"${line}"': ' SUBDOMAIN
 
   else
     SUBDOMAIN=${line}
   fi
-  ks_manage_account_yml applis.${line}.subdomain $SUBDOMAIN
+  ks_manage_account_yml "applis.${line}.subdomain" "${SUBDOMAIN}"
 }
 
 function ks_auth_unitaire() {
   line=$1
   echo ""
 
-  read -rp $'\e\033[1;37m --> Authentification '${line}' [ Enter ] 1 => basique (défaut) | 2 => oauth | 3 => authelia | 4 => aucune: ' AUTH
+  read -rp $'\e\033[1;37m --> Authentification '"${line}"' [ Enter ] 1 => basique (défaut) | 2 => oauth | 3 => aucune: ' AUTH
 
-  case $AUTH in
+  case "${AUTH}" in
   1)
     TYPE_AUTH=basique
     ;;
@@ -298,11 +290,6 @@ function ks_auth_unitaire() {
     ;;
 
   3)
-    TYPE_AUTH=authelia
-
-    ;;
-
-  4)
     TYPE_AUTH=aucune
     ;;
 
@@ -313,7 +300,7 @@ function ks_auth_unitaire() {
     ;;
   esac
 
-  ks_manage_account_yml applis.${line}.auth ${TYPE_AUTH}
+  ks_manage_account_yml "applis.${line}.auth" "${TYPE_AUTH}"
 
 }
 

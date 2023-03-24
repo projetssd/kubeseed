@@ -4,7 +4,7 @@ app_port: 5055
 description: "Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem."
 image: 'ghcr.io/linuxserver/overseerr'
 application_volumes:
-  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
 
 application_env:

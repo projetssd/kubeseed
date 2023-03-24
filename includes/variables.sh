@@ -59,3 +59,5 @@ export MYGID=$(id -g)
 export MYGIDNAME=$(id -gn)
 # Rclone
 export RCLONE_MNT_DIR="${HOME}/seedbox/rclone"
+# app settings
+export APP_SETTINGS="${SETTINGS_STORAGE}/app_settings"

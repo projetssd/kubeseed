@@ -4,7 +4,7 @@ app_port: 5000
 description: "Website change detection."
 image: 'lscr.io/linuxserver/changedetection.io:latest'
 application_volumes:
-  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
 
 application_env:

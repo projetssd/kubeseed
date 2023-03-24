@@ -7,7 +7,7 @@ application_volumes:
   # chaque élément commence par un tiret
   # On doit avoir un local_path (chemin sur l'hôte)
   # et on container_path (chemin sur le container)
-  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"

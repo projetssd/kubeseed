@@ -36,7 +36,7 @@
             volumes:
               - name: "db-{{ application }}-persistent"
                 hostPath:
-                  path: "{{ settings.storage }}/docker/{{application}}/db/persistent"
+                  path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/db/persistent"
                   type: DirectoryOrCreate
 
 - name: "Launch {{ application }} - Service"

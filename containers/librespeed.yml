@@ -4,7 +4,7 @@ app_port: 80
 description: "Self-hosted Speedtest for HTML5 and more."
 image: 'linuxserver/librespeed:latest'
 application_volumes:
-  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
 
 application_env:

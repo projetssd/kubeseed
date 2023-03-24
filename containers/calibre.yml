@@ -4,7 +4,7 @@ app_port: 8080
 description: "Calibre is a powerful and easy to use e-book manager."
 image: 'lscr.io/linuxserver/calibre:latest'
 application_volumes:
-  - local_path: "{{ settings.storage }}/docker/{{application}}/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
