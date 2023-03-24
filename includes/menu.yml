@@ -20,6 +20,9 @@
         - menu: Générer un token pour le dashboard
           type_dest: bash
           dest: ks_generate_dashboard_token
+    - menu: Remettre la sauvegarde par défaut
+      type_dest: bash
+      dest: ks_install_sauvegarde
     - menu: Sécurisation système
       type_dest: sousmenu
       sousmenu:

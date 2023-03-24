@@ -85,8 +85,9 @@ def create_menu(mylist):
     menu_list=["Menu principal", ""]
     for element in mylist:
         menu_list.append(element['menu'])
-    terminal_menu = TerminalMenu(menu_list, title="Menu KubeSeed\n\nAppuyez sur echap pour sortir", skip_empty_entries=True,
-                                 status_bar="Menu Kubeseed")
+    terminal_menu = TerminalMenu(menu_list,
+                                 title="Menu KubeSeed\n\nAppuyez sur echap pour sortir\n=============================================",
+                                 skip_empty_entries=True)
     menu_entry_index = terminal_menu.show()
     # le menu_entry_index est l'index choisi
     if menu_entry_index is None:
@@ -117,6 +118,7 @@ def menu_principal():
         datamenu = yaml.load(f, Loader=SafeLoader)
 
     create_menu(datamenu)
+
 
 def list_deployments():
     output_list = []

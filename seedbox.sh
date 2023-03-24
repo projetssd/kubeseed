@@ -54,13 +54,12 @@ clear
 #update_logrotate
 ks_log_statusbar "Check de la dernière version sur git"
 git_branch=$(git rev-parse --abbrev-ref HEAD)
-if [ ${git_branch} == 'main' ]; then
-  cd ${SETTINGS_SOURCE}
+if [ "${git_branch}" == 'main' ]; then
+  cd "${SETTINGS_SOURCE}"
   git fetch >>/dev/null 2>&1
   current_hash=$(git rev-parse HEAD)
   distant_hash=$(git rev-parse main@{upstream})
-  if [ ${current_hash} != ${distant_hash} ]; then
-    clear
+  if [ "${current_hash}" != "${distant_hash}" ]; then
     echo "==============================================="
     echo "= Il existe une mise à jour"
     echo "= Pour le faire, sortez du script, puis tapez"
@@ -69,7 +68,6 @@ if [ ${git_branch} == 'main' ]; then
     ks_pause
   fi
 else
-  clear
   echo "==============================================="
   echo "= Attention, vous n'êtes pas sur la branche main !"
   echo "= Pour repasser sur main, sortez du script, puis tapez "
@@ -77,11 +75,14 @@ else
   echo "==============================================="
   ks_pause
 fi
+
+unset_window
+clear
+
 #####################################################
 # On finit de setter les variables
 # On ressource l'environnement
 source "${SETTINGS_SOURCE}/profile.sh"
-ks_log_statusbar "Menu principal"
 ks_logo
 echo "============================================="
 # Affichage du memnu, commande python

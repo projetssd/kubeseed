@@ -9,7 +9,7 @@ function ks_logo() {
   nocolor='\033[0m'   # no color
   colorp='\033[1;34m' # Bold BLUE
   colora='\033[1;32m' # Bold GREEN
-  projetname='KubeSeed'
+  projetname='KubeSeed'in
   authors='Author: Merrick'
   printf " \n"
   printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
@@ -142,7 +142,7 @@ function ks_install_sauvegarde() {
   #configuration Sauvegarde
   echo -e "${BLUE}### BACKUP ###${NC}"
   echo -e " ${BWHITE}* Mise en place Sauvegarde${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/backup/tasks/main.yml
+  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/install_backup.yml
   checking_errors $?
   echo ""
 }
@@ -846,11 +846,12 @@ EOF
   pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
   export PYTHONPATH=${pythonpath}
 
-  # installation des dépendances, permet de créer les docker network via ansible
+  # installation des dépendances
   ks_log_statusbar "Installation des paquets galaxy"
   ansible-galaxy collection install community.general
   # dépendence permettant de gérer les fichiers yml
   ansible-galaxy install kwoodson.yedit
+  # kubernetes
   ansible-galaxy collection install kubernetes.core
 
   ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
@@ -905,15 +906,22 @@ EOF
 
   # Instalation rclone
   ks_log_statusbar "Installation/configuration de rclone"
-  ks_create_dir ${HOME}/local
-  ks_create_dir ${HOME}/Medias
+  ks_create_dir "${HOME}/local"
+  ks_create_dir "${HOME}/Medias"
   read -rp "Voulez vous utiliser rclone ? [O] : " INSTALL_RCLONE
   INSTALL_RCLONE=${INSTALL_RCLONE:-O}
   if [[ ${INSTALL_RCLONE} == "O" || ${INSTALL_RCLONE} == "o" ]]; then
+    ks_manage_account_yml rclone.usage 1
     ks_install_rclone
     ks_log_statusbar "Configuration de mergerfs"
     ks_mergerfs
+  else
+    ks_manage_account_yml rclone.usage 0
   fi
+
+  # mise en place de la sauvegarde
+  ks_log_statusbar "Mise en place de la sauvegarde"
+  ks_install_sauvegarde
 
   # On finit par la database
   echo "Création de la configuration en cours"
