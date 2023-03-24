@@ -23,47 +23,6 @@ function ks_logo() {
   printf "${color3}$(uname -srmo) - Uptime: $(/usr/bin/uptime -p)${nocolor}\n"
 }
 
-function ks_get_cloudflare_infos() {
-  #####################################
-  # Récupère les infos de cloudflare
-  # Pour utilisation ultérieure
-  ######################################
-  echo -e "${BLUE}### Gestion des DNS ###${NC}"
-  echo ""
-  echo -e "${CCYAN}------------------------------------------------------------------${CEND}"
-  echo -e "${CCYAN}   CloudFlare protège et accélère les sites internet.             ${CEND}"
-  echo -e "${CCYAN}   CloudFlare optimise automatiquement la déliverabilité          ${CEND}"
-  echo -e "${CCYAN}   de vos pages web afin de diminuer le temps de chargement       ${CEND}"
-  echo -e "${CCYAN}   et d’améliorer les performances. CloudFlare bloque aussi       ${CEND}"
-  echo -e "${CCYAN}   les menaces et empêche certains robots illégitimes de          ${CEND}"
-  echo -e "${CCYAN}   consommer votre bande passante et les ressources serveur.      ${CEND}"
-  echo -e "${CCYAN}------------------------------------------------------------------${CEND}"
-  echo ""
-  read -rp $'\e[33mSouhaitez vous utiliser les DNS Cloudflare ? (o/n)\e[0m :' OUI
-
-  if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
-
-    if [ -z "$cloud_email" ] || [ -z "$cloud_api" ]; then
-      cloud_email=$1
-      cloud_api=$2
-    fi
-
-    while [ -z "$cloud_email" ]; do
-      echo >&2 -n -e "${BWHITE}Votre Email Cloudflare: ${CEND}"
-      read cloud_email
-      ks_manage_account_yml cloudflare.login "$cloud_email"
-      update_seedbox_param "cf_login" $cloud_email
-    done
-
-    while [ -z "$cloud_api" ]; do
-      echo >&2 -n -e "${BWHITE}Votre API Cloudflare: ${CEND}"
-      read cloud_api
-      ks_manage_account_yml cloudflare.api "$cloud_api"
-    done
-  fi
-  echo ""
-}
-
 function ks_install_oauth() {
   #######################################
   # Récupère les infos oauth
@@ -87,19 +46,19 @@ function ks_install_oauth() {
 
     while [ -z "$oauth_client" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_client: ${CEND}"
-      read oauth_client
+      read -r oauth_client
       ks_manage_account_yml oauclient_id "$oauth_client"
     done
 
     while [ -z "$oauth_secret" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_secret: ${CEND}"
-      read oauth_secret
+      read -r oauth_secret
       ks_manage_account_yml oauclient_secret "$oauth_secret"
     done
 
     while [ -z "$email" ]; do
       echo >&2 -n -e "${BWHITE}Compte Gmail utilisé(s), séparés d'une virgule si plusieurs: ${CEND}"
-      read email
+      read -r email
       ks_manage_account_yml oauth.account "$email"
     done
 
@@ -125,24 +84,11 @@ function ks_install_oauth() {
   echo ""
 }
 
-function ks_install_rtorrent_cleaner() {
-  #configuration de rtorrent-cleaner avec ansible
-  echo -e "${BLUE}### RTORRENT-CLEANER ###${NC}"
-  echo ""
-  echo -e " ${BWHITE}* Installation RTORRENT-CLEANER${NC}"
-
-  ## choix de l'utilisateur
-  #SEEDUSER=$(ls ${SETTINGS_STORAGE}/media* | cut -d '-' -f2)
-  sudo cp -r ${SETTINGS_SOURCE}/includes/config/rtorrent-cleaner/rtorrent-cleaner /usr/local/bin
-  sudo sed -i "s|%SEEDUSER%|${USER}|g" /usr/local/bin/rtorrent-cleaner
-  sudo sed -i "s|%SETTINGS_STORAGE%|${SETTINGS_STORAGE}|g" /usr/local/bin/rtorrent-cleaner
-}
-
 function ks_install_sauvegarde() {
   #configuration Sauvegarde
   echo -e "${BLUE}### BACKUP ###${NC}"
   echo -e " ${BWHITE}* Mise en place Sauvegarde${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/install_backup.yml
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_backup.yml"
   checking_errors $?
   echo ""
 }
@@ -152,31 +98,17 @@ function ks_debug() {
   pause
 }
 
-function ks_install_plex_dupefinder() {
-  #configuration plex_dupefinder avec ansible
-  echo -e "${BLUE}### PLEX_DUPEFINDER ###${NC}"
-  echo -e " ${BWHITE}* Installation plex_dupefinder${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/plex_dupefinder/tasks/main.yml
-  checking_errors $?
-}
 
-function ks_install_traktarr() {
-  ##configuration traktarr avec ansible
-  echo -e "${BLUE}### TRAKTARR ###${NC}"
-  echo -e " ${BWHITE}* Installation traktarr${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/roles/traktarr/tasks/main.yml
-  checking_errors $?
-}
 
 function ks_update_logrotate() {
-  ansible-playbook ${SETTINGS_SOURCE}/includes/config/playbooks/logrotate.yml
+  ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/logrotate.yml"
 }
 
 function ks_install_autoscan() {
   #configuration autoscan avec ansible
   echo -e "${BLUE}### AUTOSCAN ###${NC}"
   echo -e " ${BWHITE}* Installation autoscan${NC}"
-  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/autoscan.yml
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/autoscan.yml"
 }
 
 function ks_install_cloudplow() {
