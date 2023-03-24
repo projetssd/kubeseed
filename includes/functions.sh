@@ -362,105 +362,6 @@ function ks_create_user_non_systeme() {
   return
 }
 
-function ks_choose_services() {
-  echo -e "${BLUE}### SERVICES ###${NC}"
-  echo "DEBUG ${SERVICESAVAILABLE}"
-  echo -e " ${BWHITE}--> Services en cours d'installation : ${NC}"
-  rm -Rf "${SERVICESPERUSER}" >/dev/null 2>&1
-  menuservices="/tmp/menuservices.txt"
-  if [[ -e "${menuservices}" ]]; then
-    rm "${menuservices}"
-  fi
-
-  for app in $(cat ${SERVICESAVAILABLE}); do
-    service=$(echo ${app} | cut -d\- -f1)
-    desc=$(echo ${app} | cut -d\- -f2)
-    echo "${service} ${desc} off" >>/tmp/menuservices.txt
-  done
-  SERVICESTOINSTALL=$(
-    whiptail --title "Gestion des Applications" --checklist \
-      "Appuyer sur la barre espace pour la sélection" 28 64 21 \
-      $(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3
-  )
-  exitstatus=$?
-  if [ $exitstatus = 0 ]; then
-    rm /tmp/menuservices.txt
-    touch $SERVICESPERUSER
-    for APPDOCKER in $SERVICESTOINSTALL; do
-      echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
-      echo $(echo ${APPDOCKER,,} | tr -d '"') >>"${SERVICESPERUSER}"
-    done
-  else
-    return
-  fi
-}
-
-function ks_choose_other_services() {
-  echo -e "${BLUE}### SERVICES ###${NC}"
-  echo -e " ${BWHITE}--> Services en cours d'installation : ${NC}"
-  rm -Rf "${SERVICESPERUSER}" >/dev/null 2>&1
-  menuservices="/tmp/menuservices.txt"
-  if [[ -e "${menuservices}" ]]; then
-    rm /tmp/menuservices.txt
-  fi
-
-  for app in $(cat "${SETTINGS_SOURCE}/includes/config/other-services-available"); do
-    service=$(echo "${app}" | cut -d\- -f1)
-    desc=$(echo "${app}" | cut -d\- -f2)
-    echo "${service} ${desc} off" >>/tmp/menuservices.txt
-  done
-  SERVICESTOINSTALL=$(
-    whiptail --title "Gestion des Applications" --checklist \
-      "Appuyer sur la barre espace pour la sélection" 28 64 21 \
-      $(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3
-  )
-  exitstatus=$?
-  if [ $exitstatus = 0 ]; then
-    rm /tmp/menuservices.txt
-    touch "${SERVICESPERUSER}"
-    for APPDOCKER in $SERVICESTOINSTALL; do
-      echo -e "	${GREEN}* $(echo "${APPDOCKER}" | tr -d '"')${NC}"
-      echo $(echo "${APPDOCKER,,}" | tr -d '"') >>"${SERVICESPERUSER}"
-    done
-  else
-    return
-  fi
-}
-
-function ks_choose_media_folder_classique() {
-  echo -e "${BLUE}### DOSSIERS MEDIAS ###${NC}"
-  echo -e " ${BWHITE}--> Création des dossiers Medias : ${NC}"
-  mkdir -p "${HOME}/filebot"
-  mkdir -p "${HOME}/local/{Films,Series,Musiques,Animes}"
-  ks_checking_errors $?
-  echo ""
-}
-
-function ks_install_services() {
-  if [ -f "$SERVICESPERUSER" ]; then
-
-    if [[ ! -d "${SETTINGS_STORAGE}/conf" ]]; then
-      mkdir -p "${SETTINGS_STORAGE}/conf" >/dev/null 2>&1
-    fi
-
-    if [[ ! -d "${SETTINGS_STORAGE}/vars" ]]; then
-      mkdir -p "${SETTINGS_STORAGE}/vars" >/dev/null 2>&1
-    fi
-
-    ks_create_file "${SETTINGS_STORAGE}/temp.txt"
-
-    ## préparation installation
-    #for line in $(grep -l 2 ${SETTINGS_STORAGE}/status/*); do
-    #  basename=$(basename "${line}")
-    #  launch_service "${basename}"
-    #done
-
-    for line in $(cat $SERVICESPERUSER); do
-      launch_service "${line}"
-    done
-  fi
-}
-
 function ks_launch_service() {
 
   line=$1
@@ -471,13 +372,13 @@ function ks_launch_service() {
 
   ks_log_write "Installation de ${line}"
   error=0
-  tempsubdomain=$(ks_get_from_account_yml applis.${line}.subdomain)
+  tempsubdomain=$(ks_get_from_account_yml "applis.${line}.subdomain")
   if [ "${tempsubdomain}" = notfound ]; then
-    ks_subdomain_unitaire ${line}
+    ks_subdomain_unitaire "${line}"
   fi
-  tempauth=$(ks_get_from_account_yml applis.${line}.auth)
+  tempauth=$(ks_get_from_account_yml "applis.${line}.auth")
   if [ "${tempauth}" = notfound ]; then
-    ks_auth_unitaire ${line}
+    ks_auth_unitaire "${line}"
   fi
 
   # On est dans le cas générique
@@ -501,127 +402,6 @@ function ks_launch_service() {
     ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
     error=1
   fi
-}
-
-function ks_copie_yml() {
-  echo "#########################################################"
-  echo "# ATTENTION                                             #"
-  echo "# Cette fonction va copier les fichiers yml choisis     #"
-  echo "# Afin de pouvoir les personnaliser                     #"
-  echo "# Mais ne lancera pas les services associés             #"
-  echo "#########################################################"
-  ks_choose_services
-  for line in $(cat $SERVICESPERUSER); do
-    copie_yml_unit "${line}"
-  done
-  ks_choose_other_services
-  for line in $(cat $SERVICESPERUSER); do
-    copie_yml_unit "${line}"
-  done
-}
-
-function ks_copie_yml_unit() {
-
-  if [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml" ]]; then
-    # Il y a un playbook spécifique pour cette appli, on le copie
-    cp "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml" "${SETTINGS_STORAGE}/conf/${line}.yml"
-  elif [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/vars/${line}.yml" ]]; then
-    # on copie les variables pour le user
-    cp "${SETTINGS_SOURCE}/includes/dockerapps/vars/${line}.yml" "${SETTINGS_STORAGE}/vars/${line}.yml"
-  else
-    ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
-  fi
-}
-
-function ks_manage_apps() {
-  echo -e "${BLUE}##########################################${NC}"
-  echo -e "${BLUE}###          GESTION DES APPLIS        ###${NC}"
-  echo -e "${BLUE}##########################################${NC}"
-
-  ansible-playbook ${SETTINGS_SOURCE}/includes/dockerapps/templates/ansible/ansible.yml
-
-}
-
-function ks_suppression_appli() {
-
-  sousdomaine=$(ks_get_from_account_yml sub.${APPSELECTED}.${APPSELECTED})
-  domaine=$(ks_get_from_account_yml user.domain)
-
-  APPSELECTED=$1
-  DELETE=0
-  if [[ $# -eq 2 ]]; then
-    if [ "$2" = "1" ]; then
-      DELETE=1
-    fi
-  fi
-  ks_manage_account_yml sub.${APPSELECTED} " "
-
-  docker rm -f "$APPSELECTED" >/dev/null 2>&1
-  if [ $DELETE -eq 1 ]; then
-    ks_log_write "Suppresion de ${APPSELECTED}, données supprimées"
-    sudo rm -rf ${SETTINGS_STORAGE}/docker/${USER}/$APPSELECTED
-  else
-    ks_log_write "Suppresion de ${APPSELECTED}, données conservées"
-  fi
-
-  rm ${SETTINGS_STORAGE}/conf/$APPSELECTED.yml >/dev/null 2>&1
-  rm ${SETTINGS_STORAGE}/vars/$APPSELECTED.yml >/dev/null 2>&1
-  echo "0" >${SETTINGS_STORAGE}/status/$APPSELECTED
-
-  case $APPSELECTED in
-  seafile)
-    docker rm -f memcached >/dev/null 2>&1
-    ;;
-  varken)
-    docker rm -f influxdb telegraf grafana >/dev/null 2>&1
-    if [ $DELETE -eq 1 ]; then
-      sudo rm -rf ${SETTINGS_STORAGE}/docker/${USER}/telegraf
-      sudo rm -rf ${SETTINGS_STORAGE}/docker/${USER}/grafana
-      sudo rm -rf ${SETTINGS_STORAGE}/docker/${USER}/influxdb
-    fi
-    ;;
-  jitsi)
-    docker rm -f prosody jicofo jvb
-    rm -rf ${SETTINGS_STORAGE}/docker/${USER}/.jitsi-meet-cfg
-    ;;
-  nextcloud)
-    docker rm -f collabora coturn office
-    rm -rf ${SETTINGS_STORAGE}/docker/${USER}/coturn
-    ;;
-  rtorrentvpn)
-    rm ${SETTINGS_STORAGE}/conf/rutorrent-vpn.yml
-    ;;
-  jackett)
-    docker rm -f flaresolverr >/dev/null 2>&1
-    ;;
-  petio)
-    docker rm -f mongo >/dev/null 2>&1
-    ;;
-  vinkunja)
-    docker rm -f vikunja-api >/dev/null 2>&1
-    ;;
-  esac
-
-  if docker ps | grep -q db-$APPSELECTED; then
-    docker rm -f db-$APPSELECTED >/dev/null 2>&1
-  fi
-
-  if docker ps | grep -q redis-$APPSELECTED; then
-    docker rm -f redis-$APPSELECTED >/dev/null 2>&1
-  fi
-
-  if docker ps | grep -q memcached-$APPSELECTED; then
-    docker rm -f memcached-$APPSELECTED >/dev/null 2>&1
-  fi
-
-  ks_checking_errors $?
-
-  ansible-playbook -e pgrole=${APPSELECTED} ${SETTINGS_SOURCE}/includes/config/playbooks/remove_cf_record.yml
-
-  echo""
-  echo -e "${BLUE}### $APPSELECTED a été supprimé ###${NC}"
-  echo ""
-
 }
 
 function ks_pause() {
