@@ -304,64 +304,6 @@ function ks_auth_unitaire() {
 
 }
 
-function ks_define_parameters() {
-  echo -e "${BLUE}### INFORMATIONS UTILISATEURS ###${NC}"
-
-  create_user
-  CONTACTEMAIL=$(
-    whiptail --title "Adresse Email" --inputbox \
-      "Merci de taper votre adresse Email :" 7 50 3>&1 1>&2 2>&3
-  )
-  ks_manage_account_yml user.mail $CONTACTEMAIL
-
-  DOMAIN=$(
-    whiptail --title "Votre nom de Domaine" --inputbox \
-      "Merci de taper votre nom de Domaine (exemple: nomdedomaine.fr) :" 7 50 3>&1 1>&2 2>&3
-  )
-  ks_manage_account_yml user.domain $DOMAIN
-  echo ""
-}
-
-function ks_create_user_non_systeme() {
-  # nouvelle version de define_parameters()
-  echo -e "${BLUE}### INFORMATIONS UTILISATEURS ###${NC}"
-
-  #  SEEDUSER=$(whiptail --title "Administrateur" --inputbox \
-  #    "Nom d'Administrateur de la Seedbox :" 7 50 3>&1 1>&2 2>&3)
-  #  [[ "$?" == 1 ]] && script_plexdrive
-  PASSWORD=$(
-    whiptail --title "Password" --passwordbox \
-      "Mot de passe :" 7 50 3>&1 1>&2 2>&3
-  )
-
-  ks_manage_account_yml user.htpwd $(htpasswd -nb ${USER} $PASSWORD)
-  ks_manage_account_yml user.name ${USER}
-  ks_manage_account_yml user.pass $PASSWORD
-  ks_manage_account_yml user.userid $(id -u)
-  ks_manage_account_yml user.groupid $(id -g)
-
-  update_seedbox_param "name" "${user}"
-  update_seedbox_param "userid" "$(id -u)"
-  update_seedbox_param "groupid" "$(id -g)"
-  update_seedbox_param "htpwd" "${htpwd}"
-
-  CONTACTEMAIL=$(
-    whiptail --title "Adresse Email" --inputbox \
-      "Merci de taper votre adresse Email :" 7 50 3>&1 1>&2 2>&3
-  )
-  ks_manage_account_yml user.mail "${CONTACTEMAIL}"
-  update_seedbox_param "mail" "${CONTACTEMAIL}"
-
-  DOMAIN=$(
-    whiptail --title "Votre nom de Domaine" --inputbox \
-      "Merci de taper votre nom de Domaine (exemple: nomdedomaine.fr) :" 7 50 3>&1 1>&2 2>&3
-  )
-  ks_manage_account_yml user.domain "${DOMAIN}"
-  update_seedbox_param "domain" "${DOMAIN}"
-  echo ""
-  return
-}
-
 function ks_launch_service() {
 
   line=$1
@@ -418,21 +360,21 @@ function ks_manage_account_yml() {
   # pour supprimer une clé, il faut que le value soit égale à un espace
   # ex : ks_manage_account_yml sub.toto.toto toto => va créer la clé sub.toto.toto et lui mettre à la valeur toto
   # ex : ks_manage_account_yml sub.toto.toto " " => va supprimer la clé sub.toto.toto et toutes les sous clés
-  if [ -f ${SETTINGS_STORAGE}/.account.lock ]; then
+  if [ -f "${SETTINGS_STORAGE}/.account.lock" ]; then
     echo "Fichier account locké, impossible de continuer"
     echo "----------------------------------------------"
     echo "Présence du fichier ${SETTINGS_STORAGE}/.account.lock"
     exit 1
   else
-    touch ${SETTINGS_STORAGE}/.account.lock
+    touch "${SETTINGS_STORAGE}/.account.lock"
     ansible-vault decrypt "${ANSIBLE_VARS}" >/dev/null 2>&1
     if [ "${2}" = " " ]; then
       ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/manage_account_yml.yml" -e "account_key=${1} account_value=${2}  state=absent"
     else
       ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/manage_account_yml.yml" -e "account_key=${1} account_value=${2} state=present"
     fi
-    ansible-vault encrypt "${ANSIBLE_VARS}l" >/dev/null 2>&1
-    rm -f ${SETTINGS_STORAGE}/.account.lock
+    ansible-vault encrypt "${ANSIBLE_VARS}" >/dev/null 2>&1
+    rm -f "${SETTINGS_STORAGE}/.account.lock"
   fi
 }
 
@@ -452,11 +394,11 @@ function ks_install() {
     source "${SETTINGS_SOURCE}/kickstart"
   fi
 
-  sudo chown -R ${USER}: ${SETTINGS_SOURCE}/
+  sudo chown -R "${USER}:" "${SETTINGS_SOURCE}"
 
   # mise en place du sudo sans password
   if [ ! -f /etc/sudoers.d/${USER} ]; then
-    echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${USER}
+    echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/${USER}"
   fi
 
   echo "Certains composants doivent encore être installés/réglés"
@@ -548,9 +490,9 @@ function ks_install() {
   # activation du venv
   source "${VENV_DIR}/bin/activate"
 
-  temppath=$(ls ${VENV_DIR}/lib)
-  pythonpath=${VENV_DIR}/lib/${temppath}/site-packages
-  export PYTHONPATH=${pythonpath}
+  temppath=$(ls "${VENV_DIR}/lib")
+  pythonpath="${VENV_DIR}/lib/${temppath}/site-packages"
+  export PYTHONPATH="${pythonpath}"
 
   ## PIP
   ks_log_statusbar "Installation/upgrade de pip"
@@ -652,11 +594,11 @@ EOF
   ks_log_statusbar "Installation de K3S"
   echo "Installation de K3S"
   curl -sfL https://get.k3s.io | sudo sh -
-  mkdir -p ${SETTINGS_STORAGE}/k3s
-  sudo cp /etc/rancher/k3s/k3s.yaml ${SETTINGS_STORAGE}/k3s
-  sudo chown ${USER}: ${SETTINGS_STORAGE}/k3s/k3s.yaml
-  export KUBECONFIG=${SETTINGS_STORAGE}/k3s/k3s.yaml
-  ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml -e ns=kubeseed
+  mkdir -p "${SETTINGS_STORAGE}/k3s"
+  sudo cp /etc/rancher/k3s/k3s.yaml "${SETTINGS_STORAGE}/k3s"
+  sudo chown "${USER}:" "${SETTINGS_STORAGE}/k3s/k3s.yaml"
+  export KUBECONFIG="${SETTINGS_STORAGE}/k3s/k3s.yaml"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=kubeseed
 
   # Dashboard traefik
   ks_log_statusbar "Installation du dashboard Traefik"
@@ -715,8 +657,8 @@ EOF
 
 function ks_log_write() {
   DATE=$(date +'%F %T')
-  FILE=${SETTINGS_STORAGE}/logs/seedbox.log
-  echo "${DATE} - ${1}" >>${FILE}
+  FILE="${SETTINGS_STORAGE}/logs/seedbox.log"
+  echo "${DATE} - ${1}" >> "${FILE}"
   echo "${1}"
 }
 
@@ -724,7 +666,7 @@ function ks_stocke_public_ip() {
   echo "Stockage des adresses ip publiques"
   IPV4=$(curl -4 https://ip.mn83.fr)
   echo "IPV4 = ${IPV4}"
-  ks_manage_account_yml network.ipv4 ${IPV4}
+  ks_manage_account_yml network.ipv4 "${IPV4}"
   #IPV6=$(dig @resolver1.ipv6-sandbox.opendns.com AAAA myip.opendns.com +short -6)
   IPV6=$(curl -6 https://ip.mn83.fr)
   if [ $? -eq 0 ]; then
