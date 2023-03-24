@@ -15,7 +15,7 @@ if [ "$myid" -eq 0 ]; then
   NB_MAX_BACKUP=3
   CDAY=$(date +%Y%m%d-%H%M)
   BACKUP_PARTITION={{ settings.storage }}/backup
-  BACKUP_FOLDER=$BACKUP_PARTITION/backup-$CDAY
+  BACKUP_FOLDER=$BACKUP_PARTITION/backup_ks-$CDAY
   ARCHIVE=$BACKUP_FOLDER/backup_ks-$CDAY.tar.gz
 
   echo ""
