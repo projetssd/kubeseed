@@ -2,3 +2,5 @@ collections:
 # fichier requirements pour sonarqube scanner
 - community.general
 - kubernetes.core
+roles:
+  - name: kwoodson.yedit
