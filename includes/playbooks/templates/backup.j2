@@ -34,7 +34,7 @@ if [ "$myid" -eq 0 ]; then
   mkdir -p $BACKUP_FOLDER
 
   echo -e "${CCYAN}> Création de l'archive${CEND}"
-  tar cvzf $ARCHIVE -P {{ settings.storage }}/docker /home/{{ lookup('env','USER') }}/.config/kubeseed /home/{{ lookup('env','USER') }}/.config/rclone /home/{{ lookup('env','USER') }}/.ansible /home/{{ lookup('env','USER') }}/.vault_pass /etc/systemd  /opt/sa /opt/gen-sa --ignore-failed-read
+  tar cvzf $ARCHIVE -P /var/lib/rancher/k3s/server/token /var/lib/rancher/k3s/server/db/ {{ settings.storage }}/docker /home/{{ lookup('env','USER') }}/.config/kubeseed /home/{{ lookup('env','USER') }}/.config/rclone /home/{{ lookup('env','USER') }}/.ansible /home/{{ lookup('env','USER') }}/.vault_pass /etc/systemd  /opt/sa /opt/gen-sa --ignore-failed-read
   sleep 2s
 
   {% if rclone.usage == 1 %}

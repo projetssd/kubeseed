@@ -6,14 +6,15 @@
 # qui seront traitées par la suite
 ########################################
 
-source ${SETTINGS_SOURCE}/includes/functions.sh
-source ${SETTINGS_SOURCE}/includes/variables.sh
+source "${SETTINGS_SOURCE}/includes/functions.sh"
+source "${SETTINGS_SOURCE}/includes/variables.sh"
+
 
 echo -e "${BLUE}### INFORMATIONS UTILISATEURS ###${NC}"
 
-if [ ! -f ${ANSIBLE_VARS} ]; then
+if [ ! -f "${ANSIBLE_VARS}" ]; then
   mkdir -p "${HOME}/.ansible/inventories/group_vars"
-  cp ${SETTINGS_SOURCE}/includes/files/account.yml ${ANSIBLE_VARS}
+  cp "${SETTINGS_SOURCE}/includes/files/account.yml" "${ANSIBLE_VARS}"
 fi
 
 echo ""
@@ -21,7 +22,7 @@ echo -e "${BLUE}L'utilisateur et mot de passe demandés${NC}"
 echo -e "${BLUE}serviront à vous authentifier sur les différents services en mode web${NC}"
 
 USERNAME=$(ks_get_from_account_yml user.name)
-if [ ${USERNAME} == notfound ]; then
+if [ "${USERNAME}" == notfound ]; then
   ks_manage_account_yml user.name "${USER}"
 else
   echo -e "${BLUE}Username déjà renseigné${CEND}"

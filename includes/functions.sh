@@ -105,7 +105,7 @@ function ks_install_oauth() {
 
     openssl=$(openssl rand -hex 16)
     ks_manage_account_yml oauth.secret "$openssl"
-
+    ks_manage_account_yml applis.oauth.subdomain oauth
     echo ""
     echo -e "${CRED}---------------------------------------------------------------${CEND}"
     echo -e "${CCYAN}    IMPORTANT:	Avant la 1ere connexion			       ${CEND}"
@@ -679,6 +679,12 @@ function ks_get_from_account_yml() {
 
 function ks_install() {
 
+   # on regarde s'il un fichier kickstart
+  if [ -f "${SETTINGS_SOURCE}/kickstart" ]; then
+    echo "fichier kickstart trouvé"
+    source "${SETTINGS_SOURCE}/kickstart"
+  fi
+  
   sudo chown -R ${USER}: ${SETTINGS_SOURCE}/
 
   # mise en place du sudo sans password
@@ -872,10 +878,7 @@ EOF
 
   #  On part à la pêche aux infos....
   ks_log_statusbar "Gestion des infos utilisateur"
-  # on regarde s'il un fichier kickstart
-  if [ -f "${SETTINGS_SOURCE}/kickstart" ]; then
-    source "${SETTINGS_SOURCE}/kickstart"
-  fi
+
   "${SETTINGS_SOURCE}/includes/scripts/get_infos.sh"
 
   # Installation de k3s

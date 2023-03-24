@@ -10,24 +10,24 @@
 # Permet de mettre en pause entre chaque
 # élement lors de l'install
 # Peu importe la valeur, si il est présent, on sera en mode debug
-KS_DEBUG=1
+export KS_DEBUG=1
 
 ################################################
 # Password pour l'auth basique
-KS_PASSWORD=raidisnotabackup
+export KS_PASSWORD=raidisnotabackup
 
 #################################################
 # Email de l'utilisateur
-KS_MAIL=monemail@kuebseed.com
+export KS_MAIL=monemail@kuebseed.com
 
 #################################################
 # Domaine de l'utilisateur
-KS_DOMAIN=kubeseed.com
+export KS_DOMAIN=kubeseed.com
 
 #################################################
 # Adresse mail cloudflare
-KS_CF_MAIL=monemail@kuebseed.com
+export KS_CF_MAIL=monemail@kuebseed.com
 
 #################################################
 # Adresse mail cloudflare
-KS_CF_API=xxxxxxxxxxxxxxxxxxxxxxxxx
+export KS_CF_API=xxxxxxxxxxxxxxxxxxxxxxxxx
