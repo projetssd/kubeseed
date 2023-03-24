@@ -151,7 +151,7 @@
 
     - name: modify middleware if oauth
       set_fact:
-        k3s_middlewares: kubeseed-traefik-forward-auth@kubernetescrd, default-redirect-https@kubernetescrd
+        k3s_middlewares: kubeseed-oauth@kubernetescrd, default-redirect-https@kubernetescrd
       when: applis[application].auth == "oauth"
 
     # Lancement de l'ingress (règle traefik)

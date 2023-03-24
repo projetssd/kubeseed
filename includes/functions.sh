@@ -684,7 +684,7 @@ function ks_install() {
     echo "fichier kickstart trouvé"
     source "${SETTINGS_SOURCE}/kickstart"
   fi
-  
+
   sudo chown -R ${USER}: ${SETTINGS_SOURCE}/
 
   # mise en place du sudo sans password
