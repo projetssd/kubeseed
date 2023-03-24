@@ -16,9 +16,8 @@ echo "# avant de continuer                               #"
 echo "####################################################"
 ks_pause
 
-mkdir -p ${HOME}/.config/rclone
-RCLONE_CONFIG_FILE=${HOME}/.config/rclone/rclone.conf
-
+mkdir -p "${HOME}/.config/rclone"
+RCLONE_CONFIG_FILE="${HOME}/.config/rclone/rclone.conf"
 
 
 function paste() {

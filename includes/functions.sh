@@ -379,7 +379,7 @@ function ks_manage_account_yml() {
 }
 
 function ks_get_from_account_yml() {
-  tempresult=$(ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/get_var.yml -e myvar=$1 -e tempfile=${tempfile} | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}' | xargs)
+  tempresult=$(ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/get_var.yml" -e myvar="${1}" | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}' | xargs)
   if [ -z "$tempresult" ]; then
     tempresult=notfound
   fi
@@ -388,7 +388,7 @@ function ks_get_from_account_yml() {
 
 function ks_install() {
 
-   # on regarde s'il un fichier kickstart
+  # on regarde s'il un fichier kickstart
   if [ -f "${SETTINGS_SOURCE}/kickstart" ]; then
     echo "fichier kickstart trouvé"
     source "${SETTINGS_SOURCE}/kickstart"
@@ -397,7 +397,7 @@ function ks_install() {
   sudo chown -R "${USER}:" "${SETTINGS_SOURCE}"
 
   # mise en place du sudo sans password
-  if [ ! -f /etc/sudoers.d/${USER} ]; then
+  if [ ! -f "/etc/sudoers.d/${USER}" ]; then
     echo "${USER} ALL=(ALL) NOPASSWD:ALL" | sudo tee "/etc/sudoers.d/${USER}"
   fi
 
@@ -618,8 +618,8 @@ EOF
 
   # Instalation rclone
   ks_log_statusbar "Installation/configuration de rclone"
-  ks_create_dir "${HOME}/local"
-  ks_create_dir "${HOME}/Medias"
+  ks_create_dir "${SETTINGS_STORAGE}/local"
+  ks_create_dir "${SETTINGS_STORAGE}/Medias"
   read -rp "Voulez vous utiliser rclone ? [O] : " INSTALL_RCLONE
   INSTALL_RCLONE=${INSTALL_RCLONE:-O}
   if [[ ${INSTALL_RCLONE} == "O" || ${INSTALL_RCLONE} == "o" ]]; then
@@ -658,7 +658,7 @@ EOF
 function ks_log_write() {
   DATE=$(date +'%F %T')
   FILE="${SETTINGS_STORAGE}/logs/seedbox.log"
-  echo "${DATE} - ${1}" >> "${FILE}"
+  echo "${DATE} - ${1}" >>"${FILE}"
   echo "${1}"
 }
 

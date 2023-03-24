@@ -16,18 +16,17 @@ source "${SETTINGS_SOURCE}/includes/variables.sh"
 
 >&2 echo -n 'Votre login Plex (e-mail or username): '
 read PLEX_LOGIN
-ks_manage_account_yml plex.ident $PLEX_LOGIN
+ks_manage_account_yml plex.ident "${PLEX_LOGIN}"
 
 
 
 >&2 echo -n 'Votre password Plex: '
 read PLEX_PASSWORD
-ks_manage_account_yml plex.sesame $PLEX_PASSWORD
+ks_manage_account_yml plex.sesame "${PLEX_PASSWORD}"
 
 
 >&2 echo 'Retrieving a X-Plex-Token using Plex login/password ...'
 
-#echo "RECAP ${PLEX_LOGIN}:${PLEX_PASSWORD}"
 
 curl -qu "${PLEX_LOGIN}":"${PLEX_PASSWORD}" 'https://plex.tv/users/sign_in.xml' \
     -X POST -H 'X-Plex-Device-Name: PlexMediaServer' \
@@ -45,9 +44,9 @@ if [ -z "$X_PLEX_TOKEN" ]; then
     >&2 echo 'Failed to retrieve the X-Plex-Token.'
     exit 0
 else
-  ks_manage_account_yml plex.token $X_PLEX_TOKEN
+  ks_manage_account_yml plex.token "${X_PLEX_TOKEN}"
 fi
 
 rm -f /tmp/plex_sign_in
 
-echo $X_PLEX_TOKEN
+echo "${X_PLEX_TOKEN}"
