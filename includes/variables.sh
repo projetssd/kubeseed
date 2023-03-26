@@ -37,7 +37,7 @@ if [ ! -f "${HOME}/.config/kubeseed/env" ]; then
   destdir=${destdir:-${HOME}/seedbox}
   export SETTINGS_STORAGE=${destdir}
   echo "SETTINGS_STORAGE=${destdir}/" >>"${HOME}/.config/kubeseed/env"
-  mkdir -p ${SETTINGS_STORAGE}
+  mkdir -p "${SETTINGS_STORAGE}/logs"
 
 else
   source "${HOME}/.config/kubeseed/env"

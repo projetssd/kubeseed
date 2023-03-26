@@ -31,3 +31,15 @@ export KS_CF_MAIL=monemail@kuebseed.com
 #################################################
 # Adresse mail cloudflare
 export KS_CF_API=xxxxxxxxxxxxxxxxxxxxxxxxx
+
+#################################################
+# Sous domaine pour traefik
+KS_TRAEFIK_SUBDOMAIN=traefik
+
+#################################################
+# Auth pour traefik (1= basique, 2= oauth, 3=Aucune)
+KS_TRAEFIK_AUTH=1
+
+#################################################
+# Sous domaine pour le dashboard
+KS_DASHBOARD_SUBDOMAIN=dashboard

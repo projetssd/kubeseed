@@ -27,7 +27,7 @@ CURRENT_SCRIPT=$(readlink -f "$0")
 # Absolute path this script is in.
 SETTINGS_SOURCE=$(dirname "$CURRENT_SCRIPT")
 export SETTINGS_SOURCE
-cd ${SETTINGS_SOURCE}
+cd "${SETTINGS_SOURCE}"
 
 source "${SETTINGS_SOURCE}/includes/variables.sh"
 source "${SETTINGS_SOURCE}/includes/functions.sh"
@@ -40,7 +40,7 @@ source "${SETTINGS_SOURCE}/includes/functions.sh"
 if [ ! -f "${SETTINGS_STORAGE}/kubeseeddb" ]; then
   # kubeseed v3 n'est pas installé
   clear
-  ks_install
+  ks_install | tee "${SETTINGS_STORAGE}/logs/install.log"
 fi
 
 # on contre le bug de debian et du venv qui ne trouve pas les paquets installés par galaxy

@@ -341,7 +341,6 @@ function ks_install() {
     apt-transport-https \
     lsb-release \
     python3-kubernetes \
-    fuse \
     fuse3
 
   sudo rm -f /usr/bin/python
