@@ -79,3 +79,23 @@
                     hostPath:
                       path: "{{ settings.storage }}"
                       type: Directory
+
+    - name: "Launch autsocan - Service"
+      kubernetes.core.k8s:
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        state: present
+        kind: Service
+        namespace: kubeseed
+        name: "autsocan"
+        definition:
+          metadata:
+            labels:
+              ksapp: "autsocan"
+              app: "autsocan"
+          spec:
+            selector:
+              ksapp: "autsocan"
+              app: "autsocan"
+            ports:
+              - protocol: TCP
+                port: 3030
