@@ -11,7 +11,7 @@ if [ "$myid" -eq 0 ]; then
 
   # Variables
   remote={{rclone.remote}}
-  remote_backups=KS_BACKUPS
+  remote_backups=.KS_BACKUPS
   NB_MAX_BACKUP=3
   CDAY=$(date +%Y%m%d-%H%M)
   BACKUP_PARTITION={{ settings.storage }}/backup

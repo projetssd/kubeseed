@@ -106,7 +106,6 @@ def create_menu(mylist):
                     [settings_source + "/includes/scripts/generique.sh", mylist[menu_entry_index]['dest']])
 
             if type_dest == "python":
-                print('OK ' + mylist[menu_entry_index]['dest'])
                 eval(mylist[menu_entry_index]['dest'] + '()')
         input("Appuyez sur une touche pour continuer...")
         create_menu(mylist)
@@ -155,12 +154,12 @@ def reinit_deployment(list_deployment):
             [generique_bash, "ks_reinit_deployment", deployment])
 
 
-def choix_running_appli():
+def choix_running_appli(complement_texte):
     list_applis = list_deployments()
     list_applis.sort()
     questions = [
         inquirer.Checkbox('applications',
-                          message="Sélectionner les applications à Redémarrer",
+                          message="Sélectionner les applications à " + complement_texte + " - entrée pour valider",
                           choices=list_applis,
                           ),
     ]
@@ -173,7 +172,7 @@ def choix_restart_appli():
     Affiche une liste de choix (checkbox) des applis à installer
     Installe les applis choisies une à une
     """
-    result = choix_running_appli()
+    result = choix_running_appli("redémarrer")
     restart_deployment(result)
 
 
@@ -182,7 +181,7 @@ def choix_delete_appli():
     Affiche une liste de choix (checkbox) des applis à installer
     Installe les applis choisies une à une
     """
-    result = choix_running_appli()
+    result = choix_running_appli("désinstaller")
     delete_deployment(result)
 
 
@@ -191,6 +190,6 @@ def choix_reinit_appli():
     Affiche une liste de choix (checkbox) des applis à installer
     Installe les applis choisies une à une
     """
-    result = choix_running_appli()
+    result = choix_running_appli("réinitialiser")
     reinit_deployment(result)
 

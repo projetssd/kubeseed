@@ -48,12 +48,12 @@ backupList() {
 remoteRestoration() {
 
 path=/tmp/seedbox.txt
-backups=$(rclone --config /home/${SUDO_USER}/.config/rclone/rclone.conf lsf {{rclone.remote}}:/KS_BACKUPS| sed 's:/.*::' | cat -n | sed 's/\([1-9].*\)/\1/')
+backups=$(rclone --config /home/${SUDO_USER}/.config/rclone/rclone.conf lsf {{rclone.remote}}:/.KS_BACKUPS| sed 's:/.*::' | cat -n | sed 's/\([1-9].*\)/\1/')
 
 echo -e "\n${CCYAN}Liste des archives disponibles :${CEND}"
 echo -e "${CGREEN}$backups${CEND}"
 
-rclone --config /home/${SUDO_USER}/.config/rclone/rclone.conf lsf {{rclone.remote}}:/KS_BACKUPS | sed 's:/.*::' > $path
+rclone --config /home/${SUDO_USER}/.config/rclone/rclone.conf lsf {{rclone.remote}}:/.KS_BACKUPS | sed 's:/.*::' > $path
 
 echo ""
 
@@ -91,7 +91,7 @@ GdriveRestoration() {
     read -r
 
     echo "> Récupération de l'archive distante"
-    rclone --config /home/${SUDO_USER}/.config/rclone/rclone.conf  copy {{rclone.remote}}:/KS_BACKUPS/$BACKUPFOLDER/$ARCHIVE . --progress
+    rclone --config /home/${SUDO_USER}/.config/rclone/rclone.conf  copy {{rclone.remote}}:/.KS_BACKUPS/$BACKUPFOLDER/$ARCHIVE . --progress
 }
 
 fin() {

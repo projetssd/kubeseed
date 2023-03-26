@@ -14,21 +14,14 @@ source "${SETTINGS_SOURCE}/includes/variables.sh"
 #########################################################################
 
 
->&2 echo -n 'Votre login Plex (e-mail or username): '
-read PLEX_LOGIN
-ks_manage_account_yml plex.ident "${PLEX_LOGIN}"
+ks_get_and_store_info  "plex.ident" "Votre login Plex (e-mail or username)" UNCHECK
 
-
-
->&2 echo -n 'Votre password Plex: '
-read PLEX_PASSWORD
-ks_manage_account_yml plex.sesame "${PLEX_PASSWORD}"
-
+ks_get_and_store_info  "plex.sesame" "Votre password Plex" UNCHECK
 
 >&2 echo 'Retrieving a X-Plex-Token using Plex login/password ...'
 
 
-curl -qu "${PLEX_LOGIN}":"${PLEX_PASSWORD}" 'https://plex.tv/users/sign_in.xml' \
+curl -qu "$(ks_get_from_account_yml plex.ident)":"$(ks_get_from_account_yml plex.sesame)" 'https://plex.tv/users/sign_in.xml' \
     -X POST -H 'X-Plex-Device-Name: PlexMediaServer' \
     -H 'X-Plex-Provides: server' \
     -H 'X-Plex-Version: 0.9' \
