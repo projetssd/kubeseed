@@ -44,7 +44,7 @@
           entryPoints:
             - websecure
           routes:
-            - match: "Host(`{{ applis.traefik.domain }}.{{ user.domain }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+            - match: "Host(`{{ applis.traefik.subdomain }}.{{ user.domain }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
               kind: Rule
               services:
                 - name: api@internal

@@ -98,8 +98,6 @@ function ks_debug() {
   pause
 }
 
-
-
 function ks_update_logrotate() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/config/playbooks/logrotate.yml"
 }
@@ -189,53 +187,6 @@ function ks_mergerfs() {
   echo ""
 }
 
-function ks_subdomain_unitaire() {
-  line=$1
-  echo ""
-  read -rp $'\e\033[1;37m --> Personnaliser le sous domaines pour '"${line}"' : (o/N) ? ' OUI
-  echo ""
-  if [[ "${OUI}" == "o" ]] || [[ "${OUI}" == "O" ]]; then
-    echo -e " ${CRED}--> NE PAS SAISIR LE NOM DE DOMAINE - LES POINTS NE SONT PAS ACCEPTES${NC}"
-    echo ""
-
-    read -rp $'\e[32m* Sous domaine pour\e[0m '"${line}"': ' SUBDOMAIN
-
-  else
-    SUBDOMAIN=${line}
-  fi
-  ks_manage_account_yml "applis.${line}.subdomain" "${SUBDOMAIN}"
-}
-
-function ks_auth_unitaire() {
-  line=$1
-  echo ""
-
-  read -rp $'\e\033[1;37m --> Authentification '"${line}"' [ Enter ] 1 => basique (défaut) | 2 => oauth | 3 => aucune: ' AUTH
-
-  case "${AUTH}" in
-  1)
-    TYPE_AUTH=basique
-    ;;
-
-  2)
-    TYPE_AUTH=oauth
-    ;;
-
-  3)
-    TYPE_AUTH=aucune
-    ;;
-
-  *)
-    TYPE_AUTH=basique
-    echo "Pas de choix sélectionné, on passe sur une auth basique"
-
-    ;;
-  esac
-
-  ks_manage_account_yml "applis.${line}.auth" "${TYPE_AUTH}"
-
-}
-
 function ks_launch_service() {
 
   line=$1
@@ -246,14 +197,8 @@ function ks_launch_service() {
 
   ks_log_write "Installation de ${line}"
   error=0
-  tempsubdomain=$(ks_get_from_account_yml "applis.${line}.subdomain")
-  if [ "${tempsubdomain}" = notfound ]; then
-    ks_subdomain_unitaire "${line}"
-  fi
-  tempauth=$(ks_get_from_account_yml "applis.${line}.auth")
-  if [ "${tempauth}" = notfound ]; then
-    ks_auth_unitaire "${line}"
-  fi
+  ks_get_and_store_info  "applis.${line}.subdomain" "Sous domaine pour ${line}" UNCHECK "${line}"
+  ks_get_and_store_info  "applis.${line}.auth" "Authentification ${line} - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
 
   # On est dans le cas générique
   # on regarde s'i y a un playbook existant
@@ -496,11 +441,11 @@ EOF
   # installation des dépendances
   ks_log_statusbar "Installation des paquets galaxy"
   ansible-galaxy install -r "${SETTINGS_SOURCE}/requirements.txt"
-#  ansible-galaxy collection install community.general
-#  # dépendence permettant de gérer les fichiers yml
-#  ansible-galaxy install kwoodson.yedit
-#  # kubernetes
-#  ansible-galaxy collection install kubernetes.core
+  #  ansible-galaxy collection install community.general
+  #  # dépendence permettant de gérer les fichiers yml
+  #  ansible-galaxy install kwoodson.yedit
+  #  # kubernetes
+  #  ansible-galaxy collection install kubernetes.core
 
   ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
   ks_manage_account_yml settings.source "${SETTINGS_SOURCE}"
@@ -675,4 +620,41 @@ function ks_reinit_deployment() {
 
 function ks_generate_dashboard_token() {
   kubectl -n kubernetes-dashboard create token admin-user
+}
+
+function ks_get_and_store_info() {
+  # Get and store the info for all.yml
+  # $1 = the key in all.yml
+  # $2 = Text (one line)
+  # $3 = The var to look for if set (if UNCHECK, do not use)
+  # $4 (optional) = default value
+  my_key=$1
+  my_text=$2
+  my_var=$3
+  complement=""
+  if [ $# -eq 4 ]; then
+    complement=" [${4}] "
+  fi
+  TEMP_VAR=$(ks_get_from_account_yml "${my_key}")
+  if [ "${TEMP_VAR}" == notfound ]; then
+    if [ "${my_var}" != "UNCHECK" ]; then
+      if [ -n "${!my_var}" ]; then
+        echo -e "${my_key} déjà renseigné dans le fichier kickstart (variable ${my_var} )"
+        my_value=${!my_var}
+      else
+        read -rp "${my_text} ${complement}: " my_value </dev/tty
+      fi
+    else
+      read -rp "${my_text} ${complement}: " my_value </dev/tty
+    fi
+    # test if variable par défaut passée
+    if [ $# -eq 4 ]; then
+      if [ -z "${my_value}" ]; then
+        my_value="${4}"
+      fi
+    fi
+    ks_manage_account_yml "${my_key}" "${my_value}"
+  else
+    echo -e "${BLUE}${my_key} déjà renseigné dans all.yml${CEND}"
+  fi
 }

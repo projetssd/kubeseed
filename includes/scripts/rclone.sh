@@ -51,7 +51,7 @@ function detection() {
     #
     rm -f /tmp/choix_crypt
     rm -f /tmp/id_teamdrive
-    ${SETTINGS_SOURCE}/includes/scripts/rclone_list_td.py
+    "${SETTINGS_SOURCE}/includes/scripts/rclone_list_td.py"
     remotecrypt=$(cat /tmp/choix_crypt)
     id_teamdrive=$(cat /tmp/id_teamdrive)
     rm -f /tmp/choix_crypt
@@ -61,7 +61,7 @@ function detection() {
   2)
     rm -f /tmp/choix_crypt
     rm -f /tmp/id_teamdrive
-    ${SETTINGS_SOURCE}/includes/scripts/rclone_list_gd.py
+    "${SETTINGS_SOURCE}/includes/scripts/rclone_list_gd.py"
     remotecrypt=$(cat /tmp/choix_crypt)
     id_teamdrive=$(cat /tmp/id_teamdrive)
     rm -f /tmp/choix_crypt

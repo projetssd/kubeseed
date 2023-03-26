@@ -44,12 +44,12 @@ else
 fi
 
 MAIL=$(ks_get_from_account_yml user.mail)
-if [ ${MAIL} == notfound ]; then
+if [ "${MAIL}" == notfound ]; then
   if [ -n "$KS_MAIL" ]; then
     echo -e "${BLUE}Mail déjà renseigné dans le fichier kickstart${CEND}"
     mail="${KS_MAIL}"
   else
-    read -p $'\e[32m↘️ Mail | Appuyer sur [Enter]: \e[0m' mail </dev/tty
+    read -rp $'\e[32m↘️ Mail | Appuyer sur [Enter]: \e[0m' mail </dev/tty
   fi
   ks_manage_account_yml user.mail $mail
 else
@@ -62,7 +62,7 @@ if [ "${DOMAINE}" == notfound ]; then
     echo -e "${BLUE}Domaine déjà renseigné dans le fichier kickstart${CEND}"
     domain="${KS_DOMAIN}"
   else
-    read -p $'\e[32m↘️ Domaine | Appuyer sur [Enter]: \e[0m' domain </dev/tty
+    read -rp $'\e[32m↘️ Domaine | Appuyer sur [Enter]: \e[0m' domain </dev/tty
   fi
   ks_manage_account_yml user.domain "$domain"
 else
