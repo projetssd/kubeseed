@@ -29,26 +29,26 @@
         kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
         kind: Deployment
         namespace: kubeseed
-        name: "autsocan"
+        name: "autoscan"
         definition:
           metadata:
             labels:
-              ksapp: "autsocan"
-              app: "autsocan"
+              ksapp: "autoscan"
+              app: "autoscan"
           spec:
             replicas: 1
             selector:
               matchLabels:
-                ksapp: "autsocan"
-                app: "autsocan"
+                ksapp: "autoscan"
+                app: "autoscan"
             template:
               metadata:
                 labels:
-                  ksapp: "autsocan"
-                  app: "autsocan"
+                  ksapp: "autoscan"
+                  app: "autoscan"
               spec:
                 containers:
-                  - name: "autsocan"
+                  - name: "autoscan"
                     image: 'cloudb0x/autoscan'
                     imagePullPolicy: "Always"
                     env:
