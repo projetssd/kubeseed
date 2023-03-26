@@ -6,10 +6,10 @@
 
 - name: Create directory
   file:
-    path: "/home/{{ lookup('env','USER') }}/local/{{application}}"
+    path: "{{ lookup('env','SETTINGS_STORAGE') }}/local/{{application}}"
     state: directory
 
-- name: Set download location
+- name: Set default download location
   lineinfile:
     path:
       "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
@@ -17,7 +17,7 @@
     line: "directory.default.set = /home/{{ lookup('env','USER') }}/local/{{application}}"
     state: present
 
-- name: Set download location
+- name: Set Top Directory
   lineinfile:
     path:
       "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rutorrent/conf/config.php"

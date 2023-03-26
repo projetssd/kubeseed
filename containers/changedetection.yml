@@ -8,9 +8,6 @@ application_volumes:
     container_path: "/config"
 
 application_env:
-  # chaque élément commence par un tiret
-  # on doit avoir name (nom de la variable)
-  # et value (nom de la variable)
   - name: PUID
     value: '{{user.userid}}'
   - name: PGID
