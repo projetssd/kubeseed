@@ -657,3 +657,7 @@ function ks_get_and_store_info() {
     echo -e "${BLUE}${my_key} déjà renseigné dans all.yml${CEND}"
   fi
 }
+
+function ks_cloudplow_upload() {
+  kubectl -n kubeseed exec --stdin --tty $(kubectl get pods -n kubeseed | grep cloudplow | grep Running| awk '{print $1}') --  cloudplow upload
+}
