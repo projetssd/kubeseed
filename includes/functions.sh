@@ -439,7 +439,7 @@ EOF
 
   # installation des dépendances
   ks_log_statusbar "Installation des paquets galaxy"
-  ansible-galaxy install -r "${SETTINGS_SOURCE}/requirements.txt"
+  ansible-galaxy install -r "${SETTINGS_SOURCE}/requirements.yml"
   #  ansible-galaxy collection install community.general
   #  # dépendence permettant de gérer les fichiers yml
   #  ansible-galaxy install kwoodson.yedit
