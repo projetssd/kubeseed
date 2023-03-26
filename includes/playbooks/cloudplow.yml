@@ -66,5 +66,5 @@
                       type: Directory
                   - name: "cloudplow-config"
                     hostPath:
-                      path: "{{ settings.storage }}/scripts/cloudplow"
+                      path: "{{ lookup('env', 'APP_SETTINGS') }}/cloudplow"
                       type: Directory
