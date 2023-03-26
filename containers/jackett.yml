@@ -8,7 +8,6 @@ application_volumes:
     container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
-# Je laisse le /home pour ceux qui font du blackhole
 
 application_env:
   - name: PUID
