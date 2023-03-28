@@ -6,6 +6,10 @@
       file:
         path: "{{ lookup('env', 'APP_SETTINGS') }}/cloudplow"
         state: directory
+        become: true
+        owner: "{{ user.name }}"
+        group: "{{ user.groupid }}"
+
 
     - name: Create conf file
       template:

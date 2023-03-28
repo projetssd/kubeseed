@@ -12,7 +12,7 @@ function ks_logo() {
   projetname='KubeSeed'
   authors='Author: Merrick'
   printf " \n"
-  printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
+  printf " ${colorp} ██╗  ██╗${coinslora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
   printf " ${colorp} ██║ ██╔╝${colora}██║   ██║██╔══██╗██╔════╝${colorp}██╔════╝${colora}██╔════╝██╔════╝██╔══██╗${nocolor}\n"
   printf " ${colorp} █████╔╝ ${colora}██║   ██║██████╔╝█████╗  ${colorp}███████╗${colora}█████╗  █████╗  ██║  ██║${nocolor}\n"
   printf " ${colorp} ██╔═██╗ ${colora}██║   ██║██╔══██╗██╔══╝  ${colorp}╚════██║${colora}██╔══╝  ██╔══╝  ██║  ██║${nocolor}\n"
@@ -413,10 +413,7 @@ EOF
   ##################################################
   # Account.yml
   mkdir -p "${SETTINGS_STORAGE}/logs"
-  ks_create_dir "${SETTINGS_STORAGE}"
-  ks_create_dir "${SETTINGS_STORAGE}/variables"
-  ks_create_dir "${SETTINGS_STORAGE}/conf"
-  ks_create_dir "${SETTINGS_STORAGE}/vars"
+  ks_create_dir "${SETTINGS_STORAGE}/app_settings"
   if [ ! -f "${ANSIBLE_VARS}" ]; then
     mkdir -p "${HOME}/.ansible/inventories/group_vars"
     cp "${SETTINGS_SOURCE}/includes/files/account.yml" "${ANSIBLE_VARS}"
