@@ -1,0 +1,19 @@
+---
+application: 'portainer'            # Nom de l'application, doit correspondre au nom de fichier
+app_port: 9000                      # port de la webui - doit être un entier, sans les quotes !
+description: "Lightweight Management UI" # sera utilisé dans whiptail, une seule ligne
+image: 'portainer/portainer-ce'          # image docker de l'application
+application_volumes:                # liste de volumes à monter
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/data"
+
+application_env:                     # Variables d'environnement du container
+  - name: UID
+    value: '{{user.userid}}'
+  - name: GID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true # Si positionné à true, ne mettra pas de check du liveness
+
