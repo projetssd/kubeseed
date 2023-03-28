@@ -67,6 +67,9 @@
                         name: "autoscan-home"
                       - mountPath: "{{ settings.storage }}"
                         name: "autoscan-settings-storage"
+                      - mountPath: "/etc/localtime"
+                        name: "autoscan-localtime"
+
                 volumes:
                   - name: "autoscan-home"
                     hostPath:
@@ -80,6 +83,11 @@
                     hostPath:
                       path: "{{ settings.storage }}"
                       type: Directory
+                  - name: "autoscan-localtime"
+                    hostPath:
+                      path: "/etc/localtime"
+                      type: File
+
 
     - name: "Launch autoscan - Service"
       kubernetes.core.k8s:
