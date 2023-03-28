@@ -1,7 +1,6 @@
 ---
 - hosts: localhost
   gather_facts: false
-  become: True
   tasks:
     - name: Check if drive1.anchor exists
       stat:
@@ -14,9 +13,13 @@
       when: not anchor_service.stat.exists
 
     - name: Create directory
+      become: yes
       file:
-        path: "{{ lookup('env','APP_SETTINGS') }}/autoscan"
+        path: {{ lookup('env','APP_SETTINGS') }}/autoscan
         state: directory
+        mode: 0775
+        owner: {{ lookup('env','USER') }}
+        group: {{ lookup('env','MYGID') }}
 
     - name: Create conf file
       template:
