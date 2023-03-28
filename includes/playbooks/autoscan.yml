@@ -1,26 +1,27 @@
 ---
 - hosts: localhost
   gather_facts: false
+  become: True
   tasks:
     - name: Check if drive1.anchor exists
       stat:
         path: "{{ settings.storage }}/local/drive1.anchor"
       register: anchor_service
 
-    - name: create file anchor
+    - name: Create file anchor
       shell: |
         touch {{ settings.storage }}/local/drive1.anchor
       when: not anchor_service.stat.exists
 
-    - name: create directory
+    - name: Create directory
       file:
-        path: "{{ settings.storage }}/scripts/autoscan"
+        path: "{{ lookup('env','APP_SETTINGS') }}/autoscan"
         state: directory
 
-    - name: Crete conf file
+    - name: Create conf file
       template:
         src: "{{ settings.source }}/includes/playbooks/templates/autoscan.config.yaml.j2"
-        dest: "{{ settings.storage }}/scripts/autoscan/config.yml"
+        dest: "{{ lookup('env','APP_SETTINGS') }}/autoscan/config.yml"
 
 
     - name: "Launch Autoscan"
@@ -73,29 +74,29 @@
                       type: Directory
                   - name: "autoscan-config"
                     hostPath:
-                      path: "{{ settings.storage }}/scripts/autoscan"
+                      path: "{{ lookup('env','APP_SETTINGS') }}/autoscan"
                       type: Directory
                   - name: "autoscan-settings-storage"
                     hostPath:
                       path: "{{ settings.storage }}"
                       type: Directory
 
-    - name: "Launch autsocan - Service"
+    - name: "Launch autoscan - Service"
       kubernetes.core.k8s:
         kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
         state: present
         kind: Service
         namespace: kubeseed
-        name: "autsocan"
+        name: "autoscan"
         definition:
           metadata:
             labels:
-              ksapp: "autsocan"
-              app: "autsocan"
+              ksapp: "autoscan"
+              app: "autoscan"
           spec:
             selector:
-              ksapp: "autsocan"
-              app: "autsocan"
+              ksapp: "autoscan"
+              app: "autoscan"
             ports:
               - protocol: TCP
                 port: 3030

@@ -5,7 +5,7 @@
   tasks:
     - name: create directory
       file:
-        path: "{{ settings.source }}/{{ directory }}"
+        path: "{{ settings.storage }}/{{ directory }}"
         state: directory
       loop:
         - "local"

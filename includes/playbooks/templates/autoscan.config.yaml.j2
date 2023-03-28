@@ -53,3 +53,6 @@ targets:
   plex:
     - url: http://plex:32400
       token: {{plex.token}}
+      rewrite:
+        - from: {{ settings.storage }}/Medias/
+          to: {{ settings.storage }}/Medias/

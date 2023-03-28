@@ -4,13 +4,7 @@
         "rclone_binary_path": "/usr/bin/rclone",
         "rclone_config_path": "/home/{{ lookup('env','USER') }}/.config/rclone/rclone.conf"
     },
-    "hidden": {
-        "{{ settings.storage }}/local/.unionfs-fuse": {
-            "hidden_remotes": [
-                "{{rclone.remote}}"
-            ]
-        }
-    },
+    "hidden": {},
     "notifications": {
     },
     "plex": {
@@ -42,9 +36,8 @@
                 ".unionfs-fuse/**",
                 ".fuse_hidden**",
                 "rutorrent**/",
-                "rutorrent_2**/",
-                "rutorrent_3**/",
-                "rutorrent_4**/",
+                "rutorrent-2**/",
+                "rutorrent-3**/",
                 "rutorrentcm**/",
                 "Rtorrentvpn**/",
                 "transmission**/",
@@ -93,9 +86,8 @@
             "max_size_gb": 50,
             "opened_excludes": [
                 "/rutorrent/",
-                "/rutorrent_2/",
-                "/rutorrent_3/",
-                "/rutorrent_4/",
+                "/rutorrent-2/",
+                "/rutorrent-3/",
                 "/rutorrentcm/",
                 "/Rtorrentvpn/",
                 "/rflood/",
@@ -111,9 +103,8 @@
             },
             "size_excludes": [
                 "rutorrent/*",
-                "rutorrent_2/*",
-                "rutorrent_3/*",
-                "rutorrent_4/*",
+                "rutorrent-2/*",
+                "rutorrent-3/*",
                 "rutorrentcm/*",
                 "Rtorrentvpn/*",
                 "rflood/*",
