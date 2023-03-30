@@ -51,3 +51,7 @@
                   kind: TraefikService
               middlewares:
                 - name: my-basic-auth
+          tls:
+            - secretName: "{{ application }}-tls"
+              hosts:
+                - "{{ applis[application].subdomain }}.{{ user.domain }}"
