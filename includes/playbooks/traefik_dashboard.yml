@@ -54,4 +54,4 @@
           tls:
             - secretName: "{{ application }}-tls"
               hosts:
-                - "{{ applis[application].subdomain }}.{{ user.domain }}"
+                - "{{ applis.traefik.subdomain }}.{{ user.domain }}"
