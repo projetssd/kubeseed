@@ -52,6 +52,6 @@
               middlewares:
                 - name: my-basic-auth
           tls:
-            - secretName: "{{ application }}-tls"
+            - secretName: "traefik-tls"
               hosts:
                 - "{{ applis.traefik.subdomain }}.{{ user.domain }}"
