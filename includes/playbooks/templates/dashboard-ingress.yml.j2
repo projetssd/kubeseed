@@ -17,13 +17,11 @@ spec:
   - web
   - websecure
   routes:
-  - match: host(`{{ applis.dashboard.domain}}.{{ user.domain }}`)
+  - match: host(`{{ applis.dashboard.domain }}.{{ user.domain }}`)
     kind: Rule
     services:
     - name: kubernetes-dashboard
       port: 443
       serversTransport: mytransport
   tls:
-    secretName: "dashboard-tls"
-    hosts:
-      - "{{ applis.dashboard.domain }}.{{ user.domain }}"
+    secretName: "{{ applis.dashboard.domain }}.{{ user.domain }}"

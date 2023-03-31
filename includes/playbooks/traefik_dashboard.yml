@@ -28,30 +28,50 @@
             app.kubernetes.io/instance: traefik
             app.kubernetes.io/name: traefik
 
-#  - name: set middleware
-#    include_tasks: "{{ settings.source }}/includes/playbooks/tasks/set_middleware.yml"
-
-  - name: Create Ingress rule
+  - name: Create certificate
     kubernetes.core.k8s:
+      api_version: cert-manager.io/v1
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      kind: Certificate
+      name: "{{ applis.traefik.subdomain }}.{{ user.domain }}"
+      namespace: kube-system
+      definition:
+        spec:
+          dnsNames:
+            - "{{ applis.traefik.subdomain }}.{{ user.domain }}"
+          secretName: "{{ applis.traefik.subdomain }}.{{ user.domain }}"
+          issuerRef:
+            name: letsencrypt-prod
+            kind: ClusterIssuer
+
+  - name: "Launch traefik - Ingress "
+    kubernetes.core.k8s:
+      api_version: networking.k8s.io/v1
       kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
       state: present
-      name: traefik-ingressroute
+      kind: Ingress
       namespace: kube-system
-      kind: IngressRoute
+      name: "ing-traefik"
       definition:
-        apiVersion: traefik.containo.us/v1alpha1
+        metadata:
+          labels:
+            ksapp: "traefik"
+            app: "traefik"
+          annotations:
+            kubernetes.io/ingress.class: traefik
+            traefik.ingress.kubernetes.io/router.middlewares: "my-basic-auth"
+            cert-manager.io/cluster-issuer: letsencrypt-prod
         spec:
-          entryPoints:
-            - websecure
-          routes:
-            - match: "Host(`{{ applis.traefik.subdomain }}.{{ user.domain }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
-              kind: Rule
-              services:
-                - name: api@internal
-                  kind: TraefikService
-              middlewares:
-                - name: my-basic-auth
+          rules:
+            - host: "{{ applis.traefik.subdomain }}.{{ user.domain }}"
+              http:
+                paths:
+                  - pathType: Prefix
+                    path: "/"
+                    backend:
+                      service:
+                        name: "traefik-dashboard"
+                        port:
+                          number: 9000
           tls:
-            secretName: "traefik-tls"
-            domains:
-              - main: "{{ applis.traefik.subdomain }}.{{ user.domain }}"
+            secretName: "{{ applis.traefik.subdomain }}.{{ user.domain }}"

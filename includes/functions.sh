@@ -9,8 +9,8 @@ function ks_logo() {
   nocolor='\033[0m'   # no color
   colorp='\033[1;34m' # Bold BLUE
   colora='\033[1;32m' # Bold GREEN
-  projetname='KubeSeed'
-  authors='Author: Merrick'
+  projetname='KubeSeed'c
+  authors='Author: Merrick'r
   printf " \n"
   printf " ${colorp} ██╗  ██╗${coinslora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
   printf " ${colorp} ██║ ██╔╝${colora}██║   ██║██╔══██╗██╔════╝${colorp}██╔════╝${colora}██╔════╝██╔════╝██╔══██╗${nocolor}\n"
