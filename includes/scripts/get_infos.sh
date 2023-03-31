@@ -35,10 +35,18 @@ fi
 ks_get_and_store_info  "user.pass" "Mot de passe" KS_PASSWORD
 ks_get_and_store_info  "user.mail" "Adresse mail" KS_MAIL
 ks_get_and_store_info  "user.domain" "Domaine" KS_DOMAIN
+### CLOUDLFLARE ###
 ks_get_and_store_info  "cloudflare.login" "Votre Email cloudflare" KS_CF_MAIL
 ks_get_and_store_info  "cloudflare.api" "Votre API cloudflare" KS_CF_API
 # On met le ssl CF à full
 ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cf_force_full_ssl.yml"
+###################
+### PDNS / NSUPDATE
+# ks_get_and_store_info  "dns.algo" "algo nsupdate" KS_NS_ALGO
+# ks_get_and_store_info  "dns.keyname" "keyname" KS_NS_KEYNAME
+# ks_get_and_store_info  "dns.keysecret" "keysecret" KS_NS_KEYSECRET
+# ks_get_and_store_info  "dns.server" "ip serveur ns" KS_NS_SERVER
+###################
 
 # creation utilisateur
 userid=$(id -u)

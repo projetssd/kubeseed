@@ -29,7 +29,7 @@
         - menu: Installer Oauth
           type_dest: bash
           dest: ks_install_oauth
-    - menu: Sécurisation système
+    - menu: Utilitaires
       type_dest: sousmenu
       sousmenu:
         - menu: Installer cloudplow

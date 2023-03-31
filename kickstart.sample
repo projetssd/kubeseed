@@ -18,7 +18,7 @@ export KS_PASSWORD=raidisnotabackup
 
 #################################################
 # Email de l'utilisateur
-export KS_MAIL=monemail@kuebseed.com
+export KS_MAIL=monemail@kubeseed.com
 
 #################################################
 # Domaine de l'utilisateur
@@ -26,7 +26,7 @@ export KS_DOMAIN=kubeseed.com
 
 #################################################
 # Adresse mail cloudflare
-export KS_CF_MAIL=monemail@kuebseed.com
+export KS_CF_MAIL=monemail@kubeseed.com
 
 #################################################
 # Adresse mail cloudflare
@@ -43,3 +43,14 @@ KS_TRAEFIK_AUTH=1
 #################################################
 # Sous domaine pour le dashboard
 KS_DASHBOARD_SUBDOMAIN=dashboard
+
+#################################################
+# PDNS / NSUPDATE ( experimental )
+#################################################
+# PDNS / NSUPDATE
+# Algorithm
+#export KS_NS_ALGO=xxx
+# Key name
+#export KS_NS_KEYNAME=xxx
+# Key secret
+#export KS_NS_KEYSECRET=xxx
