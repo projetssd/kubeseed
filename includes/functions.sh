@@ -474,16 +474,18 @@ EOF
   export KUBECONFIG="${SETTINGS_STORAGE}/k3s/k3s.yaml"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=kubeseed
 
-  # Dashboard traefik
-  ks_log_statusbar "Installation du dashboard Traefik"
-  "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
-  ks_pause
-
   # Letsencrypt
   ks_log_statusbar "Installation du mode letsencrypt"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=cert-manager
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
+
+  # Dashboard traefik
+  ks_log_statusbar "Installation du dashboard Traefik"
+  "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
+  ks_pause
+
+
 
   # Installation dashboard
   ks_log_statusbar "Installation du dashboard Kubernetes"
