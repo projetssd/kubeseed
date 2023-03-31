@@ -3,10 +3,10 @@
   gather_facts: false
   tasks:
     - name: create directory
+      become: true
       file:
         path: "{{ lookup('env', 'APP_SETTINGS') }}/cloudplow"
         state: directory
-        become: true
         owner: "{{ user.name }}"
         group: "{{ user.groupid }}"
 

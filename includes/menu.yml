@@ -29,9 +29,12 @@
         - menu: Installer Oauth
           type_dest: bash
           dest: ks_install_oauth
+    - menu: Utilitaires
+      type_dest: sousmenu
+      sousmenu:
         - menu: Installer cloudplow
           type_dest: bash
-          dest: ks_isntall_cloudplow
+          dest: ks_install_cloudplow
         - menu: Installer autoscan
           type_dest: bash
-          dest: ks_isntall_autoscan
+          dest: ks_install_autoscan

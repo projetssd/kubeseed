@@ -14,10 +14,10 @@
       when: not anchor_service.stat.exists
 
     - name: Create directory
+      become: true
       file:
         path: "{{ lookup('env','APP_SETTINGS') }}/autoscan"
         state: directory
-        become: true
         owner: "{{ user.name }}"
         group: "{{ user.groupid }}"
 
