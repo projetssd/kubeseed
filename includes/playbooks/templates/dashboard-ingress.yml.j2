@@ -24,6 +24,6 @@ spec:
       port: 443
       serversTransport: mytransport
   tls:
-    - secretName: "dashboard-tls"
-      hosts:
-        - "{{ applis.dashboard.domain }}.{{ user.domain }}"
+    secretName: "dashboard-tls"
+    hosts:
+      - "{{ applis.dashboard.domain }}.{{ user.domain }}"
