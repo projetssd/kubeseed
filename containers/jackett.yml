@@ -17,3 +17,5 @@ application_env:
 
 posttasks:
 - flaresolverr
+
+no_liveness: true
