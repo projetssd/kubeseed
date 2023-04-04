@@ -512,6 +512,12 @@ EOF
   ks_log_statusbar "Mise en place de la sauvegarde"
   ks_install_sauvegarde
 
+  # on stocke les patchs pour ne pas les appliquer
+  for patch in $(ls ${SETTINGS_SOURCE}/patches);
+  do
+    echo "${patch}" >> ${HOME}/.config/kubeseed/patches
+  done
+
   # On finit par la database
   echo "Création de la configuration en cours"
   # On créé la database
