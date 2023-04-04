@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+
+  - name: "Install env in profile"
+    ansible.builtin.blockinfile:
+      path: "{{ lookup('env','HOME') }}/.bashrc"
+      block: |
+        if [ ! -f "{{ SETTINGS_SOURCE }}/profile.sh" ]; then
+          source "{{ SETTINGS_SOURCE }}/profile.sh"
+        fi
