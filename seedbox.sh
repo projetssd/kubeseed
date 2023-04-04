@@ -76,6 +76,9 @@ else
   ks_pause
 fi
 
+ks_log_statusbar "Application des patchs de livraison"
+apply_patches
+
 unset_window
 clear
 

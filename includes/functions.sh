@@ -341,7 +341,8 @@ function ks_install() {
     apt-transport-https \
     lsb-release \
     python3-kubernetes \
-    fuse3
+    fuse3 \
+    bash-completion
 
   sudo rm -f /usr/bin/python
 
@@ -659,4 +660,19 @@ function ks_get_and_store_info() {
 
 function ks_cloudplow_upload() {
   kubectl -n kubeseed exec --stdin --tty $(kubectl get pods -n kubeseed | grep cloudplow | grep Running| awk '{print $1}') --  cloudplow upload
+}
+
+function apply_patches(){
+  touch "${HOME}/.config/kubeseed/patches"
+  for patch in $(ls ${SETTINGS_SOURCE}/patches);
+  do
+    if grep -q ${patch} "${HOME}/.config/kubeseed/patches"; then
+      # parch déjà appliqué, on ne fait rien
+      :
+    else
+      # on applique le patch
+      bash ${SETTINGS_SOURCE}/patches/${patch}
+      echo "${patch}" >> ${HOME}/.config/kubeseed/patches
+    fi
+  done
 }

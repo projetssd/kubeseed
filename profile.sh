@@ -19,6 +19,8 @@ if [ -f "${HOME}/.config/kubeseed/env" ]; then
   export PYTHONPATH
   # le fonction nous a probablement fait sortir du venv, on le recharge
   source ${VENV_DIR}/bin/activate
+  # autocompletion kubectl
+  source <(kubectl completion bash)
 fi
 
 
