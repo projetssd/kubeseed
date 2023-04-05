@@ -65,6 +65,8 @@
                         name: "cloudplow-home"
                       - mountPath: "/etc/hosts"
                         name: "cloudplow-hosts"
+                      - mountPath: "/etc/localtime"
+                        name: "cloudplow-localtime"
              
                 volumes:
                   - name: "cloudplow-home"
@@ -78,4 +80,8 @@
                   - name: "cloudplow-hosts"
                     hostPath:
                       path: "/etc/hosts"
+                      type: File
+                  - name: "cloudplow-localtime"
+                    hostPath:
+                      path: "/etc/localtime"
                       type: File
