@@ -37,7 +37,7 @@ source "${SETTINGS_SOURCE}/includes/functions.sh"
 # Maintenant, on a toutes les infos
 #
 
-if [ ! -f "${SETTINGS_STORAGE}/kubeseeddb" ]; then
+if [ ! -f "${HOME}/.config/kubeseed/installed" ]; then
   # kubeseed v3 n'est pas installé
   clear
   ks_install | tee "${SETTINGS_STORAGE}/logs/install.log"

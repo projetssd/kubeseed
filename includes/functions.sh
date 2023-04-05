@@ -326,7 +326,6 @@ function ks_install() {
     python3-dev \
     python3-pip \
     python3-venv \
-    sqlite3 \
     apache2-utils \
     dnsutils \
     python3-apt-dbg \
@@ -518,23 +517,11 @@ EOF
     echo "${patch}" >> ${HOME}/.config/kubeseed/patches
   done
 
-  # On finit par la database
-  echo "Création de la configuration en cours"
-  # On créé la database
-  sqlite3 "${SETTINGS_STORAGE}/kubeseeddb" <<EOF
-    create table seedbox_params(param varchar(50) PRIMARY KEY, value varchar(50));
-    replace into seedbox_params (param,value) values ('installed',0);
-    create table applications(name varchar(50) PRIMARY KEY,
-      status integer,
-      subdomain varchar(50),
-      port integer);
-    create table applications_params (appname varchar(50),
-      param varachar(50),
-      value varchar(50),
-      FOREIGN KEY(appname) REFERENCES applications(name));
-EOF
+  touch "${HOME}/.config/kubeseed/installed"
+  
   unset_window
   clear
+  echo "Installation terminée"
   read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"
 }
 

@@ -1,0 +1,7 @@
+source ${HOME}/.config/kubeseed/env
+source ${SETTINGS_SOURCE}/profile.sh
+
+if [ -f "${SETTINGS_STORAGE}/kubeseeddb" ]; then
+    rm -f "${SETTINGS_STORAGE}/kubeseeddb"
+    touch "${HOME}/.config/kubeseed/installed"
+fi
