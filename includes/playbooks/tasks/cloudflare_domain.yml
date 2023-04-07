@@ -11,18 +11,17 @@
     type: A
     value: "{{ network.ipv4 }}"
     record: "{{ subdomain }}"
-  when: cf_enabled
 
 ### PDNS/NSUPDATE ###
-- name: Set DNS Record in NSUP
-  community.general.nsupdate:
-    key_algorithm: "{{ dns.algo }}"
-    key_name: "{{ dns.keyname }}"
-    key_secret: "{{ dns.keysecret }}"
-    server: "{{ dns.server }}"
-    zone: "{{ user.domain }}"
-    record: "{{ subdomain }}"
-    value: "{{ network.ipv4 }}"
-    ttl: "86400"
-    type: "A"
-  when: nsup_enabled
+#- name: Set DNS Record in NSUP
+#  community.general.nsupdate:
+#    key_algorithm: "{{ dns.algo }}"
+#    key_name: "{{ dns.keyname }}"
+#    key_secret: "{{ dns.keysecret }}"
+#    server: "{{ dns.server }}"
+#    zone: "{{ user.domain }}"
+#    record: "{{ subdomain }}"
+#    value: "{{ network.ipv4 }}"
+#    ttl: "86400"
+#    type: "A"
+#  when: nsup_enabled
