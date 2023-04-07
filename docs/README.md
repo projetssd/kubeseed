@@ -1,6 +1,6 @@
 # Kubeseed, c'est quoi ? 
 
-Kubeseed est un projet de seedbox et autres outils tournant sur un moteur Kubernetes. L'implémentation qui a été choisie est k3s[k3s](https://k3s.io/)
+Kubeseed est un projet de seedbox et autres outils tournant sur un moteur Kubernetes. L'implémentation qui a été choisie est [k3s](https://k3s.io/)
 
 # Comment l'installer 
 
@@ -24,3 +24,5 @@ cd kubeseed
 ```
 
 et laissez vous guider...
+
+[test de lien](kubernetes.md)
