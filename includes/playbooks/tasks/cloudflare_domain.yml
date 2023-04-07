@@ -1,6 +1,6 @@
 ---
 ### CLOUDFLARE ###
-- name: Set DNS Record
+- name: Set DNS Record in CF
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.login }}"
@@ -13,7 +13,7 @@
     record: "{{ subdomain }}"
 
 ### PDNS/NSUPDATE ###
-#- name: Create A record
+#- name: Set DNS Record in NSUP
 #  community.general.nsupdate:
 #    key_algorithm: "{{ dns.algo }}"
 #    key_name: "{{ dns.keyname }}"
@@ -24,3 +24,4 @@
 #    value: "{{ network.ipv4 }}"
 #    ttl: "86400"
 #    type: "A"
+#  when: nsup_enabled

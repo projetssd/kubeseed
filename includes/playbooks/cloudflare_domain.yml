@@ -1,17 +1,10 @@
-#########################################################################
-# Title:         Cloudbox: Cloudflare Role                              #
-# Author(s):     l3uddz, desimaniac                                     #
-# URL:           https://github.com/cloudbox/cloudbox                   #
-# --                                                                    #
-#         Part of the Cloudbox project: https://cloudbox.works          #
-#########################################################################
-#                   GNU General Public License v3.0                     #
-#########################################################################
 ---
 - hosts: localhost
   gather_facts: false
+  vars_files:
+    - "{{ settings.source }}/includes/playbooks/tasks/nsup_or_cf.yml"
+  
   tasks:
-
   - name: Set DNS Record
     include_tasks:
       "{{ settings.source }}/includes/playbooks/tasks/cloudflare_domain.yml"
