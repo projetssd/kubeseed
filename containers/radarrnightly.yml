@@ -1,13 +1,14 @@
 ---
-application: 'sonarr'
-app_port: 8989
-description: "Sonarr is a TV Show collection manager for Usenet and BitTorrent users."
-image: 'lscr.io/linuxserver/sonarr:latest'
+application: 'radarrnightly'
+app_port: 7878
+description: "Radarr is a movie collection manager for Usenet and BitTorrent users.- NIGHTLY VERSION"
+image: 'lscr.io/linuxserver/radarr:nightly'
 application_volumes:
-  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
+
 application_env:
   - name: PUID
     value: '{{user.userid}}'
@@ -16,11 +17,9 @@ application_env:
   - name: TZ
     value: 'Europe/Paris'
   - name: DOCKER_MODS
-    value: 'ghcr.io/gilbn/theme.park:sonarr'
+    value: 'ghcr.io/gilbn/theme.park:radarr'
   - name: TP_DOMAIN
     value: 'theme-park.dev'
-  - name: TP_ADDON
-    value: 'sonarr-text-logo'
   - name: TP_THEME
     value: 'plex'
 
