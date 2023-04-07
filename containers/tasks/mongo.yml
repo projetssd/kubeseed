@@ -1,0 +1,12 @@
+---
+- name: Set facts
+  set_fact:
+    dbimage: "mongo:4.4"
+    db_app_port: 27017
+    db_persistent_path: "/data/db"
+    db_application_env:
+      - name: "TZ"
+        value: "Europe/Paris"
+
+- name: Launch databasess
+  include_tasks: "{{ settings.source }}/containers/tasks/bdd.yml"
