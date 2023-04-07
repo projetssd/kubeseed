@@ -47,13 +47,13 @@ function ks_install_oauth() {
     while [ -z "$oauth_client" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_client: ${CEND}"
       read -r oauth_client
-      ks_manage_account_yml oauclient_id "$oauth_client"
+      ks_manage_account_yml oauth.client_id "$oauth_client"
     done
 
     while [ -z "$oauth_secret" ]; do
       echo >&2 -n -e "${BWHITE}Oauth_secret: ${CEND}"
       read -r oauth_secret
-      ks_manage_account_yml oauclient_secret "$oauth_secret"
+      ks_manage_account_yml oaoauth.client_secret "$oauth_secret"
     done
 
     while [ -z "$email" ]; do
@@ -518,7 +518,7 @@ EOF
   done
 
   touch "${HOME}/.config/kubeseed/installed"
-  
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_env_at_start.yml"
   unset_window
   clear
   echo "Installation terminée"
