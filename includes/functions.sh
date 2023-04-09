@@ -44,23 +44,9 @@ function ks_install_oauth() {
 
   if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
 
-    while [ -z "$oauth_client" ]; do
-      echo >&2 -n -e "${BWHITE}Oauth_client: ${CEND}"
-      read -r oauth_client
-      ks_manage_account_yml oauth.client_id "$oauth_client"
-    done
-
-    while [ -z "$oauth_secret" ]; do
-      echo >&2 -n -e "${BWHITE}Oauth_secret: ${CEND}"
-      read -r oauth_secret
-      ks_manage_account_yml oaoauth.client_secret "$oauth_secret"
-    done
-
-    while [ -z "$email" ]; do
-      echo >&2 -n -e "${BWHITE}Compte Gmail utilisé(s), séparés d'une virgule si plusieurs: ${CEND}"
-      read -r email
-      ks_manage_account_yml oauth.account "$email"
-    done
+    ks_get_and_store_info  "oauth.client_id" "Oauth_client" UNCHECK
+    ks_get_and_store_info  "oauth.client_secret" "Oauth_secret" UNCHECK
+    ks_get_and_store_info  "oauth.account" "Compte Gmail utilisé(s), séparés d'une virgule si plusieurs" UNCHECK
 
     openssl=$(openssl rand -hex 16)
     ks_manage_account_yml oauth.secret "$openssl"
@@ -76,7 +62,6 @@ function ks_install_oauth() {
     read -r
     ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/deploy_oauth.yml"
     echo "==============================================="
-    echo "= Choisissez les applications à réinitialiser ="
     echo "= Choisissez les applications à réinitialiser ="
     python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_reinit_appli
   fi
@@ -437,11 +422,6 @@ EOF
   # installation des dépendances
   ks_log_statusbar "Installation des paquets galaxy"
   ansible-galaxy install -r "${SETTINGS_SOURCE}/requirements.yml"
-  #  ansible-galaxy collection install community.general
-  #  # dépendence permettant de gérer les fichiers yml
-  #  ansible-galaxy install kwoodson.yedit
-  #  # kubernetes
-  #  ansible-galaxy collection install kubernetes.core
 
   ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
   ks_manage_account_yml settings.source "${SETTINGS_SOURCE}"
@@ -485,7 +465,9 @@ EOF
   "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
   ks_pause
 
-
+  ks_log_statusbar "Configuration du module letsencrypt avec traefik"
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
   # Installation dashboard
   ks_log_statusbar "Installation du dashboard Kubernetes"
@@ -514,7 +496,7 @@ EOF
   # on stocke les patchs pour ne pas les appliquer
   for patch in $(ls ${SETTINGS_SOURCE}/patches);
   do
-    echo "${patch}" >> ${HOME}/.config/kubeseed/patches
+    echo "${patch}" >> "${HOME}/.config/kubeseed/patches"
   done
 
   touch "${HOME}/.config/kubeseed/installed"
@@ -537,7 +519,6 @@ function ks_stocke_public_ip() {
   IPV4=$(curl -4 https://ip.mn83.fr)
   echo "IPV4 = ${IPV4}"
   ks_manage_account_yml network.ipv4 "${IPV4}"
-  #IPV6=$(dig @resolver1.ipv6-sandbox.opendns.com AAAA myip.opendns.com +short -6)
   IPV6=$(curl -6 https://ip.mn83.fr)
   if [ $? -eq 0 ]; then
     echo "IPV6 = ${IPV6}"
@@ -659,13 +640,13 @@ function apply_patches(){
   touch "${HOME}/.config/kubeseed/patches"
   for patch in $(ls ${SETTINGS_SOURCE}/patches);
   do
-    if grep -q ${patch} "${HOME}/.config/kubeseed/patches"; then
+    if grep -q "${patch}" "${HOME}/.config/kubeseed/patches"; then
       # parch déjà appliqué, on ne fait rien
       :
     else
       # on applique le patch
-      bash ${SETTINGS_SOURCE}/patches/${patch}
-      echo "${patch}" >> ${HOME}/.config/kubeseed/patches
+      bash "${SETTINGS_SOURCE}/patches/${patch}"
+      echo "${patch}" >> "${HOME}/.config/kubeseed/patches"
     fi
   done
 }

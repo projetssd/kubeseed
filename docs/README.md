@@ -2,6 +2,15 @@
 
 Kubeseed est un projet de seedbox et autres outils tournant sur un moteur Kubernetes. L'implémentation qui a été choisie est [k3s](https://k3s.io/)
 
+# Puis-je l'utiliser ?
+
+Ce projet est destiné à simplifier l'installation et l'usage des outils nécessaires à une seedbox. Toutefois, l'utilisation de kubernetes n'est pas forcément simple.
+Il est recommandé d'avoir des bases en administration système linux, et de ne pas avoir peur de mettre les mains dans le cambouis.
+
+De plus, le projet est en cours de développement actif, et il y aura certainement des adaptations à faire au fil de l'eau.
+
+Si vous cherchez un projet plus simple à utiliser, je recommande [ssdv2](https://github.com/projetssd/ssdv2) des mêmes auteurs, qui tourne en docker.
+
 # Comment l'installer 
 
 Vous avez besoin : 
