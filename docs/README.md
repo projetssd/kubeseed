@@ -34,4 +34,4 @@ cd kubeseed
 
 et laissez vous guider...
 
-[test de lien](kubernetes.md)
+Dans le cas ou vous faites une migration depuis ssdV2, [suivez ce guide](migration_ssdv2.md)

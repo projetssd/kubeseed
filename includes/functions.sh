@@ -74,7 +74,7 @@ function ks_install_sauvegarde() {
   echo -e "${BLUE}### BACKUP ###${NC}"
   echo -e " ${BWHITE}* Mise en place Sauvegarde${NC}"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_backup.yml"
-  checking_errors $?
+  ks_checking_errors $?
   echo ""
 }
 
