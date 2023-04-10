@@ -3,7 +3,7 @@
 Kubeseed
 Kubeseed - uses kubernetes for containers
 
-# PROJET EN COURS D'ECRITURE - NE PAS UTILISER EN L'ETAT
+# PROJET EN RELEASE CANDIDATE - UTILISEZ A VOS RISQUES ET PERILS
 
 A installer sur Debian 11 EXCLUSIVEMENT (travaux en cours pour rendre compatible)
 
@@ -26,7 +26,7 @@ cd kubeseed
 
 et se laisser guider
 
-# Dévelopeurs
+La documentation complète se trouve [ici](https://projetssd.github.io/kubeseed/)
 
 
 
