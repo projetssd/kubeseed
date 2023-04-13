@@ -460,6 +460,10 @@ EOF
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
+  # Création auth basique
+  ks_log_statusbar "Création auth basique"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_secret.yml"
+
   # Dashboard traefik
   ks_log_statusbar "Installation du dashboard Traefik"
   "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
