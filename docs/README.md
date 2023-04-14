@@ -2,6 +2,8 @@
 
 Kubeseed est un projet de seedbox et autres outils tournant sur un moteur Kubernetes. L'implémentation qui a été choisie est [k3s](https://k3s.io/)
 
+{:toc}
+
 # Puis-je l'utiliser ?
 
 Ce projet est destiné à simplifier l'installation et l'usage des outils nécessaires à une seedbox. Toutefois, l'utilisation de kubernetes n'est pas forcément simple.
@@ -19,6 +21,8 @@ Vous avez besoin :
 
 Non obligatoire mais conseillé : l'utilisation de cloudflare. Cela permet les enregistrements automatiques des sous domaines.
 
+Si vous utilisez [rclone](https://rclone.org/), vous aurez besoin d'un rclone.conf déjà configuré.
+
 A minima, les ports 80 et 443 doivent être accessibles. Certaines autres ports devront être accessibles selon les outils installés :
 - 32400 pour plex
 - 30000 pour rutorrent
@@ -34,4 +38,21 @@ cd kubeseed
 
 et laissez vous guider...
 
+## Installation avec kickstart et variables d'environnements.
+
+### Variables d'environnement
+
+Plusieurs variables d'environnement peuvent être déclarées avant installation, pour éviter des saisies manuelles. La liste des variables possibles se trouve dans le fichier ***kickstart.sample***
+
+### Fichier kickstart
+
+Vous pouvez aussi copier le fichier **kickstart.sample** en **kickstart**, modifier son contenu selon votre convenance, et il sera pris en compte lors de l'installation.
+
+## Migration depuis ssdv2
+
 Dans le cas ou vous faites une migration depuis ssdV2, [suivez ce guide](migration_ssdv2.md)
+
+## Autres pages à consulter
+
+* [Kubernetes](kubernetes.md)
+* [Détail des applications](applications.md)
