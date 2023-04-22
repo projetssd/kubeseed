@@ -44,9 +44,9 @@ function ks_install_oauth() {
 
   if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
 
-    ks_get_and_store_info  "oauth.client_id" "Oauth_client" UNCHECK
-    ks_get_and_store_info  "oauth.client_secret" "Oauth_secret" UNCHECK
-    ks_get_and_store_info  "oauth.account" "Compte Gmail utilisé(s), séparés d'une virgule si plusieurs" UNCHECK
+    ks_get_and_store_info "oauth.client_id" "Oauth_client" UNCHECK
+    ks_get_and_store_info "oauth.client_secret" "Oauth_secret" UNCHECK
+    ks_get_and_store_info "oauth.account" "Compte Gmail utilisé(s), séparés d'une virgule si plusieurs" UNCHECK
 
     openssl=$(openssl rand -hex 16)
     ks_manage_account_yml oauth.secret "$openssl"
@@ -182,8 +182,8 @@ function ks_launch_service() {
 
   ks_log_write "Installation de ${line}"
   error=0
-  ks_get_and_store_info  "applis.${line}.subdomain" "Sous domaine pour ${line}" UNCHECK "${line}"
-  ks_get_and_store_info  "applis.${line}.auth" "Authentification ${line} - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
+  ks_get_and_store_info "applis.${line}.subdomain" "Sous domaine pour ${line}" UNCHECK "${line}"
+  ks_get_and_store_info "applis.${line}.auth" "Authentification ${line} - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
 
   # On est dans le cas générique
   # on regarde s'i y a un playbook existant
@@ -492,9 +492,8 @@ EOF
   ks_install_sauvegarde
 
   # on stocke les patchs pour ne pas les appliquer
-  for patch in $(ls ${SETTINGS_SOURCE}/patches);
-  do
-    echo "${patch}" >> "${HOME}/.config/kubeseed/patches"
+  for patch in $(ls ${SETTINGS_SOURCE}/patches); do
+    echo "${patch}" >>"${HOME}/.config/kubeseed/patches"
   done
 
   touch "${HOME}/.config/kubeseed/installed"
@@ -631,20 +630,40 @@ function ks_get_and_store_info() {
 }
 
 function ks_cloudplow_upload() {
-  kubectl -n kubeseed exec --stdin --tty $(kubectl get pods -n kubeseed | grep cloudplow | grep Running| awk '{print $1}') --  cloudplow upload
+  kubectl -n kubeseed exec --stdin --tty $(kubectl get pods -n kubeseed | grep cloudplow | grep Running | awk '{print $1}') -- cloudplow upload
 }
 
-function apply_patches(){
+function apply_patches() {
   touch "${HOME}/.config/kubeseed/patches"
-  for patch in $(ls ${SETTINGS_SOURCE}/patches);
-  do
+  for patch in $(ls ${SETTINGS_SOURCE}/patches); do
     if grep -q "${patch}" "${HOME}/.config/kubeseed/patches"; then
       # parch déjà appliqué, on ne fait rien
       :
     else
       # on applique le patch
       bash "${SETTINGS_SOURCE}/patches/${patch}"
-      echo "${patch}" >> "${HOME}/.config/kubeseed/patches"
+      echo "${patch}" >>"${HOME}/.config/kubeseed/patches"
     fi
   done
+}
+
+function ks_install_helm() {
+  curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  chmod 755 /tmp/get_helm.sh
+  bash /tmp/get_helm.sh
+}
+
+function ks_install_prometheus() {
+  echo "#########################################################"
+  echo "# Prometheus"
+  echo "# Prometheus va être installé et récolter les metriques"
+  echo "# pour le cluster Kubernetes automatiquement "
+  echo "#########################################################"
+  ks_pause
+  ks_install_helm
+  helm repo add prometheus https://prometheus-community.github.io/helm-charts
+  help repo update
+  ks_get_and_store_info "applis.prometheus.subdomain" "Sous domaine pour prometheus" UNCHECK "prometheus"
+  ks_get_and_store_info "applis.prometheus.auth" "Authentification prometheus - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_prometheus.yml"
 }

@@ -20,7 +20,7 @@
     - name: "Set DNS Record on CloudFlare"
       include_tasks: "{{ settings.source }}/includes/playbooks/tasks/cloudflare_domain.yml"
       vars:
-        subdomain: "{{  applis[application].subdomain}}"
+        subdomain: "{{  applis[application].subdomain }}"
 
     # Volumes ###################################################################
     # Prépare un dictionnaire des volumes qui vont être mappés sur le container
