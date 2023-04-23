@@ -1,5 +1,5 @@
 --------------------------------------------
-- [Description - Installation](README.md)
-- [Migration depuis SSD V2](migration_ssdv2.md)
-- [Utilisation de Kubernetes](kubernetes.md)
-- [Détail des applications](applications.md)
+- [Description - Installation](index.html)
+- [Migration depuis SSD V2](migration_ssdv2.html)
+- [Utilisation de Kubernetes](kubernetes.html)
+- [Détail des applications](applications.html)
