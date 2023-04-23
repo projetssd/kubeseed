@@ -2,8 +2,6 @@
 
 Kubeseed est un projet de seedbox et autres outils tournant sur un moteur Kubernetes. L'implémentation qui a été choisie est [k3s](https://k3s.io/)
 
-{% include_relative toc.md %}
-
 # Puis-je l'utiliser ?
 
 Ce projet est destiné à simplifier l'installation et l'usage des outils nécessaires à une seedbox. Toutefois, l'utilisation de kubernetes n'est pas forcément simple.

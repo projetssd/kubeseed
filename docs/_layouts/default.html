@@ -24,15 +24,15 @@
         {% endif %}
 
         <p>{{ site.description | default: site.github.project_tagline }}</p>
-        <p>
+<!--        <p>
         <ul>
             <li><a href="index.html">Description - Installation</a></li>
             <li><a href="migration_ssdv2.html">Migration depuis SSDv2</a></li>
             <li><a href="kubernetes.html">Utilisation de Kubernetes</a></li>
             <li><a href="applications.html">Détail des applications</a></li>
         </ul>
-        </p>
-
+        </p>-->
+        {% include toc.md %}
 
         {% if site.github.is_project_page %}
         <p class="view"><a href="{{ site.github.repository_url }}">View the Project on GitHub <small>{{
