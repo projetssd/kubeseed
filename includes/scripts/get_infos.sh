@@ -9,7 +9,6 @@
 source "${SETTINGS_SOURCE}/includes/functions.sh"
 source "${SETTINGS_SOURCE}/includes/variables.sh"
 
-
 echo -e "${BLUE}### INFORMATIONS UTILISATEURS ###${NC}"
 
 if [ ! -f "${ANSIBLE_VARS}" ]; then
@@ -21,8 +20,6 @@ echo ""
 echo -e "${BLUE}L'utilisateur et mot de passe demandés${NC}"
 echo -e "${BLUE}serviront à vous authentifier sur les différents services en mode web${NC}"
 
-
-
 USERNAME=$(ks_get_from_account_yml user.name)
 if [ "${USERNAME}" == notfound ]; then
   ks_manage_account_yml user.name "${USER}"
@@ -31,22 +28,30 @@ else
   user=${USERNAME}
 fi
 
-
-ks_get_and_store_info  "user.pass" "Mot de passe" KS_PASSWORD
-ks_get_and_store_info  "user.mail" "Adresse mail" KS_MAIL
-ks_get_and_store_info  "user.domain" "Domaine" KS_DOMAIN
+ks_get_and_store_info "user.pass" "Mot de passe" KS_PASSWORD
+ks_get_and_store_info "user.mail" "Adresse mail" KS_MAIL
+ks_get_and_store_info "user.domain" "Domaine" KS_DOMAIN
 ### CLOUDLFLARE ###
-ks_get_and_store_info  "cloudflare.login" "Votre Email cloudflare" KS_CF_MAIL
-ks_get_and_store_info  "cloudflare.api" "Votre API cloudflare" KS_CF_API
-# On met le ssl CF à full
-ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cf_force_full_ssl.yml"
-###################
-### PDNS / NSUPDATE
-# ks_get_and_store_info  "dns.algo" "algo nsupdate" KS_NS_ALGO
-# ks_get_and_store_info  "dns.keyname" "keyname" KS_NS_KEYNAME
-# ks_get_and_store_info  "dns.keysecret" "keysecret" KS_NS_KEYSECRET
-# ks_get_and_store_info  "dns.server" "ip serveur ns" KS_NS_SERVER
-###################
+ks_get_and_store_info "cloudflare.usage" "Voulez vous utiliser cloudflare ? [O/N]" KS_CF_USAGE O
+cloudflare_usage=$(ks_get_from_account_yml cloudflare.usage)
+if [ "${cloudflare_usage}" == "O" ]; then
+  ks_get_and_store_info "cloudflare.login" "Votre Email cloudflare" KS_CF_MAIL
+  ks_get_and_store_info "cloudflare.api" "Votre API cloudflare" KS_CF_API
+  # On met le ssl CF à full
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cf_force_full_ssl.yml"
+else
+  ###################
+  ### PDNS / NSUPDATE
+  ks_get_and_store_info "dns.usage" "Voulez vous utilise nsupdate ? [O/N]" KS_NS_USAGE O
+  ns_usage=$(ks_get_from_account_yml ns.usage)
+  if [ "${ns_usage}" == "O" ]; then
+    ks_get_and_store_info "dns.algo" "algo nsupdate" KS_NS_ALGO
+    ks_get_and_store_info "dns.keyname" "keyname" KS_NS_KEYNAME
+    ks_get_and_store_info "dns.keysecret" "keysecret" KS_NS_KEYSECRET
+    ks_get_and_store_info "dns.server" "ip serveur ns" KS_NS_SERVER
+  fi
+  ###################
+fi
 
 # creation utilisateur
 userid=$(id -u)
