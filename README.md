@@ -1,6 +1,7 @@
 # 
 
-Kubeseed
+K
+ubeseed
 Kubeseed - uses kubernetes for containers
 
 # PROJET EN RELEASE CANDIDATE - UTILISEZ A VOS RISQUES ET PERILS

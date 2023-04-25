@@ -13,13 +13,14 @@ La commande kubectl est disponible pour l'utilisateur qui a installé la seedbox
 Par exemple, pour avoir la liste des déploiements du namespace kubeseed :
 
 ```
-kubectl -n kubeseed get deployments
+kubectl get deployments
 ```
 
-Par défaut, l'autocomplétion fonctionne, vous pouvez taper "tab" pour afficher les différentes possibilités (liste des namespaces, des objets, ...)
+Par défaut, l'autocomplétion fonctionne, vous pouvez taper "tab" pour afficher les différentes possibilités (liste des namespaces, des objets, ...).
+Le namespace par défaut est "kubeseed"
 
 ## Génération d'un jeton pour le dashboard
 
 Le dashboard Kubernetes permet d'avoir un oeil sur votre infrastructure. Afin de pouvoir se loguer, vous devez générer un jeton (token).
 
-Cela peut se faire soit depuis le menu (Gestion => Gestion Kubernetes => générer un jeton pour le dashboard), soit en lançant la commande **ks_generate_token**
+Cela peut se faire soit depuis le menu (Gestion => Gestion Kubernetes => générer un jeton pour le dashboard), soit en lançant la commande **ks_generate_dashboard_token**

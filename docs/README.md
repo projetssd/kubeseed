@@ -26,7 +26,7 @@ A minima, les ports 80 et 443 doivent être accessibles. Certaines autres ports 
 - 30000 pour rutorrent
 - etc...
 
-Avec ces outils : 
+Avec ces outils, connectez vous avec un user qui a les droits sudo (pas en root !), puis : 
 
 ```
 git clone https://github.com/projetssd/kubeseed.git

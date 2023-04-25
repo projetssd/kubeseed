@@ -21,6 +21,7 @@ if [ -f "${HOME}/.config/kubeseed/env" ]; then
   source ${VENV_DIR}/bin/activate
   # autocompletion kubectl
   source <(kubectl completion bash)
+  kubectl config set-context --current --namespace=kubeseed
 fi
 
 
