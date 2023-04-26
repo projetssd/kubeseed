@@ -5,7 +5,8 @@
     <li><a href="kubernetes.html">Utilisation de Kubernetes</a></li>
     <li><a href="paths.html">Chemins</a></li>
     <li><a href="applications.html">Détail des applications</a>
-    {% if page.slug == "applictions" %}
+    {% if page.name == "applictions.html" %}
+        {{ page }}
     {% include applications.html %}
     {% endif %}</li>
     <li><a href="support.html">Support</a></li>
