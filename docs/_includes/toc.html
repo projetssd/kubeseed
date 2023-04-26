@@ -4,7 +4,10 @@
     <li><a href="migration_ssdv2.html">Migration depuis SSDv2</a></li>
     <li><a href="kubernetes.html">Utilisation de Kubernetes</a></li>
     <li><a href="paths.html">Chemins</a></li>
-    <li><a href="applications.html">Détail des applications</a></li>
+    <li><a href="applications.html">Détail des applications</a>
+    {% if page.slug == "applictions" %}
+    {% include applications.html %}
+    {% endif %}</li>
     <li><a href="support.html">Support</a></li>
 </ul>
 </p>
