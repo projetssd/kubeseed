@@ -1,0 +1,22 @@
+---
+application: 'fossbilling'
+app_port: 80
+description: "FOSSBILLING"
+image: 'fossbilling/fossbilling'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/var/www/html"
+
+application_env:
+  - name: TZ
+    value: 'Europe/Paris'
+
+
+no_liveness: true
+
+# liste des pretasks (lancées avant le déploiement)
+# Doit correspondre a un fichier yml dans le répertoire containers/tasks
+pretasks:
+  - mysql
+
+

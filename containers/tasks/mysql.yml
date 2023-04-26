@@ -1,0 +1,19 @@
+---
+- name: Set facts
+  set_fact:
+    dbimage: "mysql:8.0"
+    db_app_port: 3306
+    db_persistent_path: "/var/lib/mysql"
+    db_application_env:
+      - name: "MYSQL_DATABASE"
+        value: "{{ application }}"
+      - name: "MYSQL_USER"
+        value: "{{ application }}"
+      - name: "MYSQL_PASSWORD"
+        value: "{{ application }}"
+      - name: "MYSQL_RANDOM_ROOT_PASSWORD"
+        value: "{{ application }}"
+
+- name: Launch databasess
+  include_tasks: "{{ settings.source }}/containers/tasks/bdd.yml"
+
