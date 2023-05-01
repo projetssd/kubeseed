@@ -1,0 +1,14 @@
+---
+application: 'prometheus'
+app_port: 9090
+description: "Prometheus is a systems and service monitoring system"
+image: 'prom/prometheus'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/etc/prometheus"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/prometheus"
+
+application_env:
+  - name: TZ
+    value: 'Europe/Paris'

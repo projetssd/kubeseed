@@ -25,6 +25,10 @@ export KS_MAIL=monemail@kubeseed.com
 export KS_DOMAIN=kubeseed.com
 
 #################################################
+# Utilisation de cloudflare (O/N)
+export KS_CF_USAGE=O
+
+#################################################
 # Adresse mail cloudflare
 export KS_CF_MAIL=monemail@kubeseed.com
 

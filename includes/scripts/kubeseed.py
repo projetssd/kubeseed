@@ -26,7 +26,8 @@ def choix_appli_lance():
     """
     list_applis = []
     basepath = settings_source + '/containers/'
-
+    persopath = settings_storage + '/app_persos/'
+    # On fait la liste des applis officielles
     for entry in os.listdir(basepath):
         if os.path.isfile(os.path.join(basepath, entry)):
             # on a un fichier
@@ -40,7 +41,28 @@ def choix_appli_lance():
                         description = data['description']
                     except:
                         description = data['application']
-                # On crée un tupe (appli - desc, appli)
+                # On crée un tuple (appli - desc, appli)
+                list_applis.append((application + ' - ' + description, application))
+    # On fait la liste des applis persos
+    for entry in os.listdir(persopath):
+        if os.path.isfile(os.path.join(persopath, entry)):
+            # on a un fichier
+            if entry.endswith('.yml'):
+                # C'est un fichier yaml
+                with open(basepath + entry) as f:
+                    data = yaml.load(f, Loader=SafeLoader)
+                    application = data['application']
+                    # on gère le cas où il n'y a pas de description
+
+                    try:
+                        old_description = data['description']
+                    except:
+                        old_description = data['application']
+                    description = '[PERSO] - ' + old_description
+                # On regarde si on a déjà cette appli dans la première liste
+                if (application + ' - ' + old_description, application) in  list_applis:
+                    list_applis.remove((application + ' - ' + old_description, application))
+                # On crée un tuple (appli - desc, appli)
                 list_applis.append((application + ' - ' + description, application))
     # On trie la liste par ordre alpha
     list_applis.sort()

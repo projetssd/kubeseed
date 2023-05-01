@@ -1,0 +1,17 @@
+---
+application: 'grafana'
+app_port: 3000
+description: "Grafana is the open source analytics & monitoring solution for every database.."
+image: 'grafana/grafana-oss:latest'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/lib"
+    container_path: "/var/lib/grafana"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/log"
+    container_path: "/var/log/grafana"
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: PASSWORD
+    value: '{{user.pass}}'

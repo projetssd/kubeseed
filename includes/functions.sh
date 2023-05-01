@@ -44,23 +44,9 @@ function ks_install_oauth() {
 
   if [[ "$OUI" == "o" ]] || [[ "$OUI" == "O" ]]; then
 
-    while [ -z "$oauth_client" ]; do
-      echo >&2 -n -e "${BWHITE}Oauth_client: ${CEND}"
-      read -r oauth_client
-      ks_manage_account_yml oauth.client_id "$oauth_client"
-    done
-
-    while [ -z "$oauth_secret" ]; do
-      echo >&2 -n -e "${BWHITE}Oauth_secret: ${CEND}"
-      read -r oauth_secret
-      ks_manage_account_yml oaoauth.client_secret "$oauth_secret"
-    done
-
-    while [ -z "$email" ]; do
-      echo >&2 -n -e "${BWHITE}Compte Gmail utilisé(s), séparés d'une virgule si plusieurs: ${CEND}"
-      read -r email
-      ks_manage_account_yml oauth.account "$email"
-    done
+    ks_get_and_store_info "oauth.client_id" "Oauth_client" UNCHECK
+    ks_get_and_store_info "oauth.client_secret" "Oauth_secret" UNCHECK
+    ks_get_and_store_info "oauth.account" "Compte Gmail utilisé(s), séparés d'une virgule si plusieurs" UNCHECK
 
     openssl=$(openssl rand -hex 16)
     ks_manage_account_yml oauth.secret "$openssl"
@@ -77,7 +63,6 @@ function ks_install_oauth() {
     ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/deploy_oauth.yml"
     echo "==============================================="
     echo "= Choisissez les applications à réinitialiser ="
-    echo "= Choisissez les applications à réinitialiser ="
     python3 "${SETTINGS_SOURCE}/includes/scripts/generique_python.py" choix_reinit_appli
   fi
 
@@ -89,7 +74,7 @@ function ks_install_sauvegarde() {
   echo -e "${BLUE}### BACKUP ###${NC}"
   echo -e " ${BWHITE}* Mise en place Sauvegarde${NC}"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_backup.yml"
-  checking_errors $?
+  ks_checking_errors $?
   echo ""
 }
 
@@ -197,23 +182,16 @@ function ks_launch_service() {
 
   ks_log_write "Installation de ${line}"
   error=0
-  ks_get_and_store_info  "applis.${line}.subdomain" "Sous domaine pour ${line}" UNCHECK "${line}"
-  ks_get_and_store_info  "applis.${line}.auth" "Authentification ${line} - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
+  ks_get_and_store_info "applis.${line}.subdomain" "Sous domaine pour ${line}" UNCHECK "${line}"
+  ks_get_and_store_info "applis.${line}.auth" "Authentification ${line} - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
 
   # On est dans le cas générique
   # on regarde s'i y a un playbook existant
 
-  if [[ -f "${SETTINGS_STORAGE}/conf/${line}.yml" ]]; then
+  if [[ -f "${SETTINGS_STORAGE}/app_persos/${line}.yml" ]]; then
     # il y a déjà un playbook "perso", on le lance
-    ansible-playbook "${SETTINGS_STORAGE}/containers/${line}.yml"
-  elif [[ -f "${SETTINGS_STORAGE}/vars/${line}.yml" ]]; then
-    # il y a des variables persos, on les lance
-    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "@${SETTINGS_STORAGE}/vars/${line}.yml"
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "var_file=${SETTINGS_STORAGE}/app_persos/${line}.yml"
 
-  elif [[ -f "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml" ]]; then
-    # pas de playbook perso ni de vars perso
-    # puis on le lance
-    ansible-playbook "${SETTINGS_SOURCE}/includes/dockerapps/${line}.yml"
   elif [[ -f "${SETTINGS_SOURCE}/containers/${line}.yml" ]]; then
     # puis on lance le générique avec ce qu'on vient de copier
     ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "var_file=${SETTINGS_SOURCE}/containers/${line}.yml"
@@ -413,6 +391,7 @@ EOF
   ##################################################
   # Account.yml
   mkdir -p "${SETTINGS_STORAGE}/logs"
+  mkdir -p "${SETTINGS_STORAGE}/app_persos"
   ks_create_dir "${SETTINGS_STORAGE}/app_settings"
   if [ ! -f "${ANSIBLE_VARS}" ]; then
     mkdir -p "${HOME}/.ansible/inventories/group_vars"
@@ -437,11 +416,6 @@ EOF
   # installation des dépendances
   ks_log_statusbar "Installation des paquets galaxy"
   ansible-galaxy install -r "${SETTINGS_SOURCE}/requirements.yml"
-  #  ansible-galaxy collection install community.general
-  #  # dépendence permettant de gérer les fichiers yml
-  #  ansible-galaxy install kwoodson.yedit
-  #  # kubernetes
-  #  ansible-galaxy collection install kubernetes.core
 
   ks_manage_account_yml settings.storage "${SETTINGS_STORAGE}"
   ks_manage_account_yml settings.source "${SETTINGS_SOURCE}"
@@ -480,12 +454,18 @@ EOF
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
+  # Création auth basique
+  ks_log_statusbar "Création auth basique"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_secret.yml"
+
   # Dashboard traefik
   ks_log_statusbar "Installation du dashboard Traefik"
   "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
   ks_pause
 
-
+  ks_log_statusbar "Configuration du module letsencrypt avec traefik"
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
 
   # Installation dashboard
   ks_log_statusbar "Installation du dashboard Kubernetes"
@@ -512,9 +492,8 @@ EOF
   ks_install_sauvegarde
 
   # on stocke les patchs pour ne pas les appliquer
-  for patch in $(ls ${SETTINGS_SOURCE}/patches);
-  do
-    echo "${patch}" >> ${HOME}/.config/kubeseed/patches
+  for patch in $(ls ${SETTINGS_SOURCE}/patches); do
+    echo "${patch}" >>"${HOME}/.config/kubeseed/patches"
   done
 
   touch "${HOME}/.config/kubeseed/installed"
@@ -537,7 +516,6 @@ function ks_stocke_public_ip() {
   IPV4=$(curl -4 https://ip.mn83.fr)
   echo "IPV4 = ${IPV4}"
   ks_manage_account_yml network.ipv4 "${IPV4}"
-  #IPV6=$(dig @resolver1.ipv6-sandbox.opendns.com AAAA myip.opendns.com +short -6)
   IPV6=$(curl -6 https://ip.mn83.fr)
   if [ $? -eq 0 ]; then
     echo "IPV6 = ${IPV6}"
@@ -652,20 +630,52 @@ function ks_get_and_store_info() {
 }
 
 function ks_cloudplow_upload() {
-  kubectl -n kubeseed exec --stdin --tty $(kubectl get pods -n kubeseed | grep cloudplow | grep Running| awk '{print $1}') --  cloudplow upload
+  kubectl -n kubeseed exec --stdin --tty $(kubectl get pods -n kubeseed | grep cloudplow | grep Running | awk '{print $1}') -- cloudplow upload
 }
 
-function apply_patches(){
+function apply_patches() {
   touch "${HOME}/.config/kubeseed/patches"
-  for patch in $(ls ${SETTINGS_SOURCE}/patches);
-  do
-    if grep -q ${patch} "${HOME}/.config/kubeseed/patches"; then
+  for patch in $(ls ${SETTINGS_SOURCE}/patches); do
+    if grep -q "${patch}" "${HOME}/.config/kubeseed/patches"; then
       # parch déjà appliqué, on ne fait rien
       :
     else
       # on applique le patch
-      bash ${SETTINGS_SOURCE}/patches/${patch}
-      echo "${patch}" >> ${HOME}/.config/kubeseed/patches
+      bash "${SETTINGS_SOURCE}/patches/${patch}"
+      echo "${patch}" >>"${HOME}/.config/kubeseed/patches"
     fi
   done
+}
+
+function ks_install_helm() {
+  curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  chmod 755 /tmp/get_helm.sh
+  bash /tmp/get_helm.sh
+}
+
+function ks_install_prometheus() {
+  echo "#########################################################"
+  echo "# Prometheus"
+  echo "# Prometheus va être installé et récolter les metriques"
+  echo "# pour le cluster Kubernetes automatiquement "
+  echo "#########################################################"
+  ks_pause
+  ks_install_helm
+  helm repo add prometheus https://prometheus-community.github.io/helm-charts
+  help repo update
+  ks_get_and_store_info "applis.prometheus.subdomain" "Sous domaine pour prometheus" UNCHECK "prometheus"
+  ks_get_and_store_info "applis.prometheus.auth" "Authentification prometheus - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_prometheus.yml"
+}
+
+function ks_get_system_info() {
+  domain=$(ks_get_from_account_yml user.domain)
+  ipv4=$(ks_get_from_account_yml network.ipv4)
+  ipv6=$(ks_get_from_account_yml network.ipv6)
+  kubectl version | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
+  k3s --version | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
+  kubectl describe node $(kubectl get nodes | grep -v NAME | awk '{print $1}') | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
+  kubectl get pods -A | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
+  kubectl get deployments -A | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
+  kubectl get ing -A | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
 }
