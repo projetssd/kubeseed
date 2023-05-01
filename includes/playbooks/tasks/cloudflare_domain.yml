@@ -1,0 +1,28 @@
+---
+### CLOUDFLARE ###
+- name: Set DNS Record in CF
+  cloudflare_dns:
+    account_api_token: "{{ cloudflare.api }}"
+    account_email: "{{ cloudflare.login }}"
+    zone: "{{ user.domain }}"
+    state: present
+    solo: true
+    proxied: true
+    type: A
+    value: "{{ network.ipv4 }}"
+    record: "{{ subdomain }}"
+  when: cloudflare.usage == "O"
+
+### PDNS/NSUPDATE ###
+- name: Set DNS Record in NSUP
+  community.general.nsupdate:
+    key_algorithm: "{{ dns.algo }}"
+    key_name: "{{ dns.keyname }}"
+    key_secret: "{{ dns.keysecret }}"
+    server: "{{ dns.server }}"
+    zone: "{{ user.domain }}"
+    record: "{{ subdomain }}"
+    value: "{{ network.ipv4 }}"
+    ttl: "86400"
+    type: "A"
+  when: ns.usage == "O"
