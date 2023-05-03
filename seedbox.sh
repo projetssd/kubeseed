@@ -7,12 +7,23 @@
 ##################################################
 
 ################################################
+# Internationalization
+for f in i18n/*.po
+do
+  [[ -e "$f" ]] || break  # handle the case of no *.po files
+  short="${f:0:2}"
+  mkdir -p "i18n/${short}/LC_MESSAGES"
+  msgfmt -o ks.mo "${short}.po"
+  mv ks.mo "i18n/${short}/LC_MESSAGES/"
+done
+
+################################################
 # TEST ROOT USER
 if [ "$USER" == "root" ]; then
   echo -e "${CCYAN}-----------------------${CEND}"
-  echo -e "${CCYAN}[  Lancement en root  ]${CEND}"
+  echo -e "${CCYAN}[  $(gettext "Lancement en root")  ]${CEND}"
   echo -e "${CCYAN}-----------------------${CEND}"
-  echo -e "${CCYAN} KubeSeed ne doit pas être lancé en root ou en sudo${CEND}"
+  echo -e "${CCYAN} $(gettext "KubeSeed ne doit pas être lancé en root ou en sudo")${CEND}"
   echo -e "${CCYAN}-----------------------${CEND}"
   exit 1
 fi

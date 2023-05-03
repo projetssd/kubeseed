@@ -1,0 +1,4 @@
+msgid "Lancement en root"
+msgstr "Launch as root"
+msgid "KubeSeed ne doit pas être lancé en root ou en sudo"
+msgstr "KubeSeed must not be launched as root or using sudo"

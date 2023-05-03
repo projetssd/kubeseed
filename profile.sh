@@ -22,6 +22,7 @@ if [ -f "${HOME}/.config/kubeseed/env" ]; then
   # autocompletion kubectl
   source <(kubectl completion bash)
   kubectl config set-context --current --namespace=kubeseed
+
 fi
 
 
