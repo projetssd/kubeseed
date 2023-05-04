@@ -57,4 +57,3 @@ Dans le cas ou vous faites une migration depuis ssdV2, [suivez ce guide](migrati
 
 
 
-BASE {{ site.url }}
