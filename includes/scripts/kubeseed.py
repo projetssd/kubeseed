@@ -12,11 +12,17 @@ from yaml.loader import SafeLoader
 from simple_term_menu import TerminalMenu
 # Kubernetes
 from kubernetes import client, config
+# Traductions
+import gettext
 
 
 settings_source = os.environ['SETTINGS_SOURCE']
 settings_storage = os.environ['SETTINGS_STORAGE']
 generique_bash = settings_source + "/includes/scripts/generique.sh"
+
+gettext.bindtextdomain('ks', settings_source + '/i18n')
+gettext.textdomain('ks')
+_ = gettext.gettext
 
 
 def choix_appli_lance():
@@ -104,11 +110,11 @@ def lance_applis(list_applis):
 
 
 def create_menu(mylist):
-    menu_list=["Menu principal", ""]
+    menu_list = [_('Menu principal'), ""]
     for element in mylist:
-        menu_list.append(element['menu'])
+        menu_list.append(_(element['menu']))
     terminal_menu = TerminalMenu(menu_list,
-                                 title="Menu KubeSeed\n\nAppuyez sur echap pour sortir\n=============================================",
+                                 title=_("Menu KubeSeed") + "\n\n" + _("Appuyez sur echap pour sortir") + "\n=============================================",
                                  skip_empty_entries=True)
     menu_entry_index = terminal_menu.show()
     # le menu_entry_index est l'index choisi

@@ -61,3 +61,6 @@ export MYGIDNAME=$(id -gn)
 export RCLONE_MNT_DIR="${HOME}/seedbox/rclone"
 # app settings
 export APP_SETTINGS="${SETTINGS_STORAGE}/app_settings"
+# Internationalization
+export TEXTDOMAIN=ks
+export TEXTDOMAINDIR="${SETTINGS_SOURCE}/i18n"
