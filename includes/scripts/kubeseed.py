@@ -15,7 +15,6 @@ from kubernetes import client, config
 # Traductions
 import gettext
 
-
 settings_source = os.environ['SETTINGS_SOURCE']
 settings_storage = os.environ['SETTINGS_STORAGE']
 generique_bash = settings_source + "/includes/scripts/generique.sh"
@@ -66,7 +65,7 @@ def choix_appli_lance():
                         old_description = data['application']
                     description = '[PERSO] - ' + old_description
                 # On regarde si on a déjà cette appli dans la première liste
-                if (application + ' - ' + old_description, application) in  list_applis:
+                if (application + ' - ' + old_description, application) in list_applis:
                     list_applis.remove((application + ' - ' + old_description, application))
                 # On crée un tuple (appli - desc, appli)
                 list_applis.append((application + ' - ' + description, application))
@@ -74,7 +73,7 @@ def choix_appli_lance():
     list_applis.sort()
     questions = [
         inquirer.Checkbox('applications',
-                          message="Sélectionner les applications à installer",
+                          message=_("Sélectionner les applications à") + " " + _("installer"),
                           choices=list_applis,
                           ),
     ]
@@ -114,12 +113,13 @@ def create_menu(mylist):
     for element in mylist:
         menu_list.append(_(element['menu']))
     terminal_menu = TerminalMenu(menu_list,
-                                 title=_("Menu KubeSeed") + "\n\n" + _("Appuyez sur echap pour sortir") + "\n=============================================",
+                                 title=_("Menu KubeSeed") + "\n\n" + _(
+                                     "Appuyez sur echap pour sortir") + "\n=============================================",
                                  skip_empty_entries=True)
     menu_entry_index = terminal_menu.show()
     # le menu_entry_index est l'index choisi
     if menu_entry_index is None:
-        print('Sortie sur echap')
+        print(_('Sortie sur echap'))
         exit()
     if menu_entry_index == 0:
         menu_principal()
@@ -135,7 +135,7 @@ def create_menu(mylist):
 
             if type_dest == "python":
                 eval(mylist[menu_entry_index]['dest'] + '()')
-        input("Appuyez sur une touche pour continuer...")
+        input(_("Appuyez sur une touche pour continuer") + "...")
         create_menu(mylist)
 
 
@@ -187,7 +187,8 @@ def choix_running_appli(complement_texte):
     list_applis.sort()
     questions = [
         inquirer.Checkbox('applications',
-                          message="Sélectionner les applications à " + complement_texte + " - entrée pour valider",
+                          message=_("Sélectionner les applications à") + " " +
+                                  complement_texte + " - " + _("entrée pour valider"),
                           choices=list_applis,
                           ),
     ]
@@ -200,7 +201,7 @@ def choix_restart_appli():
     Affiche une liste de choix (checkbox) des applis à installer
     Installe les applis choisies une à une
     """
-    result = choix_running_appli("redémarrer")
+    result = choix_running_appli(_("redémarrer"))
     restart_deployment(result)
 
 
@@ -209,7 +210,7 @@ def choix_delete_appli():
     Affiche une liste de choix (checkbox) des applis à installer
     Installe les applis choisies une à une
     """
-    result = choix_running_appli("désinstaller")
+    result = choix_running_appli(_("désinstaller"))
     delete_deployment(result)
 
 
@@ -218,6 +219,5 @@ def choix_reinit_appli():
     Affiche une liste de choix (checkbox) des applis à installer
     Installe les applis choisies une à une
     """
-    result = choix_running_appli("réinitialiser")
+    result = choix_running_appli(_("réinitialiser"))
     reinit_deployment(result)
-
