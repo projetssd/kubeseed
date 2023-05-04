@@ -1,3 +1,0 @@
-[submodule "docs/_plugins/multiple-languages"]
-	path = docs/_plugins/multiple-languages
-	url = https://github.com/kurtsson/jekyll-multiple-languages-plugin.git
