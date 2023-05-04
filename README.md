@@ -1,7 +1,33 @@
 # Kubeseed
 
-
 Kubeseed - uses kubernetes for containers
+
+# RELEASE CANDIDATE PROJECT - USE AT YOUR OWN RISKS
+
+/!\ ENGLISH TRANSLATORS WANTED /!\ 
+
+To be installed on a fresh Debian 11 (works in progress to adapt to other OS)
+
+## Prerequisistes
+
+* a server with internet access. At least, ports 80 and 443 must be available (other ports could be necesseray depending on other applications, 32400 for plex, 30000 for rutorrent...)
+* a domain name
+* optionnal but recommended : using cloudflare to manage his doamin name
+
+Server should have git and sudo installed (apt install git sudo)
+
+## Steps
+
+To be used with a user with sudo rights (not root)
+
+```
+git clone https://github.com/projetssd/kubeseed.git
+cd kubeseed
+./seedbox.sh
+```
+
+Full documentation (french only for now) [here](https://projetssd.github.io/kubeseed/)
+
 
 # PROJET EN RELEASE CANDIDATE - UTILISEZ A VOS RISQUES ET PERILS
 
@@ -12,7 +38,7 @@ A installer sur Debian 11 EXCLUSIVEMENT (travaux en cours pour rendre compatible
 * Un nom de domaine
 * Optionnel mais fortement recommandé : faire gérer son nom de domaine par cloudflare pour automatiser les entrées dns
 
-Le serveur doit avoir les paquets git et sudo installés
+Le serveur doit avoir les paquets git et sudo installés (apt install git sudo)
 
 ## Procédure
 
