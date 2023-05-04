@@ -43,3 +43,7 @@ msgstr "install"
 #
 msgid "Ajout/Suppression/Sauvegarde des applications"
 msgstr "Add/Delete/Backup applications"
+msgid "Redémarrage d'une application"
+msgstr "Restart en app"
+msgid "Suppression d'une application"
+msgstr "Delete an app"
