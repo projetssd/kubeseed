@@ -1,0 +1,29 @@
+---
+application: 'bookstack'
+app_port: 80
+description: "Bookstack is a free and open source Wiki designed for creating beautiful documentation."
+image: 'lscr.io/linuxserver/bookstack'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/config"
+
+application_env:
+  - name: TZ
+    value: "Europe/Paris"
+  - name: PUID
+    value: "{{user.userid}}"
+  - name: PGID
+    value: "{{user.groupid}}"
+  - name: DB_HOST
+    value: "db-{{application}}"
+  - name: DB_USER
+    value: "{{ application }}"
+  - name: DB_PASS
+    value: "{{ application }}"
+  - name: DB_DATABASE
+    value: "{{ application }}"
+  - name: APP_URL
+    value: "https://{{ applis[application].subdomain }}.{{ user.domain }}"
+
+pretasks:
+  - mariadb
