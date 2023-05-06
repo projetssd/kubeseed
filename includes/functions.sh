@@ -10,7 +10,7 @@ function ks_logo() {
   colorp='\033[1;34m' # Bold BLUE
   colora='\033[1;32m' # Bold GREEN
   projetname='KubeSeed'
-  authors='Author: Merrick'
+  authors="$(gettext "Auteur"): Merrick"
   printf " \n"
   printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
   printf " ${colorp} ██║ ██╔╝${colora}██║   ██║██╔══██╗██╔════╝${colorp}██╔════╝${colora}██╔════╝██╔════╝██╔══██╗${nocolor}\n"
@@ -319,7 +319,8 @@ function ks_install() {
     lsb-release \
     python3-kubernetes \
     fuse3 \
-    bash-completion
+    bash-completion \
+    gettext
 
   sudo rm -f /usr/bin/python
 
@@ -678,4 +679,16 @@ function ks_get_system_info() {
   kubectl get pods -A | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
   kubectl get deployments -A | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
   kubectl get ing -A | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
+}
+
+function ks_generate_translation() {
+  for f in ${SETTINGS_SOURCE}/i18n/*.po; do
+    [[ -e "$f" ]] || break # handle the case of no *.po files
+    temp=$(basename $f)
+    short="${temp:0:2}"
+    mkdir -p "i18n/${short}/LC_MESSAGES"
+    msgfmt -o "${SETTINGS_SOURCE}/i18n/${short}/LC_MESSAGES/ks.mo" "${SETTINGS_SOURCE}/i18n/${short}.po"
+    echo "$(gettext "Generation") ${short} $(gettext "terminée")"
+  done
+  echo " == $(gettext "Génération des traductions terminées") =="
 }

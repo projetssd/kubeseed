@@ -9,10 +9,11 @@
 ################################################
 # TEST ROOT USER
 if [ "$USER" == "root" ]; then
+  source "includes/variables.sh"
   echo -e "${CCYAN}-----------------------${CEND}"
-  echo -e "${CCYAN}[  Lancement en root  ]${CEND}"
+  echo -e "${CCYAN}[  $(gettext "Lancement en root")  ]${CEND}"
   echo -e "${CCYAN}-----------------------${CEND}"
-  echo -e "${CCYAN} KubeSeed ne doit pas être lancé en root ou en sudo${CEND}"
+  echo -e "${CCYAN} $(gettext "KubeSeed ne doit pas être lancé en root ou en sudo")${CEND}"
   echo -e "${CCYAN}-----------------------${CEND}"
   exit 1
 fi
