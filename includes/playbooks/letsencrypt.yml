@@ -3,9 +3,9 @@
   gather_facts: false
   become: true
   tasks:
-  - name: Wait 10 secondes for cert manager to be up
+  - name: Wait 30 secondes for cert manager to be up
     pause:
-      seconds: 10
+      seconds: 30
 
   - name: Deploy from template
     template:
