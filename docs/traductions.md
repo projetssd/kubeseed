@@ -22,7 +22,7 @@ Au lieu de faire
 echo "Lancement en root"
 ```
 
-il faut faire 
+Il faut faire 
 
 ```shell 
 echo "$(gettext "Lancement en root")"
