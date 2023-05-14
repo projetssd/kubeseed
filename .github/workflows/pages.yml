@@ -24,8 +24,8 @@ jobs:
     # Standard usage
       - uses: helaili/jekyll-action@v2
         with:
-          token: ${{ secrets.TOKEN2 }}
-          jekyll_src: 'docs'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_branch: 'gh-pages'
 
 
   deploy:
