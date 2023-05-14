@@ -6,6 +6,7 @@ Il est conseillé de ne pas mettre d'authentification pour ces applis dans kubes
 ![image](https://user-images.githubusercontent.com/3830148/236147092-b22a7470-c48e-4df9-a938-c69feb486b47.png)
 
 Cela permettra d'utiliser des outils tiers comme des applis portables
+NB : Les nouvelles versions des *arrs force la mise en place d'une authentification gérée par le ARR en question, le fait de ne pas mettre d'auth par kubeseed permet d'éviter des loops d'auth.
 
 ### Connexion à rutorrent
 
