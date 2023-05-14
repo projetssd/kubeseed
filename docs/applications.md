@@ -1,3 +1,7 @@
+---
+layout: post
+title: Applications
+---
 # Comment ajouter une application à ma seedbox
 
 Il faut ajouter un fichier yml au répertoire ${SETTINGS_STORAGE}/app_persos/. Le modèle à utiliser se trouve dans **examples/nouvelle_appli.yml**

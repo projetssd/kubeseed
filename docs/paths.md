@@ -1,3 +1,7 @@
+---
+layout: post
+title: Chemins
+---
 # Chemins utilisés par Kube seed
 
 ## SETTINGS_SOURCE

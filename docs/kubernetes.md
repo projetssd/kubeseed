@@ -1,3 +1,7 @@
+---
+layout: post
+title: Kubernetes
+---
 # Kubernetes
 
 ## Implémentation de kubernetes pour Kubeseed

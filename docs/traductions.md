@@ -1,3 +1,7 @@
+---
+layout: post
+title: Traductions
+---
 # Comment ajouter/modifier une traduction
 
 Par défaut, Kubeseed est en français. Certains éléments peuvent être traduits pour prendre en charge la langue du système ou de l'utilisateur (visible par la commande **locale** dans un terminal).

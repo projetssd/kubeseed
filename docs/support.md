@@ -1,3 +1,7 @@
+---
+layout: post
+title: Support
+---
 # Support de l'application
 
 Le support se fait en best effort, **[sur ouverture de ticket github uniquement](https://github.com/projetssd/kubeseed/issues/new?assignees=&labels=&template=bug_report.md&title=){:target="_blank"}**. Aucun support ne sera assuré sur discord.
