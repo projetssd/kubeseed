@@ -28,7 +28,6 @@ cd kubeseed
 
 Full documentation (french only for now) [here](https://projetssd.github.io/kubeseed/)
 
-
 # PROJET EN RELEASE CANDIDATE - UTILISEZ A VOS RISQUES ET PERILS
 
 A installer sur Debian 11 EXCLUSIVEMENT (travaux en cours pour rendre compatible)
