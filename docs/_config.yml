@@ -8,3 +8,9 @@ description: Une seedbox sous Kubernetes
 languages: ["fr", "en"]
 
 baseurl: /kubeseed
+
+defaultLang: fr
+languageNames:
+  fr: Français
+  en: English
+

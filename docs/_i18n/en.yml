@@ -1,3 +1,6 @@
 global:
   french: French
   english: English
+
+index:
+  kubeseed_desc: "Kubeseed is a seedbox (and other tools) project, running on a Kubernetes engine. To do so, we use "
