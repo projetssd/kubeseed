@@ -18,10 +18,7 @@ jobs:
       - name: Build
         uses: actions/jekyll-build-pages@v1
         with:
-          destination: "/docs"
           source: "./docs"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
-        with:
-          path: "/docs"
