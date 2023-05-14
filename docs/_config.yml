@@ -7,4 +7,4 @@ description: Une seedbox sous Kubernetes
 
 languages: ["fr", "en"]
 
-site.baseurl: "/kubeseed"
+baseurl: /kubeseed
