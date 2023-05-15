@@ -2,8 +2,6 @@
 layout: post
 title: Migration depuis ssd v2
 ---
-# Migration depuis ssd v2
-
 Il n'y a pas de procédure automatisée de migration depuis [ssdv2](https://github.com/projetssd/ssdv2), les opérations doivent se faire à la main.
 
 ## Dans le cas d'utilisation de rclone/google drive

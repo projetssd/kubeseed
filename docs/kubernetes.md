@@ -2,8 +2,6 @@
 layout: post
 title: Kubernetes
 ---
-# Kubernetes
-
 ## Implémentation de kubernetes pour Kubeseed
 
 Pour Kubeseed, l'infra kubernetes est constitué d'un seul noeud, installé avec [k3s](https://k3s.io/). Cela permet d'avoir un cluster Kubernetes rapidement et simplement.

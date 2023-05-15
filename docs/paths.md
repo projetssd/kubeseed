@@ -1,9 +1,7 @@
 ---
 layout: post
-title: Chemins
+title: Chemins utilisés par Kubeseed
 ---
-# Chemins utilisés par Kube seed
-
 ## SETTINGS_SOURCE
 
 La variable ${SETTINGS_SOURCE} comprend le chemin contenant les sources du projet (repo git). Le contenu de ce répertoire ne doit pas être modifié à la main, et n'est mis à jour que par git
