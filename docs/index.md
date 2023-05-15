@@ -1,6 +1,5 @@
 ---
 layout: post
-title: Kubeseed
 ---
 # Kubeseed, c'est quoi ? 
 
