@@ -32,6 +32,7 @@ ks_get_and_store_info "user.pass" "Mot de passe" KS_PASSWORD
 ks_get_and_store_info "user.mail" "Adresse mail" KS_MAIL
 ks_get_and_store_info "user.domain" "Domaine" KS_DOMAIN
 ### CLOUDLFLARE ###
+ks_manage_account_yml dns.usage N
 ks_get_and_store_info "cloudflare.usage" "Voulez vous utiliser cloudflare ? [O/N]" KS_CF_USAGE O
 cloudflare_usage=$(ks_get_from_account_yml cloudflare.usage)
 if [ "${cloudflare_usage}" == "O" ]; then

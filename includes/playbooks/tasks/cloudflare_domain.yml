@@ -25,4 +25,4 @@
     value: "{{ network.ipv4 }}"
     ttl: "86400"
     type: "A"
-  when: ns.usage == "O"
+  when: dns.usage == "O"

@@ -1,0 +1,15 @@
+---
+application: 'ittools'
+app_port: 80
+description: "Useful tools for developer and people working in IT"
+image: 'ghcr.io/corentinth/it-tools:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+
