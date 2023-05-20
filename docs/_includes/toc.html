@@ -15,11 +15,11 @@
 </ul>
 </p>
 <hr />
-<a class="active" href="#">{{ site.lang }}</a><hr />
-        {% for lang in site.languageNames %}
-        {% if lang[0] == site.lang %} {% continue %} {% endif %}
 
-        <a href="{{ site.baseurl_root }}{% if lang[0] != site.defaultLang %}/{{ lang[0] }}{% endif %}/">{{ lang[1] }}</a>
+        {% for lang in site.languageNames %}
+            {% if lang[0] != site.lang %}
+                <a href="{{ site.baseurl_root }}{% if lang[0] != site.defaultLang %}/{{ lang[0] }}{% endif %}/">{{ lang[1] }}</a>
+            {% endif %}
 
         {% endfor %}
 
