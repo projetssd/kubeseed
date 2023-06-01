@@ -48,7 +48,7 @@ if [ "$myid" -eq 0 ]; then
   {% endif %}
 
   # Nombre de sauvegardes effectuées
-  nbBackup=$(find $BACKUP_PARTITION -type d -name 'backup-*' | wc -l)
+  nbBackup=$(find $BACKUP_PARTITION -type d -name 'backup_ks-*' | wc -l)
 
   if [[ "$nbBackup" -gt "$NB_MAX_BACKUP" ]]; then
 
