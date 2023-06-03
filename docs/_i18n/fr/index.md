@@ -48,4 +48,4 @@ Vous pouvez aussi copier le fichier **kickstart.sample** en **kickstart**, modif
 
 ## Migration depuis ssdv2
 
-Dans le cas ou vous faites une migration depuis ssdV2, [suivez ce guide](migration_ssdv2.md)
+Dans le cas ou vous faites une migration depuis ssdV2, [suivez ce guide](migration_ssdv2.html)
