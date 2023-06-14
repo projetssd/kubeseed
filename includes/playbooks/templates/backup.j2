@@ -53,8 +53,8 @@ if [ "$myid" -eq 0 ]; then
   if [[ "$nbBackup" -gt "$NB_MAX_BACKUP" ]]; then
 
       # Archive la plus ancienne
-      oldestBackupPath=$(find $BACKUP_PARTITION -type d -name 'backup-*' -printf '%T+ %p\n' | sort | head -n 1 | awk '{print $2}')
-      oldestBackupFile=$(find $BACKUP_PARTITION -type d -name 'backup-*' -printf '%T+ %p\n' | sort | head -n 1 | awk '{split($0,a,/\//); print a[5]}')
+      oldestBackupPath=$(find $BACKUP_PARTITION -type d -name 'backup_ks-*' -printf '%T+ %p\n' | sort | head -n 1 | awk '{print $2}')
+      oldestBackupFile=$(find $BACKUP_PARTITION -type d -name 'backup_ks-*' -printf '%T+ %p\n' | sort | head -n 1 | awk '{split($0,a,/\//); print a[5]}')
 
       # Suppression du répertoire du backup
       rm -rf "$oldestBackupPath"
