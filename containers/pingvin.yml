@@ -1,0 +1,18 @@
+---
+application: 'pingvin'
+app_port: 3000
+description: "Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer."
+image: 'stonith404/pingvin-share'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/opt/app/backend/data"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/img"
+    container_path: "/opt/app/frontend/public/img"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: API_URL
+    value: "https://{{ applis[application].subdomain }}.{{ user.domain }}"
