@@ -497,6 +497,16 @@ EOF
     echo "${patch}" >>"${HOME}/.config/kubeseed/patches"
   done
 
+  if [ -f "${SETTINGS_SOURCE}/kickstart" ]; then
+    rm -f "${SETTINGS_SOURCE}/kickstart"
+  fi
+
+  ks_log_statusbar "Lancement de la première sauvegarde après installation"
+  sudo /usr/local/bin/backup
+  echo "Une première sauvegarde de l'installation a été faite dans ${SETTINGS_STORAGE}/backup. Si vous souhaitez la conserver, merci de l'archiver"
+  ks_pause
+
+
   touch "${HOME}/.config/kubeseed/installed"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_env_at_start.yml"
   unset_window
