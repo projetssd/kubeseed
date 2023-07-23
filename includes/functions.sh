@@ -261,77 +261,38 @@ function ks_install() {
   echo "=================================================================="
   read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"
   echo "=================================================================="
-####
-#  ks_log_statusbar "Gestion du source list"
-#  version_ok=0
-#  if grep "NAME=" /etc/os-release | grep -qi debian; then
-#    # Debian
-#    if grep "VERSION_ID=" /etc/os-release | grep -q 11; then
-#      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-#      sudo cp "${SETTINGS_SOURCE}/includes/files/debian11.sources.list" /etc/apt/sources.list
-#      version_ok=1
-#    else
-#      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 11 de Debian"
-#      exit 1
-#    fi
-#  fi
-#
-#  if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
-#    # Debian
-#    if grep "VERSION_ID=" /etc/os-release | grep -q "22.04"; then
-#      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-#      sudo cp "${SETTINGS_SOURCE}/includes/files/ubuntu2204.sources.list" /etc/apt/sources.list
-#      version_ok=1
-#    else
-#      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 22.04 d'Ubuntu'"
-#      exit 1
-#    fi
-#  fi
-#
-#  if [ ${version_ok} == 0 ]; then
-#    echo "Aucune version compatible pour l'installation, abandon..."
-#    exit 1
-#  fi
-####
 
   ks_log_statusbar "Gestion du source list"
   version_ok=0
-
-  # Récupérer les informations sur la distribution
-  distro=$(grep "NAME=" /etc/os-release | grep -oP '(?<=\").*(?=\")')
-  version=$(grep "VERSION_ID=" /etc/os-release | grep -oP '(?<=\").*(?=\")')
-
-  # Fonction pour changer le sources.list et marquer la version comme compatible
-  change_sources_list() {
+  if grep "NAME=" /etc/os-release | grep -qi debian; then
+    # Debian
+    if grep "VERSION_ID=" /etc/os-release | grep -q 12; then
       sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-      sudo cp "${SETTINGS_SOURCE}/includes/files/${1}" /etc/apt/sources.list
+      sudo cp "${SETTINGS_SOURCE}/includes/files/debian12.sources.list" /etc/apt/sources.list
       version_ok=1
-  }
-
-  if [ "$distro" == "Debian" ]; then
-      if [ "$version" == "11" ]; then
-          change_sources_list "debian11.sources.list"
-      elif [ "$version" == "12" ]; then
-          change_sources_list "debian12.sources.list"
-      else
-          echo "Kubeseed n'est compatible qu'avec Debian 11 et Debian 12 pour l'instant."
-          exit 1
-      fi
-  fi
-
-  if [ "$distro" == "Ubuntu" ]; then
-      if [ "$version" == "22.04" ]; then
-          change_sources_list "ubuntu2204.sources.list"
-      else
-          echo "Kubeseed n'est compatible qu'avec Ubuntu 22.04 pour l'instant."
-          exit 1
-      fi
-  fi
-
-  if [ "$version_ok" -eq 0 ]; then
-      echo "Aucune version compatible pour l'installation, abandon..."
+    else
+      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 12 de Debian"
       exit 1
+    fi
   fi
+
+  if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
+    # Debian
+    if grep "VERSION_ID=" /etc/os-release | grep -q "22.04"; then
+      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
+      sudo cp "${SETTINGS_SOURCE}/includes/files/ubuntu2204.sources.list" /etc/apt/sources.list
+      version_ok=1
+    else
+      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 22.04 d'Ubuntu'"
+      exit 1
+    fi
+  fi
+
+  if [ ${version_ok} == 0 ]; then
+    echo "Aucune version compatible pour l'installation, abandon..."
+    exit 1
+  fi
+
   ks_pause
   ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
