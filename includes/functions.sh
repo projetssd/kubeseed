@@ -332,7 +332,7 @@ function ks_install() {
       echo "Aucune version compatible pour l'installation, abandon..."
       exit 1
   fi
-
+  ks_pause
   ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
 
@@ -603,7 +603,7 @@ ks_log_statusbar() {
   COLS=$(tput cols)
   # si en debug
   if [ -n "$KS_DEBUG" ]; then
-    echo "###### MODE DEBUG ######"s
+    echo "###### MODE DEBUG ######"
     ks_pause
   fi
   clear
