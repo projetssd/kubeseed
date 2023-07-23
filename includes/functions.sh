@@ -262,7 +262,7 @@ function ks_install() {
   read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"
   echo "=================================================================="
 
-  ks_log_statusbar "Gestion du source list"
+  ks_log_statusbar "Gestion du sources.list"
   version_ok=0
   if grep "NAME=" /etc/os-release | grep -qi debian; then
     # Debian
@@ -277,7 +277,7 @@ function ks_install() {
   fi
 
   if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
-    # Debian
+    # Ubuntu
     if grep "VERSION_ID=" /etc/os-release | grep -q "22.04"; then
       sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
       sudo cp "${SETTINGS_SOURCE}/includes/files/ubuntu2204.sources.list" /etc/apt/sources.list
