@@ -1,10 +1,11 @@
-##############################################
-# Copier de fichier en kickstart
+###############################################
+# Copier le fichier en kickstart
 # pour qu'il soit pris en compte
-##############################################
+# ce fichier est supprimé à la fin de l'install
+###############################################
 # Commenter les variables si vous ne voulez pas
 # qu'elles soient prises en compte
-##############################################
+###############################################
 
 ###############################################
 # Permet de mettre en pause entre chaque
@@ -40,25 +41,26 @@ export KS_CF_API=xxxxxxxxxxxxxxxxxxxxxxxxx
 
 #################################################
 # Sous domaine pour traefik
-KS_TRAEFIK_SUBDOMAIN=traefik
+export KS_TRAEFIK_SUBDOMAIN=traefik
 
 #################################################
 # Auth pour traefik (1= basique, 2= oauth, 3=Aucune)
-KS_TRAEFIK_AUTH=1
+export KS_TRAEFIK_AUTH=1
 
 #################################################
 # Sous domaine pour le dashboard
-KS_DASHBOARD_SUBDOMAIN=dashboard
+export KS_DASHBOARD_SUBDOMAIN=dashboard
 
 #################################################
 # PDNS / NSUPDATE ( experimental )
 # mettre le usage a N si cloudflare et vice versa
 #################################################
+
+### PDNS / NSUPDATE
 #export KS_NS_USAGE=O
-# PDNS / NSUPDATE
-# Algorithm
+### Algorithm
 #export KS_NS_ALGO=xxx
-# Key name
+### Key name
 #export KS_NS_KEYNAME=xxx
-# Key secret
+### Key secret
 #export KS_NS_KEYSECRET=xxx
