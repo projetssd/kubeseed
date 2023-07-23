@@ -262,22 +262,22 @@ function ks_install() {
   read -p "Appuyez sur entrée pour continuer, ou ctrl+c pour sortir"
   echo "=================================================================="
 
-  ks_log_statusbar "Gestion du source list"
+  ks_log_statusbar "Gestion du sources.list"
   version_ok=0
   if grep "NAME=" /etc/os-release | grep -qi debian; then
     # Debian
-    if grep "VERSION_ID=" /etc/os-release | grep -q 11; then
+    if grep "VERSION_ID=" /etc/os-release | grep -q 12; then
       sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-      sudo cp "${SETTINGS_SOURCE}/includes/files/debian11.sources.list" /etc/apt/sources.list
+      sudo cp "${SETTINGS_SOURCE}/includes/files/debian12.sources.list" /etc/apt/sources.list
       version_ok=1
     else
-      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 11 de Debian"
+      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 12 de Debian"
       exit 1
     fi
   fi
 
   if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
-    # Debian
+    # Ubuntu
     if grep "VERSION_ID=" /etc/os-release | grep -q "22.04"; then
       sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
       sudo cp "${SETTINGS_SOURCE}/includes/files/ubuntu2204.sources.list" /etc/apt/sources.list
@@ -293,6 +293,7 @@ function ks_install() {
     exit 1
   fi
 
+  ks_pause
   ks_log_statusbar "Mise à jour du systeme"
   sudo apt update
 
@@ -306,7 +307,6 @@ function ks_install() {
     python3-venv \
     apache2-utils \
     dnsutils \
-    python3-apt-dbg \
     python3-apt \
     python3-venv \
     python-apt-doc \
@@ -473,7 +473,7 @@ EOF
   "${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh"
   ks_pause
 
-  # Instalation rclone
+  # Installation rclone
   ks_log_statusbar "Installation/configuration de rclone"
   ks_create_dir "${SETTINGS_STORAGE}/local"
   ks_create_dir "${SETTINGS_STORAGE}/Medias"
@@ -524,10 +524,10 @@ function ks_log_write() {
 
 function ks_stocke_public_ip() {
   echo "Stockage des adresses ip publiques"
-  IPV4=$(curl -4 https://ip.mn83.fr)
+  IPV4=$(curl -4 https://ip4.mn83.fr)
   echo "IPV4 = ${IPV4}"
   ks_manage_account_yml network.ipv4 "${IPV4}"
-  IPV6=$(curl -6 https://ip.mn83.fr)
+  IPV6=$(curl -6 https://ip6.mn83.fr)
   if [ $? -eq 0 ]; then
     echo "IPV6 = ${IPV6}"
     ks_manage_account_yml network.ipv6 "a[${IPV6}]"
@@ -564,7 +564,7 @@ ks_log_statusbar() {
   COLS=$(tput cols)
   # si en debug
   if [ -n "$KS_DEBUG" ]; then
-    echo "###### MODE DEBUG ######"s
+    echo "###### MODE DEBUG ######"
     ks_pause
   fi
   clear
