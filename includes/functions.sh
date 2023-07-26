@@ -9,7 +9,7 @@ function ks_logo() {
   nocolor='\033[0m'   # no color
   colorp='\033[1;34m' # Bold BLUE
   colora='\033[1;32m' # Bold GREEN
-  projetname='KubeSeed'
+  projetnamke='KubeSeed'
   authors="$(gettext "Auteur"): Merrick"
   printf " \n"
   printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
@@ -270,8 +270,13 @@ function ks_install() {
       sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
       sudo cp "${SETTINGS_SOURCE}/includes/files/debian12.sources.list" /etc/apt/sources.list
       version_ok=1
+    elif grep "VERSION_ID=" /etc/os-release | grep -q 11; then
+      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
+      sudo cp "${SETTINGS_SOURCE}/includes/files/debian11.sources.list" /etc/apt/sources.list
+      version_ok=1
+
     else
-      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 12 de Debian"
+      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 11 ou 12 de Debian"
       exit 1
     fi
   fi
