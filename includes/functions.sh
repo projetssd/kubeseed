@@ -9,7 +9,7 @@ function ks_logo() {
   nocolor='\033[0m'   # no color
   colorp='\033[1;34m' # Bold BLUE
   colora='\033[1;32m' # Bold GREEN
-  projetnamke='KubeSeed'
+  projetname='KubeSeed'
   authors="$(gettext "Auteur"): Merrick"
   printf " \n"
   printf " ${colorp} ██╗  ██╗${colora}██╗   ██╗██████╗ ███████╗${colorp}███████╗${colora}███████╗███████╗██████╗ ${nocolor}\n"
