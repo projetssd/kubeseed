@@ -74,4 +74,6 @@
                         port:
                           number: 9000
           tls:
-            secretName: "{{ applis.traefik.subdomain }}.{{ user.domain }}"
+            - secretName: "traefik-tls"
+              hosts:
+                - "{{ applis.traefik.subdomain }}.{{ user.domain }}"
