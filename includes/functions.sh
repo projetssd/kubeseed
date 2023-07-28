@@ -241,6 +241,13 @@ function ks_get_from_account_yml() {
   echo $tempresult
 }
 
+# Fonction pour changer le sources.list et marquer la version comme compatible
+function ks_change_sources_list() {
+  sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
+  sudo cp "${SETTINGS_SOURCE}/includes/files/${1}" /etc/apt/sources.list
+  version_ok=1
+}
+
 function ks_install() {
 
   # on regarde s'il un fichier kickstart
@@ -264,47 +271,11 @@ function ks_install() {
 
   ks_log_statusbar "Gestion du sources.list"
   version_ok=0
-  if grep "NAME=" /etc/os-release | grep -qi debian; then
-    # Debian
-    if grep "VERSION_ID=" /etc/os-release | grep -q 12; then
-      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-      sudo cp "${SETTINGS_SOURCE}/includes/files/debian12.sources.list" /etc/apt/sources.list
-      version_ok=1
-    elif grep "VERSION_ID=" /etc/os-release | grep -q 11; then
-      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-      sudo cp "${SETTINGS_SOURCE}/includes/files/debian11.sources.list" /etc/apt/sources.list
-      version_ok=1
 
-    else
-      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 11 ou 12 de Debian"
-      exit 1
-    fi
-  fi
-
-  if grep "NAME=" /etc/os-release | grep -qi ubuntu; then
-    # Ubuntu
-    if grep "VERSION_ID=" /etc/os-release | grep -q "22.04"; then
-      sudo mv /etc/apt/sources.list /etc/apt/sources.list.before_kubeseed
-      sudo cp "${SETTINGS_SOURCE}/includes/files/ubuntu2204.sources.list" /etc/apt/sources.list
-      version_ok=1
-    else
-      echo "Kubeseed n'est pour l'instant compatible qu'avec la version 22.04 d'Ubuntu'"
-      exit 1
-    fi
-  fi
-
-  if [ ${version_ok} == 0 ]; then
-    echo "Aucune version compatible pour l'installation, abandon..."
-    exit 1
-  fi
-
-  ks_pause
-  ks_log_statusbar "Mise à jour du systeme"
-  sudo apt update
-
-  ks_log_statusbar "Installation des paquets systeme"
-  sudo apt-get install -y \
-    build-essential \
+  # Récupérer les informations sur la distribution
+  distro=$(grep "^ID=" /etc/os-release | cut -d '=' -f 2 | tr -d '"')
+  version=$(grep "^VERSION_ID=" /etc/os-release | cut -d '=' -f 2 | tr -d '"')
+  apt_to_install="build-essential \
     libssl-dev \
     libffi-dev \
     python3-dev \
@@ -325,7 +296,56 @@ function ks_install() {
     python3-kubernetes \
     fuse3 \
     bash-completion \
-    gettext
+    gettext"
+  if [ "$distro" == "debian" ]; then
+    case "$version" in
+    12*)
+      ks_change_sources_list "debian12.sources.list"
+      version_ok=1
+
+      ;;
+    11*)
+      ks_change_sources_list "debian11.sources.list"
+      apt_to_install="${apt_to_install} python3-apt-dbg"
+      version_ok=1
+      ;;
+    *)
+      echo "Kubeseed n'est compatible qu'avec Debian 11 et Debian 12 pour l'instant."
+      exit 1
+      ;;
+    esac
+  elif [ "$distro" == "ubuntu" ]; then
+    case "$version" in
+    22.04)
+      ks_change_sources_list "ubuntu2204.sources.list"
+      version_ok=1
+      ;;
+    *)
+      echo "Kubeseed n'est compatible qu'avec Ubuntu 22.04 pour l'instant."
+      exit 1
+      ;;
+    esac
+  else
+    echo "Distribution non prise en charge."
+    exit 1
+  fi
+
+  if [ "$version_ok" -eq 0 ]; then
+    echo "Aucune version compatible pour l'installation, abandon..."
+    exit 1
+  fi
+
+  if [ ${version_ok} == 0 ]; then
+    echo "Aucune version compatible pour l'installation, abandon..."
+    exit 1
+  fi
+
+  ks_pause
+  ks_log_statusbar "Mise à jour du systeme"
+  sudo apt update
+
+  ks_log_statusbar "Installation des paquets systeme"
+  sudo apt install -y "${apt_to_install}"
 
   sudo rm -f /usr/bin/python
 
@@ -510,7 +530,6 @@ EOF
   sudo /usr/local/bin/backup
   echo "Une première sauvegarde de l'installation a été faite dans ${SETTINGS_STORAGE}/backup. Si vous souhaitez la conserver, merci de l'archiver"
   ks_pause
-
 
   touch "${HOME}/.config/kubeseed/installed"
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_env_at_start.yml"
