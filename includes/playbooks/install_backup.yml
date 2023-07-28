@@ -23,15 +23,6 @@
         mode: 0755
         force: yes
 
-
-    - name: "Set logrotate"
-      become: yes
-      lineinfile:
-        create: true
-        path: /etc/logrotate.d/rsyslog
-        line: "/var/log/backup.log"
-        insertbefore: BOF
-
     - name: Set cron
       become: yes
       cron:

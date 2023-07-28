@@ -5,3 +5,9 @@
   missingok
   su {{ lookup('env','USER') }} {{ lookup('env','MYGIDNAME') }}
 }
+/var/log/backup.log {
+  rotate 7
+  daily
+  compress
+  missingok
+}
