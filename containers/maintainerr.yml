@@ -1,0 +1,12 @@
+---
+application: 'maintainerr'
+app_port: 80
+description: "Maintainerr makes managing your media easy."
+image: 'jorenn92/maintainerr'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/opt/data"
+
+application_env:
+  - name: TZ
+    value: 'Europe/Paris'
