@@ -389,7 +389,8 @@ function ks_install() {
     inquirer \
     pyyaml \
     ansible-runner \
-    simple-term-menu
+    simple-term-menu \
+    lxml
 
   mkdir -p ~/.ansible/inventories
 

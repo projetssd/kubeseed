@@ -6,6 +6,7 @@
         hostPath:
           path: "{{ detail_volume.local_path }}"
 
+
 - name: append host volume
   set_fact:
     host_volumes: "{{ host_volumes + temp_dict }}"
@@ -14,7 +15,7 @@
   set_fact:
     temp_dict:
       - mountPath: "{{ detail_volume.container_path }}"
-        name: "{{ application}}-{{ detail_volume.container_path| replace('/','')|replace('.','')  }}"
+        name: "{{ application}}-{{ detail_volume.container_path| replace('/','') |replace('.','') }}"
 
 - name: append container volume
   set_fact:

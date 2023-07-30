@@ -1,0 +1,36 @@
+{
+    "tautulli": {
+        "api_key": "{{ tautulli_api_key.stdout| default("") }}",
+        "base_url": "http://tautulli:8181/api/v2",
+        "fetch_limit": 25
+    },
+    "radarr": {
+        "api_key": "{{ radarr_api_key| default("") }}",
+        "base_url": "http://radarr:7878/api/v3",
+        "exempt_tag_names": [
+            "do-not-delete"
+        ]
+    },
+    "sonarr": {
+        "api_key": "{{ sonarr_api_key| default("") }}",
+        "base_url": "http://sonarr:8989/api/v3",
+        "monitor_continuing_series": true,
+        "exempt_tag_names": [
+            "do-not-delete"
+        ]
+    },
+    "overseerr": {
+        "api_key": "{{ overseerr_api_key| default("") }}",
+        "base_url": "http://overseerr:5055/api/v1",
+        "fetch_limit": 10
+    },
+    "plex": {
+        "base_url": "http://plex:32400",
+        "token": "{{ plex.token }}",
+        "refresh": true
+    },
+    "last_watched_days_deletion_threshold": 90,
+    "unwatched_days_deletion_threshold": 30,
+    "dry_run": true,
+    "schedule_interval": 86400
+}

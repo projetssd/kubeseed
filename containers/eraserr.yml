@@ -1,0 +1,18 @@
+---
+application: 'eraserr'
+app_port: 32400
+description: "Manage plex content"
+image: 'ecsouthwick/eraserr'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/app/config.json"
+    container_path: "/app/config.json"
+application_env:
+  - name: TZ
+    value: "Europe/Paris"
+
+no_liveness: true
+no_gui: true
+
+pretasks:
+  - arrkeys
+  - eraserr

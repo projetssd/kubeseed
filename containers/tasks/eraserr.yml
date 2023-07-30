@@ -1,0 +1,13 @@
+---
+- name: create directory
+  file:
+    path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/app"
+    state: directory
+  become: yes
+
+- name: create config
+  template:
+    src: "{{  lookup('env', 'SETTINGS_SOURCE') }}/includes/playbooks/templates/eraserr.json.j2"
+    dest: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/app/config.json"
+    backup: true
+  become: yes

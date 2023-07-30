@@ -1,0 +1,102 @@
+---
+# RADARR
+- name: "Check if radarr exists"
+  stat:
+    path: "{{ settings.storage }}/app_settings/radarr/config/config.xml"
+  register: radarr_config
+
+- name: "When radarr exists et api key"
+  block:
+
+  - name: Pull radarr api key
+    xml:
+      path: "{{ settings.storage }}/app_settings/radarr/config/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set radarr api Key
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+  when: radarr_config.stat.exists
+
+# RADARRNIGHTLY
+- name: "Check if radarrnightly exists"
+  stat:
+    path: "{{ settings.storage }}/app_settings/radarrnightly/config/config.xml"
+  register: radarrradarrnightly_config
+
+- name: "When radarrnightly exists get api key"
+  block:
+
+  - name: Pull radarrnightly api key
+    xml:
+      path: "{{ settings.storage }}/app_settings/radarrnightly/config/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set radarr api Key
+    set_fact:
+      radarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+  when: radarrradarrnightly_config.stat.exists
+
+# SONARR
+- name: "Check if sonarr exists"
+  stat:
+    path: "{{ settings.storage }}/app_settings/sonarr/config/config.xml"
+  register: sonarr_config
+
+- name: "When sonarr exists get api key"
+  block:
+
+  - name: Pull sonarr api key
+    xml:
+      path: "{{ settings.storage }}/app_settings/sonarr/config/config.xml"
+      xpath: /Config/ApiKey
+      content: text
+    register: xmlresp
+
+  - name: Set sonarr api Key
+    set_fact:
+      sonarr_api_key: "{{ xmlresp.matches[0].ApiKey }}"
+
+  when: sonarr_config.stat.exists
+
+# TAUTULLI
+- name: Check config Tautulli exists
+  stat:
+    path: "{{ settings.storage }}/app_settings/tautulli/config/config.ini"
+  register: tautulli_config
+
+- name: 'ApiKey Tautulli'
+  shell: |
+    grep "api_key" {{ settings.storage }}/app_settings/tautulli/config/config.ini | cut -d '=' -f2 | sed 's/ //g' | head -1
+  register: tautulli_api_key
+  when: tautulli_config.stat.exists
+
+# Overseerr
+# RADARR
+- name: "Check if overseerr exists"
+  stat:
+    path: "{{ settings.storage }}/app_settings/overseerr/config/settings.json"
+  register: overseerr_config
+
+- name: "When radarr exists et api key"
+  block:
+
+  - name: Pull oversseerr config
+    slurp:
+      src: "{{ settings.storage }}/app_settings/overseerr/config/settings.json"
+    register: overseerr_config_file
+
+  - name: set config
+    set_fact:
+      overseerr_config_detail: "{{ overseerr_config_file['content'] | b64decode }}"
+
+  - name: Set overseerr api Key
+    set_fact:
+      overseerr_api_key: "{{ overseerr_config_detail.main.apiKey }}"
+
+
+  when: overseerr_config.stat.exists
