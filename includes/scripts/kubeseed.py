@@ -54,7 +54,7 @@ def choix_appli_lance():
             # on a un fichier
             if entry.endswith('.yml'):
                 # C'est un fichier yaml
-                with open(basepath + entry) as f:
+                with open(persopath + entry) as f:
                     data = yaml.load(f, Loader=SafeLoader)
                     application = data['application']
                     # on gère le cas où il n'y a pas de description
