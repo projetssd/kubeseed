@@ -303,6 +303,7 @@ function ks_install() {
     case "$version" in
     12*)
       ks_change_sources_list "debian12.sources.list"
+      apt_to_install="${apt_to_install}"
       version_ok=1
       ;;
     11*)
@@ -319,7 +320,7 @@ function ks_install() {
     case "$version" in
     22.04)
       ks_change_sources_list "ubuntu2204.sources.list"
-      apt_to_install="${apt_to_install} python3-apt-dbg" # Ajout de python3-apt-dbg pour Ubuntu 22.04
+      apt_to_install="${apt_to_install} python3-apt-dbg"
       version_ok=1
       ;;
     *)
