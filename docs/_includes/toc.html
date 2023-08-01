@@ -18,7 +18,7 @@
 
         {% for lang in site.languageNames %}
             {% if lang[0] != site.lang %}
-                <a href="{{ site.baseurl_root }}{% if lang[0] != site.defaultLang %}/{{ lang[0] }}{% endif %}/">{{ lang[1] }}</a>
+                <a href="{{ site.baseurl_root }}{% if lang[0] != site.defaultLang %}/{{ lang[0] }}{% endif %}/{{ page.url }}">{{ lang[1] }}</a>
             {% endif %}
 
         {% endfor %}
