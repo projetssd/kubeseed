@@ -44,8 +44,8 @@ else
 ###################
 ### PDNS / NSUPDATE
 ks_get_and_store_info "dns.usage" "Voulez vous utilise nsupdate ? [O/N]" KS_NS_USAGE O
-ns_usage=$(ks_get_from_account_yml ns.usage)
-if [ "${ns_usage}" == "O" ]; then
+dns_usage=$(ks_get_from_account_yml dns.usage)
+if [ "${dns_usage}" == "O" ]; then
   ks_get_and_store_info "dns.algo" "algo nsupdate" KS_NS_ALGO
   ks_get_and_store_info "dns.keyname" "keyname" KS_NS_KEYNAME
   ks_get_and_store_info "dns.keysecret" "keysecret" KS_NS_KEYSECRET
