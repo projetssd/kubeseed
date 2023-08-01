@@ -40,6 +40,7 @@ function detection() {
   echo -e "${CGREEN}${CEND}"
   echo -e "${CGREEN}   1) Share Drive ${CEND}"
   echo -e "${CGREEN}   2) Gdrive${CEND}"
+  echo -e "${CGREEN}   3) Gdrive${CEND}"
   echo ""
 
   read -rp "Votre choix: " RTYPE
