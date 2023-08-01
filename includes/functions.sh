@@ -297,12 +297,13 @@ function ks_install() {
     fuse3 \
     bash-completion \
     gettext"
+  version_ok=0
+
   if [ "$distro" == "debian" ]; then
     case "$version" in
     12*)
       ks_change_sources_list "debian12.sources.list"
       version_ok=1
-
       ;;
     11*)
       ks_change_sources_list "debian11.sources.list"
@@ -318,6 +319,7 @@ function ks_install() {
     case "$version" in
     22.04)
       ks_change_sources_list "ubuntu2204.sources.list"
+      apt_to_install="${apt_to_install} python3-apt-dbg" # Ajout de python3-apt-dbg pour Ubuntu 22.04
       version_ok=1
       ;;
     *)
@@ -335,20 +337,14 @@ function ks_install() {
     exit 1
   fi
 
-  if [ ${version_ok} == 0 ]; then
-    echo "Aucune version compatible pour l'installation, abandon..."
-    exit 1
-  fi
-
   ks_pause
-  ks_log_statusbar "Mise à jour du systeme"
+  ks_log_statusbar "Mise à jour du système"
   sudo apt update
 
-  ks_log_statusbar "Installation des paquets systeme"
+  ks_log_statusbar "Installation des paquets système"
   sudo apt install -y "${apt_to_install}"
 
   sudo rm -f /usr/bin/python
-
   sudo ln -s /usr/bin/python3 /usr/bin/python
 
   # création d'un vault_pass vide
