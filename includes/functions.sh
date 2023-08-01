@@ -275,40 +275,39 @@ function ks_install() {
   # Récupérer les informations sur la distribution
   distro=$(grep "^ID=" /etc/os-release | cut -d '=' -f 2 | tr -d '"')
   version=$(grep "^VERSION_ID=" /etc/os-release | cut -d '=' -f 2 | tr -d '"')
-  apt_to_install="build-essential \
-    libssl-dev \
-    libffi-dev \
-    python3-dev \
-    python3-pip \
-    python3-venv \
-    apache2-utils \
-    dnsutils \
-    python3-apt \
-    python3-venv \
-    python-apt-doc \
-    python-apt-common \
-    ca-certificates \
-    curl \
-    gnupg \
-    software-properties-common \
-    apt-transport-https \
-    lsb-release \
-    python3-kubernetes \
-    fuse3 \
-    bash-completion \
-    gettext"
+  apt_to_install=("build-essential"
+  "libssl-dev"
+  "libffi-dev"
+  "python3-dev"
+  "python3-pip"
+  "python3-venv"
+  "apache2-utils"
+  "dnsutils"
+  "python3-apt"
+  "python3-venv"
+  "python-apt-doc"
+  "python-apt-common"
+  "ca-certificates"
+  "curl"
+  "gnupg"
+  "software-properties-common"
+  "apt-transport-https"
+  "lsb-release"
+  "python3-kubernetes"
+  "fuse3"
+  "bash-completion"
+  "gettext")
   version_ok=0
 
   if [ "$distro" == "debian" ]; then
     case "$version" in
     12*)
       ks_change_sources_list "debian12.sources.list"
-      apt_to_install="${apt_to_install}"
       version_ok=1
       ;;
     11*)
       ks_change_sources_list "debian11.sources.list"
-      apt_to_install="${apt_to_install} python3-apt-dbg"
+      apt_to_install+=("python3-apt-dbg")
       version_ok=1
       ;;
     *)
@@ -320,7 +319,7 @@ function ks_install() {
     case "$version" in
     22.04)
       ks_change_sources_list "ubuntu2204.sources.list"
-      apt_to_install="${apt_to_install} python3-apt-dbg"
+      apt_to_install+=("python3-apt-dbg")
       version_ok=1
       ;;
     *)
@@ -343,7 +342,7 @@ function ks_install() {
   sudo apt update
 
   ks_log_statusbar "Installation des paquets système"
-  sudo apt install -y "${apt_to_install}"
+  sudo apt install -y "${apt_to_install[@]}"
 
   sudo rm -f /usr/bin/python
   sudo ln -s /usr/bin/python3 /usr/bin/python
