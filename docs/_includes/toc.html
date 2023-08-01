@@ -1,12 +1,12 @@
 <p>
 <ul>
-    <li><a href="/kubeseed/index.html">{% t liens.description %}</a></li>
-    <li><a href="/kubeseed/migration_ssdv2.html">{% t liens.migration %}</a></li>
-    <li><a href="/kubeseed/kubernetes.html">{% t liens.kubernetes %}</a></li>
-    <li><a href="/kubeseed/paths.html">{% t liens.chemins %}</a></li>
-    <li><a href="/kubeseed/traductions.html">{% t liens.traductions %}</a></li>
+    <li><a href="{{ site.baseurl_root }}{% if site.lang != site.defaultLang %}/{{ site.lang }}{% endif %}/index.html">{% t liens.description %}</a></li>
+    <li><a href="{{ site.baseurl_root }}{% if site.lang != site.defaultLang %}/{{ site.lang }}{% endif %}/migration_ssdv2.html">{% t liens.migration %}</a></li>
+    <li><a href="{{ site.baseurl_root }}{% if site.lang != site.defaultLang %}/{{ site.lang }}{% endif %}/kubernetes.html">{% t liens.kubernetes %}</a></li>
+    <li><a href="{{ site.baseurl_root }}{% if site.lang != site.defaultLang %}/{{ site.lang }}{% endif %}/paths.html">{% t liens.chemins %}</a></li>
+    <li><a href="{{ site.baseurl_root }}{% if site.lang != site.defaultLang %}/{{ site.lang }}{% endif %}/traductions.html">{% t liens.traductions %}</a></li>
 
-    <li><a href="/kubeseed/applications.html">Détail des applications</a>
+    <li><a href="{{ site.baseurl_root }}{% if site.lang != site.defaultLang %}/{{ site.lang }}{% endif %}/applications.html">Détail des applications</a>
         {% if page.name == "applications.md" %}
         {% include applications.html %}
         {% endif %}
