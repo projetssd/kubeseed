@@ -29,13 +29,15 @@ def detect_td():
 def detect_drop():
     """
     Fonction de détection d'un dropbox
+    Génère une liste des dropbox
     """
     config = configparser.ConfigParser()
     config.read(rclone_config_file)
 
-    mytd=[]
+    mytd = []
+
     for section in config.sections():
-        if "dropbox" in section: #<== modifié config[section]:
+        if config[section]['type'] == 'dropbox':
             mytd.append(section)
     return mytd
 
@@ -82,6 +84,7 @@ def recherche_crypt(myremote):
         if config[section]['type'] == 'crypt':
             if myremote in config[section]['remote']:
                 return section
+                print(section)
     return False
 
 
