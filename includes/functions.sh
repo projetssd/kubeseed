@@ -343,7 +343,7 @@ function ks_install() {
   sudo apt update
 
   ks_log_statusbar "Installation des paquets système"
-  #sudo apt install -y "${apt_to_install}"
+  sudo apt install -y "${apt_to_install}"
 
   sudo rm -f /usr/bin/python
   sudo ln -s /usr/bin/python3 /usr/bin/python
