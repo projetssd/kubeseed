@@ -36,6 +36,7 @@ ks_get_and_store_info "user.domain" "Domaine" KS_DOMAIN
 ks_get_and_store_info "cloudflare.usage" "Voulez vous utiliser cloudflare ? [O/N]" KS_CF_USAGE O
 cloudflare_usage=$(ks_get_from_account_yml cloudflare.usage)
 if [ "${cloudflare_usage}" == "O" ]; then
+  ks_manage_account_yml dns.usage N
   ks_get_and_store_info "cloudflare.login" "Votre Email cloudflare" KS_CF_MAIL
   ks_get_and_store_info "cloudflare.api" "Votre API cloudflare" KS_CF_API
   # On met le ssl CF à full
