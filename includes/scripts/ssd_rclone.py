@@ -26,6 +26,20 @@ def detect_td():
 
     return mytd
 
+def detect_drop():
+    """
+    Fonction de détection d'un dropbox
+    Génère une liste des dropbox
+    """
+    config = configparser.ConfigParser()
+    config.read(rclone_config_file)
+
+    mytd = []
+
+    for section in config.sections():
+        if config[section]['type'] == 'dropbox':
+            mytd.append(section)
+    return mytd
 
 def detect_gd():
     """
@@ -35,8 +49,7 @@ def detect_gd():
     config = configparser.ConfigParser()
     config.read(rclone_config_file)
 
-    mytd = []  # la liste des td
-
+    mytd = [] 
     for section in config.sections():
         if config[section]['type'] == 'drive':
             mytd.append(section)
@@ -71,6 +84,7 @@ def recherche_crypt(myremote):
         if config[section]['type'] == 'crypt':
             if myremote in config[section]['remote']:
                 return section
+                print(section)
     return False
 
 
@@ -92,7 +106,7 @@ def get_id_teamdrive(myremote):
 
 
 def affiche_drive(drives):
-    """
+    """&
     Affiche la liste des drives, et demande au user de choisir
     :param drives: liste de remotes
     :return:

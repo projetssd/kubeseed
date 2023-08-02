@@ -40,6 +40,7 @@ function detection() {
   echo -e "${CGREEN}${CEND}"
   echo -e "${CGREEN}   1) Share Drive ${CEND}"
   echo -e "${CGREEN}   2) Gdrive${CEND}"
+  echo -e "${CGREEN}   3) Dropbox${CEND}"
   echo ""
 
   read -rp "Votre choix: " RTYPE
@@ -66,6 +67,17 @@ function detection() {
     id_teamdrive=$(cat /tmp/id_teamdrive)
     rm -f /tmp/choix_crypt
     rm -f /tmp/id_teamdrive
+    ;;
+
+   3)
+    rm -f /tmp/choix_crypt
+    rm -f /tmp/id_teamdrive
+    "${SETTINGS_SOURCE}/includes/scripts/rclone_list_dropbox.py"
+    remotecrypt=$(cat /tmp/choix_crypt)
+    echo $remotecrypt
+    id_teamdrive=$(cat /tmp/id_teamdrive)
+    #rm -f /tmp/choix_crypt
+    #rm -f /tmp/id_teamdrive
     ;;
 
   *)

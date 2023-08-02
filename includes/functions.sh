@@ -275,6 +275,7 @@ function ks_install() {
   # Récupérer les informations sur la distribution
   distro=$(grep "^ID=" /etc/os-release | cut -d '=' -f 2 | tr -d '"')
   version=$(grep "^VERSION_ID=" /etc/os-release | cut -d '=' -f 2 | tr -d '"')
+
   apt_to_install=("build-essential"
   "libssl-dev"
   "libffi-dev"
@@ -298,6 +299,7 @@ function ks_install() {
   "bash-completion"
   "gettext")
   version_ok=0
+
 
   if [ "$distro" == "debian" ]; then
     case "$version" in
@@ -341,7 +343,9 @@ function ks_install() {
   ks_log_statusbar "Mise à jour du système"
   sudo apt update
 
-  ks_log_statusbar "Installation des paquets système"
+  
+  ks_log_statusbar "Installation des paquets systeme"
+
   sudo apt install -y "${apt_to_install[@]}"
 
   sudo rm -f /usr/bin/python
