@@ -1,7 +1,7 @@
 ---
 application: 'cops'
 app_port: 80
-description: "COPS links to your Calibre library database and allows downloading and emailing of books directly from a web browser and provides a OPDS feed to connect to your devices."
+description: "COPS links to your Calibre database and allows downloading and emailing of books."
 image: 'lscr.io/linuxserver/cops'
 application_volumes:
   - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"

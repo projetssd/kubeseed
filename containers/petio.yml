@@ -1,7 +1,7 @@
 ---
 application: 'petio'
 app_port: 7777
-description: "Petio is a third party companion app available to Plex server owners to allow their users to request, review and discover content."
+description: "Petio is a third party companion app available to Plex server owners."
 image: 'ghcr.io/petio-team/petio:latest'
 application_volumes:
   - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"

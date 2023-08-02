@@ -1,7 +1,7 @@
 ---
 application: 'tautulli'
 app_port: 8181
-description: "Tautulli is a 3rd party application that you can run alongside your Plex Media Server to monitor activity and track various statistics."
+description: "Tautulli can run alongside your Plex Media Server to monitor activity."
 image: 'tautulli/tautulli'
 application_volumes:
   - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
