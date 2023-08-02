@@ -77,7 +77,13 @@ def choix_appli_lance():
                           choices=list_applis,
                           ),
     ]
-    lance_applis(inquirer.prompt(questions)['applications'])
+    try:
+        temp_result = inquirer.prompt(questions)['applications']
+        lance_applis(temp_result)
+    except:
+        print('Aucune application sélectionnée')
+
+
 
 
 def get_from_account_yml(myinput):
