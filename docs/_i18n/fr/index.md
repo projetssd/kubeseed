@@ -14,7 +14,7 @@ Si vous cherchez un projet plus simple à utiliser, je recommande [ssdv2](https:
 # Comment l'installer 
 
 Vous avez besoin : 
-- d'un serveur en debian 11 fraîchement installé
+- d'un serveur en debian 11 ou 12 fraîchement installé (Théoriquement compatible ubuntu 22.04 mais non testé)
 - d'un nom de domaine
 
 Non obligatoire mais conseillé : l'utilisation de cloudflare. Cela permet les enregistrements automatiques des sous domaines.

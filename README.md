@@ -6,7 +6,7 @@ Kubeseed - uses kubernetes for containers
 
 /!\ ENGLISH TRANSLATORS WANTED /!\ 
 
-To be installed on a fresh Debian 11 (works in progress to adapt to other OS)
+To be installed on a fresh Debian 11 or 12 (Ubuntu 22.04 should be ok, but not fully tested)
 
 ## Prerequisistes
 
@@ -31,7 +31,7 @@ Full documentation (french only for now) [here](https://projetssd.github.io/kube
 # PROJET EN RELEASE CANDIDATE - UTILISEZ A VOS RISQUES ET PERILS
 
 test
-A installer sur Debian 11 EXCLUSIVEMENT (travaux en cours pour rendre compatible)
+A installer sur Debian 11 ou 12 (Ubuntu 22.04 compatible mais non testé)
 
 ## Prérequis : 
 * Un serveur avec accès internet. A minima les ports 80 et 443 doivent être accessibles (d'autres ports pourront être nécessaires pour d'autres appli, 32400 pour Plex, 30000 pour rutorrent, etc...)

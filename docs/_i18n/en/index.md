@@ -14,7 +14,7 @@ If you're looking for seomthing simplier, I recommand [ssdv2](https://github.com
 # Installation 
 
 You'll need :
-- a fresh isntalled server on Debian 11
+- a fresh isntalled server on Debian 11 or 12 (Ubuntu 22.04 should be ok but not tested)
 - a domain name
 
 Not mandatory, but recommended : using cloudflare, it allows to automatically manage subdomains.
