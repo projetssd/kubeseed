@@ -39,3 +39,41 @@ Une appli kubeseed est en général composée de trois éléments (les puristes 
 - un ingress => c'est une règle entrante, basée sur une url, qui fait le lien entre le monde extérieur et un service (et donc indirectement un pod). C'est par là qu'on indique que radarr.ndd.fr doit être redirigé vers le service radarr, et donc vers le pod radarr-xxxxx
 
 Certaines applications vont avoir des services complémentaires (c'est le cas de rutorrent qui va avoir un service qui va lui permettre d'accepter les requêtes venant de l'extérieur sur le port 3000), ou bien des objetc complémentaires (les bases de données vont avoir un objet NetworkPolicy, qui va limiter les communications uniquement au pod maitre de l'application par exemple)
+
+### Debug des applications
+
+Il faut tout d'abord regarder l'état des déploiements.
+
+```
+kubectl get deployements
+```
+
+Ils doivent tous être en "up to date = 1", et "available = 1"
+
+Si un déploiement n'est pas dans cet état là, il faut faire
+
+```
+kubectl describe deployement <nom_du_déploiement>
+```
+Qui va nous donner des premières indications sur pourquoi les pods n'ont pas démarré.
+
+Si un déploiement est dans un état correct, mais que l'application n'est pas joignable, il faut regarder les logs des pods associés
+
+```
+kubectl get pods
+```
+Va nous donner les noms des pods
+
+```
+kubectl logs <nom_du_pod> 
+```
+
+Va afficher les logs du pods (comme docker logs avant)
+
+On peut faire
+
+```
+kubectl logs -f <nom_du_pod> 
+```
+
+pour faire défiler les logs en temps réél
