@@ -1,0 +1,3 @@
+source ${HOME}/.config/kubeseed/env
+source ${SETTINGS_SOURCE}/profile.sh
+ansible-playbook ${SETTINGS_SOURCE}/includes/playbooks/install_env_at_start.yml
