@@ -10,3 +10,8 @@
         if [ -f "{{ settings.source }}/profile.sh" ]; then
           source "{{ settings.source }}/profile.sh"
         fi
+
+  - name: "Install alias"
+    ansible.builtin.lineinfile:
+      path: "{{ lookup('env','HOME') }}/.bashrc"
+      line: "alias seedbox='cd {{ settings.source }} && ./seedbox.sh'"
