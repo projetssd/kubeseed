@@ -708,7 +708,7 @@ function ks_get_system_info() {
   domain=$(ks_get_from_account_yml user.domain)
   ipv4=$(ks_get_from_account_yml network.ipv4)
   ipv6=$(ks_get_from_account_yml network.ipv6)
-  kubectl version | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
+  kubectl version --output=yaml| sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
   k3s --version | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
   kubectl describe node $(kubectl get nodes | grep -v NAME | awk '{print $1}') | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
   kubectl get pods -A | sed "s/${domain}/**masked domain**/g" | sed "s/${ipv4}/**masked ipv4**/g" | sed "s/${ipv6}/**masked ipv6**/g"
