@@ -1,0 +1,42 @@
+- name: Get user domain
+  shell: ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/get_var.yml" -e myvar="user.domain" | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}' | xargs
+  register: user_domain
+  changed_when: false
+
+- name: Debug user domain
+  debug:
+    msg: "User domain: {{ user_domain.stdout }}"
+
+- name: wait for files to be present
+  wait_for:
+    path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/config/sabnzbd.ini"
+
+- name: Récupérer la valeur existante de host_whitelist
+  shell: "grep '^host_whitelist' {{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/config/sabnzbd.ini | sed 's/^host_whitelist\\s*=\\s*//'"
+  register: existing_whitelist
+  changed_when: false
+
+- name: Debug existing value
+  debug:
+    msg: "Existing value: {{ existing_whitelist.stdout }}"
+
+- name: Construire la nouvelle valeur
+  set_fact:
+    new_whitelist: "{{ existing_whitelist.stdout }}sabnzbd.{{ user_domain.stdout }}, sabnzbd"
+
+- name: Add sabnzbd to host_whitelist in sabnzbd.ini
+  lineinfile:
+    path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/config/sabnzbd.ini"
+    regexp: '^host_whitelist\s*='
+    line: "host_whitelist = {{ new_whitelist }}"
+    backup: no
+  become: yes
+
+- name: Debug file content after change
+  shell: "cat {{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/config/sabnzbd.ini | grep whitelist"
+  register: file_content
+  changed_when: false
+
+- name: Debug file content
+  debug:
+    msg: "{{ file_content.stdout }}"
