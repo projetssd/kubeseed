@@ -1,0 +1,23 @@
+---
+application: 'sabnzbd'
+app_port: 8080
+description: "SABnzbd est un lecteur de newsgroups"
+image: 'lscr.io/linuxserver/sabnzbd:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/data"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+posttasks:
+  - stop
+  - configure_sabnzbd
+  - start
