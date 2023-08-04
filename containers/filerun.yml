@@ -1,0 +1,31 @@
+---
+application: 'filerun'
+app_port: 80
+description: "filerun"
+image: 'filerun/filerun:8.1'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/html"
+    container_path: "/var/www/html"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "/user-files"
+
+application_env:
+  - name: FR_DB_HOST
+    value: "db-{{application}}"
+  - name: FR_DB_USER
+    value: "{{ application }}"
+  - name: FR_DB_PASS
+    value: "{{ application }}"
+  - name: FR_DB_NAME
+    value: "{{ application }}"
+  - name: APACHE_RUN_USER
+    value: "{{user.name}}"
+  - name: APACHE_RUN_USER_ID
+    value: "{{user.userid}}"
+  - name: APACHE_RUN_GROUP
+    value: "{{user.group}}"
+  - name: APACHE_RUN_GROUP_ID
+    value: "{{user.groupid}}"
+
+pretasks:
+  - mariadb
