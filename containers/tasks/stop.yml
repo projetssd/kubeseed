@@ -1,15 +1,14 @@
----
 # Permet de simuler un stop sur un déploiement (replica 0)
 - name: "Wait 10s before stop"
   pause:
     seconds: 10
 
 - name: "Restart {{ application }}"
-  shell:
-    /bin/bash -c "kubectl -n kubeseed" {{ application }} scale deployment --replicas 0"
+  shell: "/bin/bash -c 'kubectl scale deployment {{ application }} --replicas 0 -n kubeseed'"
   environment:
     KUBECONFIG: "{{ settings.storage }}/k3s/k3s.yaml"
 
 - name: "Wait 10s after stop"
   pause:
     seconds: 10
+
