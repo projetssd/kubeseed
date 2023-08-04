@@ -1,12 +1,3 @@
-- name: Get user domain
-  shell: ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/get_var.yml" -e myvar="user.domain" | grep "##RESULT##" | awk -F'##RESULT##' '{print $2}' | xargs
-  register: user_domain
-  changed_when: false
-
-- name: Debug user domain
-  debug:
-    msg: "User domain: {{ user_domain.stdout }}"
-
 - name: wait for files to be present
   wait_for:
     path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/config/sabnzbd.ini"
@@ -22,7 +13,7 @@
 
 - name: Construire la nouvelle valeur
   set_fact:
-    new_whitelist: "{{ existing_whitelist.stdout }}sabnzbd.{{ user_domain.stdout }}, sabnzbd"
+    new_whitelist: "{{ existing_whitelist.stdout }}{{ applis[application].subdomain }}.{{ user.domain }}, sabnzbd"
 
 - name: Add sabnzbd to host_whitelist in sabnzbd.ini
   lineinfile:
