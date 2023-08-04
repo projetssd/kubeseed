@@ -727,3 +727,11 @@ function ks_generate_translation() {
   done
   echo " == $(gettext "Génération des traductions terminées") =="
 }
+
+function ks_install_rtorrent_cleaner() {
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_rtorrent-cleaner.yml"
+  echo "rtorrent-cleaner doit être lancé avec un argument (report, rm, ...) pour fonctionner"*
+  "${HOME}/.config/composer/vendor/magicalex/rtorrent-cleaner/bin/rtorrent-cleaner"
+  ks_pause
+
+}

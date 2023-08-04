@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Install dependencies
+      become: yes
+      apt:
+        name:
+        - php-cli
+        - php-xmlrpc
+        - php-mbstring
+        - composer
+        state: present
+
+    - name: Install rtorrent-cleaner
+      composer:
+        command: "require"
+        global_command: true
+        arguments: "magicalex/rtorrent-cleaner"
+        working_dir: "{{ lookup('env','HOME') }}"
+
+    - name: Copy script
+      copy:
+        src: "{{ settings.source }}/includes/files/rtorrent-cleaner"
+        dest: "{{ lookup('env','HOME') }}/bin/rtorrent-cleaner"
+        mode: 0755
+
