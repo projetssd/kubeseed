@@ -3,9 +3,10 @@ title: Liste des functions utilisable
 ---
 # Index des functions utilisables en général
 
-Voici une petite liste, la totalité des fonctions n'est pas utilisable par le commun des mortels.
+Voici une petite liste, la totalité des fonctions n'est pas utilisable par le commun des mortels.<br>
 Ne fonctionne que si kubeseed est installé complètement est sans bavure ;)
-Cette liste peut-être utile:
+
+**__Cette liste peut-être utile:__**
 
 | Nom de la function          | Description |
 |:----------------------------|:------------|
