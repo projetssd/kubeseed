@@ -1,4 +1,8 @@
-## Radarr / Sonarr
+---
+layout: post
+title: Radarr / Sonarr
+---
+
 
 ### Authentification
 
