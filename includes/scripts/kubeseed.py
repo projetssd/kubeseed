@@ -18,6 +18,8 @@ import gettext
 settings_source = os.environ['SETTINGS_SOURCE']
 settings_storage = os.environ['SETTINGS_STORAGE']
 generique_bash = settings_source + "/includes/scripts/generique.sh"
+basepath = settings_source + '/containers/'
+persopath = settings_storage + '/app_persos/'
 
 gettext.bindtextdomain('ks', settings_source + '/i18n')
 gettext.textdomain('ks')
@@ -30,8 +32,6 @@ def choix_appli_lance():
     Installe les applis choisies une à une
     """
     list_applis = []
-    basepath = settings_source + '/containers/'
-    persopath = settings_storage + '/app_persos/'
     # On fait la liste des applis officielles
     for entry in os.listdir(basepath):
         if os.path.isfile(os.path.join(basepath, entry)):
@@ -153,14 +153,32 @@ def menu_principal():
     create_menu(datamenu)
 
 
+def is_nogui(my_application):
+    result_is_nogui = False
+    path_to_test = [basepath, persopath]
+    for paths in path_to_test:
+        if os.path.isfile(paths + my_application + ".yml"):
+            with open(paths + my_application + ".yml") as f:
+                data = yaml.load(f, Loader=SafeLoader)
+                if "no_gui" in data:
+
+                    if data['no_gui']:
+                        result_is_nogui = True
+    return result_is_nogui
+
+
 def list_deployments():
     output_list = []
+
     config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')
     apis_api = client.AppsV1Api()
     resp = apis_api.list_namespaced_deployment(namespace="kubeseed")
     for item in resp.items:
+        complement_titre = ''
         if not item.metadata.name.startswith('db.'):
-            output_list.append(item.metadata.name)
+            if is_nogui(my_application=item.metadata.name):
+                complement_titre = ' [NoGui]'
+            output_list.append(item.metadata.name + complement_titre)
     return output_list
 
 
@@ -198,6 +216,7 @@ def choix_running_appli(complement_texte):
                           choices=list_applis,
                           ),
     ]
+
     result = inquirer.prompt(questions)['applications']
     return result
 
