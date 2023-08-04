@@ -84,8 +84,6 @@ def choix_appli_lance():
         print('Aucune application sélectionnée')
 
 
-
-
 def get_from_account_yml(myinput):
     """
     Pour récupérer une variable du all.yml en python pur
@@ -115,6 +113,10 @@ def lance_applis(list_applis):
 
 
 def create_menu(mylist):
+    """
+    Fonction de création de menu
+    Fonction semi récursive, affiche le menu principal ou un sous menu
+    """
     menu_list = [_('Menu principal'), ""]
     for element in mylist:
         menu_list.append(_(element['menu']))
@@ -146,6 +148,9 @@ def create_menu(mylist):
 
 
 def menu_principal():
+    """
+    Affiche le menu principal
+    """
     # on charge les valeurs du menu
     with open(settings_source + '/includes/menu.yml') as f:
         datamenu = yaml.load(f, Loader=SafeLoader)
@@ -154,6 +159,11 @@ def menu_principal():
 
 
 def is_nogui(my_application):
+    """
+    Cherche si une application a une gui ou pas
+    my_application: string - nom de l'application
+    return bool
+    """
     result_is_nogui = False
     path_to_test = [basepath, persopath]
     for paths in path_to_test:
@@ -168,6 +178,10 @@ def is_nogui(my_application):
 
 
 def list_deployments():
+    """
+    Liste les déploiements actifs dans le namespace kubeseed
+    Filtre si db. ou si nogui
+    """
     output_list = []
 
     config.load_kube_config(config_file=settings_storage + '/k3s/k3s.yaml')

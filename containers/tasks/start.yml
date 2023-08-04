@@ -1,0 +1,7 @@
+---
+# Permet de relancer un déploiement (replica 1)
+- name: "Restart {{ application }}"
+  shell:
+    /bin/bash -c "kubectl -n kubeseed" {{ application }} scale deployment --replicas 1"
+  environment:
+    KUBECONFIG: "{{ settings.storage }}/k3s/k3s.yaml"
