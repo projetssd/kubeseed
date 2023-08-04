@@ -67,5 +67,6 @@ ks_manage_account_yml user.htpwd $(htpasswd -nb "${user}" "${pass}")
 
 ks_manage_account_yml user.userid "$userid"
 ks_manage_account_yml user.groupid "$grpid"
+ks_manage_account_yml user.group "$(id -g -n)"
 
 ks_manage_account_yml user.k3s_secret $(htpasswd -nb "${user}" "${pass}" | openssl base64)
