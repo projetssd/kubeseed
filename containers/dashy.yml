@@ -1,5 +1,5 @@
 ---
-application: 'dashly'
+application: 'dashy'
 app_port: 80
 description: "Dashy helps you organize your self-hosted services"
 image: 'lissy93/dashy:latest'
@@ -12,4 +12,4 @@ application_env:
   - name: PGID
     value: '{{user.groupid}}'
 pretasks:
-  configure_dashly
+  configure_dashy
