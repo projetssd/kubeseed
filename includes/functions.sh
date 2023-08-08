@@ -300,6 +300,7 @@ function ks_install() {
   "gettext")
   version_ok=0
 
+  set -e # pour sortir du script si erreur
 
   if [ "$distro" == "debian" ]; then
     case "$version" in
@@ -338,7 +339,7 @@ function ks_install() {
     echo "Aucune version compatible pour l'installation, abandon..."
     exit 1
   fi
-
+  set +e # pour sortir du script si erreur
   ks_pause
   ks_log_statusbar "Mise à jour du système"
   sudo apt update
