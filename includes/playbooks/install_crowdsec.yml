@@ -1,0 +1,51 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Get install script
+      become: yes
+      ansible.builtin.get_url:
+        url: https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh
+        dest: /tmp/crowdsec
+        mode: '0755'
+
+    - name: Install package
+      become: yes
+      shell: bash /tmp/crowdsec
+
+    - name: Delete install script
+      become: yes
+      file:
+        path: /tmp/crowdsec
+        state: 'absent'
+
+    - name: Install packages
+      become: yes
+      apt:
+        name:
+        - crowdsec
+        - crowdsec-firewall-bouncer-iptables
+        state: present
+
+    - name: Install traefik parser logs
+      become: yes
+      shell: cscli parsers install crowdsecurity/traefik-logs
+
+    - name: configure traefik logs
+      become: yes
+      ansible.builtin.blockinfile:
+        path: /etc/crowdsec/acquis.yml
+        block: |
+        filenames:
+          - /var/log/pods/traefik*/traefik/*.log
+        labels:
+          type: traefik
+
+    - name: Restart crowdsec
+      become: yes
+      service:
+        name: crowdsec
+        state: restarted
+
+
+    

@@ -736,3 +736,7 @@ function ks_install_rtorrent_cleaner() {
   ks_pause
 
 }
+
+function install_crowdsec() {
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_crowdsec.yml"
+}
