@@ -466,6 +466,11 @@ EOF
 
   "${SETTINGS_SOURCE}/includes/scripts/get_infos.sh"
 
+  # Crowdsec
+  ks_log_statusbar "Installation de crowdsec"
+  ks_install_crowdsec
+
+
   # Installation de k3s
   ks_log_statusbar "Installation de K3S"
   echo "Installation de K3S"
@@ -737,10 +742,10 @@ function ks_install_rtorrent_cleaner() {
 
 }
 
-function install_crowdsec() {
+function ks_install_crowdsec() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_crowdsec.yml"
 }
 
-function install_fail2ban() {
+function ks_install_fail2ban() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_fail2ban.yml"
 }
