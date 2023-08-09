@@ -10,7 +10,7 @@ application_volumes:
     container_path: "{{ lookup('env','HOME') }}"
   - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/shared"
     container_path: "/shared"
-    - local_path: "/dev/shm"
+  - local_path: "/dev/shm"
     container_path: "/dev/shm"
 
 application_env:
