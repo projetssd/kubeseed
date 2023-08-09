@@ -740,3 +740,7 @@ function ks_install_rtorrent_cleaner() {
 function install_crowdsec() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_crowdsec.yml"
 }
+
+function install_fail2ban() {
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_fail2ban.yml"
+}

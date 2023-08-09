@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Install packages
+      become: yes
+      apt:
+        name:
+        - fail2ban
+        state: present
+
+
+
+    
