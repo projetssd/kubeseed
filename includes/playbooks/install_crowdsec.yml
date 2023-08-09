@@ -36,10 +36,10 @@
       ansible.builtin.blockinfile:
         path: /etc/crowdsec/acquis.yml
         block: |
-        filenames:
-          - /var/log/pods/traefik*/traefik/*.log
-        labels:
-          type: traefik
+          filenames:
+            - /var/log/pods/traefik*/traefik/*.log
+          labels:
+            type: traefik
 
     - name: Restart crowdsec
       become: yes
