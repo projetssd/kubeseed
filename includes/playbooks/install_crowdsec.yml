@@ -34,7 +34,7 @@
     - name: configure traefik logs
       become: yes
       ansible.builtin.blockinfile:
-        path: /etc/crowdsec/acquis.yml
+        path: /etc/crowdsec/acquis.yaml
         block: |
           filenames:
             - /var/log/pods/traefik*/traefik/*.log

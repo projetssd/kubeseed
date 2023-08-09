@@ -44,3 +44,9 @@
         - menu : Installer rtorrent-cleaner
           type_dest: bash
           dest: ks_install_rtorrent_cleaner
+        - menu: Installer crowdsec
+          type_dest: bash
+          dest: install_crowdsec
+        - menu: Install fail2ban
+          type_dest: bash
+          dest: install_fail2ban
