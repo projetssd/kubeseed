@@ -5,7 +5,7 @@ title: Portainer
 
 Pour connecter portainer à votre cluster, une fois que l'application est installée :
 
-Aller dans **add environment** => ** kubernetes **
+Aller dans **add environment** => **kubernetesjere**
 
 Il va indiquer une commande à lancer sur le serveur :
 

@@ -2,6 +2,8 @@ name: Build Jekyll site
 on:
  push:
    branches: ["main"]
+   paths:
+     - docs/**
 
 permissions:
   contents: write
