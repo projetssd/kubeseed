@@ -1,0 +1,15 @@
+---
+- name: Change directory rights
+  file:
+    path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/lib"
+    state: directory
+    mode: 0777
+  become: yes
+
+- name: Change directory rights
+  file:
+    path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/log"
+    state: directory
+    mode: 0777
+  become: yes
+
