@@ -20,6 +20,11 @@
         arguments: "magicalex/rtorrent-cleaner"
         working_dir: "{{ lookup('env','HOME') }}"
 
+    - name: create directory
+      file:
+        path: "{{ lookup('env','HOME') }}/bin"
+        state: directory
+
     - name: Copy script
       copy:
         src: "{{ settings.source }}/includes/files/rtorrent-cleaner"
