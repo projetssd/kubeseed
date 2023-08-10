@@ -9,6 +9,10 @@ application_volumes:
 application_env:
   - name: TZ
     value: "Europe/Paris"
+  - name: PLEX_URL
+    value: "http://plex:32400"
+  - name: PLEX_TOKEN
+    value: "{{ plex.token }}"
 
 no_liveness: true
 no_gui: true
