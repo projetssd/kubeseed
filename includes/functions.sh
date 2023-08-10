@@ -707,7 +707,7 @@ function ks_install_prometheus() {
   ks_pause
   ks_install_helm
   helm repo add prometheus https://prometheus-community.github.io/helm-charts
-  help repo update
+  helm repo update
   ks_get_and_store_info "applis.prometheus.subdomain" "Sous domaine pour prometheus" UNCHECK "prometheus"
   ks_get_and_store_info "applis.prometheus.auth" "Authentification prometheus - 1 => basique (défaut) | 2 => oauth | 3 => aucune" UNCHECK 1
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_prometheus.yml"
