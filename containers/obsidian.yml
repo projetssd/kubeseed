@@ -1,0 +1,18 @@
+---
+application: 'obsidian'
+app_port: 8080
+description: "Obsidian is a private note-taking app."
+image: 'ghcr.io/sytone/obsidian-remote:latest'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/vaults"
+    container_path: "/vaults"
+
+application_env:
+  - name: UID
+    value: '{{user.userid}}'
+  - name: GID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
