@@ -4,7 +4,7 @@ minimum-age: 5m
 port: 3030
 
 anchors:
-  - {{ settings.storage }}Medias/drive1.anchor
+  - {{ settings.storage }}/Medias/drive1.anchor
 
 triggers:
   inotify:
@@ -12,47 +12,47 @@ triggers:
 
       # filter with regular expressions
       include:
-        - ^{{ settings.storage }}Medias/
+        - ^{{ settings.storage }}/Medias/
       exclude:
         - '\.(srt|pdf)$'
 
       # rewrite inotify path to unified filesystem
       rewrite:
-        - from: ^{{ settings.storage }}local/
-          to: {{ settings.storage }}Medias/
+        - from: ^{{ settings.storage }}/local/
+          to: {{ settings.storage }}/Medias/
 
       # local filesystem paths to monitor
       paths:
-        - path: {{ settings.storage }}local/Series
-        - path: {{ settings.storage }}local/Films
+        - path: {{ settings.storage }}/local/Series
+        - path: {{ settings.storage }}/local/Films
   sonarr:
     - name: sonarr-docker
       priority: 3
 
       rewrite:
-        - from: {{ settings.storage }}Medias/Series/
-          to: {{ settings.storage }}Medias/Series/
+        - from: {{ settings.storage }}/Medias/Series/
+          to: {{ settings.storage }}/Medias/Series/
 
   radarr:
     - name: radarr-docker
       priority: 1
 
       rewrite:
-        - from: {{ settings.storage }}Medias/Films/
-          to: {{ settings.storage }}Medias/Films/
+        - from: {{ settings.storage }}/Medias/Films/
+          to: {{ settings.storage }}/Medias/Films/
 
   lidarr:
     - name: lidarr-docker
       priority: 2
 
       rewrite:
-        - from: {{ settings.storage }}Medias/Musiques/
-          to: {{ settings.storage }}Medias/Musiques/
+        - from: {{ settings.storage }}/Medias/Musiques/
+          to: {{ settings.storage }}/Medias/Musiques/
 
 targets:
   plex:
     - url: http://plex:32400
       token: {{plex.token}}
       rewrite:
-        - from: {{ settings.storage }}Medias/
-          to: {{ settings.storage }}Medias/
+        - from: {{ settings.storage }}/Medias/
+          to: {{ settings.storage }}/Medias/
