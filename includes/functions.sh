@@ -617,17 +617,20 @@ function ks_choix_appli_lance() {
 }
 
 function ks_restart_deployment() {
-  kubectl rollout restart deployment "${1}" -n kubeseed
+  myapplication=${1//  [NoGui]}
+  kubectl rollout restart deployment "${myapplication}" -n kubeseed
 }
 
 function ks_delete_deployment() {
-  kubectl -n kubeseed delete deployment,service,ingress -l ksapp="${1}"
-  ks_manage_account_yml "applis.${1}" " "
+  myapplication=${1//  [NoGui]}
+  kubectl -n kubeseed delete deployment,service,ingress -l ksapp="${myapplication}"
+  ks_manage_account_yml "applis.${myapplication}" " "
 }
 
 function ks_reinit_deployment() {
-  ks_manage_account_yml "applis.${1}" " "
-  ks_launch_service "${1}"
+  myapplication=${1//  [NoGui]}
+  ks_manage_account_yml "applis.${myapplication}" " "
+  ks_launch_service "${myapplication}"
 }
 
 function ks_generate_dashboard_token() {
