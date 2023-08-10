@@ -12,3 +12,6 @@ application_env:
 
 no_liveness: true
 no_gui: true
+
+pretasks:
+  - plexautolanguages

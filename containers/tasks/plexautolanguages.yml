@@ -1,0 +1,13 @@
+---
+- name: create directory
+  become: yes
+  file:
+    path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+    state: directory
+    mode: 0777
+
+
+- name: copy configuration
+  template:
+    src: "{{  lookup('env', 'SETTINGS_SOURCE') }}/includes/playbooks/templates/plexautolanguages.yml.j2"
+    dest: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/config.yaml"
