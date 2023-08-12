@@ -17,15 +17,12 @@ application_env:
     value: "Europe/Paris"
   - name: PLEX_CLAIM
     value: "{{ plex_claim_code }}"
-  - name: ADVERTISE_IP
-    value: "http://{{ network.ipv4 }}:32400"
 
 no_liveness: true
 
 specific_container_info:
   ports:
     - 32400
-  devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
 
 pretasks:
   - claim_plex_server
