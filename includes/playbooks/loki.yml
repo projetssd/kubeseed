@@ -18,10 +18,6 @@
         state: file
       register: tempfile_1
 
-    - name: debug
-      debug:
-        var: tempfile_1
-
     - name: Ger promtail values
       shell: "helm show values grafana/promtail > {{ tempfile_1.path }}"
 
@@ -38,3 +34,8 @@
         release_namespace: kubeseed
         values_files:
           - "{{ tempfile_1.path }}"
+
+    - name: Delete temp file
+      file:
+        path: "{{ tempfile_1.path }}"
+        state: absent
