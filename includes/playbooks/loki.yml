@@ -1,0 +1,41 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Install grafana repo
+      kubernetes.core.helm_repository:
+        name: grafana
+        repo_url: https://grafana.github.io/helm-charts
+
+    - name: Install loki
+      kubernetes.core.helm:
+        name: loki
+        chart_ref: grafana/loki-distributed
+        release_namespace: kubeseed
+
+    - name: Create temp file
+      tempfile:
+        state: file
+      register: tempfile_1
+
+    - name: Ger promtail values
+      shell: "helm show values grafana/promtail > {{ tempfile_1.path }}"
+
+    - name: Replace values for promtail
+      ansible.builtin.replace:
+        path: "{{ tempfile_1.path }}"
+        regexp: 'http://loki-gateway/loki/api/v1/push'
+        replace: "http://loki-loki-distributed-gateway/loki/api/v1/push"
+
+    - name: deploy promtail
+      kubernetes.core.helm:
+        name: loki
+        chart_ref: grafana/loki-distributed
+        release_namespace: kubeseed
+        values_files:
+          - "{{ tempfile_1.path }}"
+
+    - name: Delete temp file
+      file:
+        path: "{{ tempfile_1.path }}"
+        state: absent

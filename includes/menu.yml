@@ -41,6 +41,9 @@
         - menu: Installer prometheus
           type_dest: bash
           dest: ks_install_prometheus
+        - menu: Installer loki/promtail
+          type_dest: bash
+          dest: ks_install_loki
         - menu : Installer rtorrent-cleaner
           type_dest: bash
           dest: ks_install_rtorrent_cleaner

@@ -752,3 +752,7 @@ function ks_install_crowdsec() {
 function ks_install_fail2ban() {
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/install_fail2ban.yml"
 }
+
+function ks_install_loki() {
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/loki.yml"
+}
