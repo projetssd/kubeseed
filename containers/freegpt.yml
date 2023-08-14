@@ -1,0 +1,11 @@
+---
+application: 'freegpt'
+app_port: 1338
+description: "FreeGPT AI conversation"
+image: 'ramonvc/freegpt-webui:latest'
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
