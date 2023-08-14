@@ -3,11 +3,13 @@ application: 'plex'
 app_port: 32400
 description: "A powerful media server"
 image: 'plexinc/pms-docker'
+
 application_volumes:
   - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
   - local_path: "{{lookup('env','HOME')}}"
     container_path: "{{lookup('env','HOME')}}"
+
 application_env:
   - name: PLEX_UID
     value: '{{user.userid}}'
@@ -25,5 +27,8 @@ specific_container_info:
     - 32400
 
 pretasks:
-  - claim_plex_server
   - check_dri
+  - claim_plex_server
+
+posttasks:
+  - patch_ressources_plex
