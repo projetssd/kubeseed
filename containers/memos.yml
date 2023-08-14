@@ -1,0 +1,21 @@
+---
+application: 'memos'
+app_port: 5230
+description: "A privacy-first, lightweight note-taking service"
+image: 'neosmemo/memos:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/memos"
+    container_path: "/var/opt/memos"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: MEMOS_PORT
+    value: "5230"
+
+no_liveness: true
+
+no_gui: false
+
