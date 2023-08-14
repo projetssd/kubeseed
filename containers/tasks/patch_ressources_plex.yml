@@ -1,0 +1,15 @@
+---
+- name: "Execute tasks if /dev/dri exists"
+  block:
+    - name: "Install plugin iGPU for k3s"
+      shell:
+        /bin/bash -c "kubectl apply -k https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/gpu_plugin?ref=v0.19.0"
+      environment:
+        KUBECONFIG: "{{ settings.storage }}/k3s/k3s.yaml"
+
+    - name: "Patch {{ application }} for adding iGPU"
+      shell:
+        /bin/bash -c "kubectl apply -f {{ settings.source }}/containers/tasks/patch-deployment/igpu_plex.yml"
+      environment:
+        KUBECONFIG: "{{ settings.storage }}/k3s/k3s.yaml"
+  when: dev_dri.stat.exists == True

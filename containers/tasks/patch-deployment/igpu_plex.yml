@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: kubeseed
+spec:
+  template:
+    spec:
+      containers:
+        - name: plex
+          resources:
+            limits:
+              gpu.intel.com/i915: "1"

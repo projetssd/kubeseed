@@ -147,11 +147,11 @@
 
       - name: set middleware
         set_fact:
-          k3s_middlewares: default-redirect-https@kubernetescrd
+          k3s_middlewares: default-redirect-https@kubernetescrd, kubeseed-real-ip-middleware@kubernetescrd
 
       - name: modify middleware if basic auth
         set_fact:
-          k3s_middlewares: kubeseed-my-basic-auth@kubernetescrd, default-redirect-https@kubernetescrd
+          k3s_middlewares: kubeseed-my-basic-auth@kubernetescrd, default-redirect-https@kubernetescrd, kubeseed-real-ip-middleware@kubernetescrd
         when: applis[application].auth == 1
 
       - name: modify middleware if oauth
@@ -189,6 +189,8 @@
                             name: "{{ application }}"
                             port:
                               number: "{{ app_port }}"
+                    middlewares:
+                      - name: real-ip-middleware
               tls:
                 - secretName: "{{ application }}-tls"
                   hosts:

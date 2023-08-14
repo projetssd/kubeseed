@@ -3,11 +3,13 @@ application: 'plex'
 app_port: 32400
 description: "A powerful media server"
 image: 'plexinc/pms-docker'
+
 application_volumes:
   - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
   - local_path: "{{lookup('env','HOME')}}"
     container_path: "{{lookup('env','HOME')}}"
+
 application_env:
   - name: PLEX_UID
     value: '{{user.userid}}'
@@ -17,16 +19,16 @@ application_env:
     value: "Europe/Paris"
   - name: PLEX_CLAIM
     value: "{{ plex_claim_code }}"
-  - name: ADVERTISE_IP
-    value: "http://{{ network.ipv4 }}:32400"
 
 no_liveness: true
 
 specific_container_info:
   ports:
     - 32400
-  devices: "{{ '/dev/dri:/dev/dri' if (gpu.intel and dev_dri.stat.exists) | default(false) else omit }}"
 
 pretasks:
-  - claim_plex_server
   - check_dri
+  - claim_plex_server
+
+posttasks:
+  - patch_ressources_plex
