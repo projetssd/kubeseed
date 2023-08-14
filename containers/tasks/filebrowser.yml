@@ -1,5 +1,6 @@
 - debug:
         msg:
-          - "Vous devez utiliser les informations d'identification suivantes :"
-          - "Username: admin"
-          - "Password: admin"
+          - "$$$ Vous devez utiliser les informations d'identification suivantes :"
+          - "$$$ Username: admin"
+          - "$$$ Password: admin"
+
