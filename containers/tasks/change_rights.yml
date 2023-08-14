@@ -1,0 +1,8 @@
+---
+- name: Change ownership recursively
+  become: true
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}"
+    owner: "{{ user.userid }}"
+    group: "{{ user.groupid }}"
+    recurse: yes

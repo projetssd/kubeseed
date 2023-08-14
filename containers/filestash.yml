@@ -1,0 +1,24 @@
+---
+application: 'filestash'
+app_port: 8334
+description: "A Dropbox-like file manager that let you manage your data anywhere it is located"
+image: 'machines/filestash'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/app/data/state"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: UID
+    value: '{{user.userid}}'
+  - name: GID
+    value: '{{user.groupid}}'
+
+no_liveness: true
+
+no_gui: false
+
+posttasks:
+  - change_rights
+  - restart
