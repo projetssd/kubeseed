@@ -1,0 +1,26 @@
+---
+application: 'readarr'
+app_port: 8787
+description: "Readarr - Book Manager and Automation (Sonarr for Ebooks)"
+image: 'lscr.io/linuxserver/readarr:nightly'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:                     # Variables d'environnement du container
+  # chaque élément commence par un tiret
+  # on doit avoir name (nom de la variable)
+  # et value (nom de la variable)
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true
+
+no_gui: false
+
