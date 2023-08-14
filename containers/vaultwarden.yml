@@ -1,0 +1,16 @@
+---
+application: 'vaultwarden'
+app_port: 80
+description: "Unofficial Bitwarden compatible server"
+image: 'vaultwarden/server:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/data"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
