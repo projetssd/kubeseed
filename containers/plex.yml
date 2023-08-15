@@ -27,8 +27,8 @@ specific_container_info:
     - 32400
 
 pretasks:
-  - check_dri
+#  - check_dri
   - claim_plex_server
 
-posttasks:
-  - patch_ressources_plex
+#posttasks:
+#  - patch_ressources_plex

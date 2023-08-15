@@ -1,0 +1,12 @@
+---
+application: 'requestrr'
+app_port: 4545
+description: "Requestrr is a chatbot used to simplify using services like Sonarr/Radarr/Overseerr/Ombi via the use of chat!"
+image: 'darkalfx/requestrr'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/root/config"
+
+application_env:
+
+no_liveness: true # Si positionné à true, ne mettra pas de check du liveness
