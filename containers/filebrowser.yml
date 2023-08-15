@@ -16,5 +16,7 @@ application_env:
     value: '{{user.groupid}}'
   - name: TZ
     value: 'Europe/Paris'
+  - name: FB_NOAUTH
+    value: 'true'
 posttasks:
   - filebrowser
