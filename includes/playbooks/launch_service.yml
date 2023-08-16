@@ -42,6 +42,7 @@
           containers:
             - name: "{{ application }}"
               image: '{{image}}'
+              securityContext: "{{ container_security_context.capabilities|default(omit) }}"
               imagePullPolicy: "Always"
               ports:
                 - containerPort: "{{ app_port }}"
@@ -62,6 +63,7 @@
           containers:
             - name: "{{ application }}"
               image: '{{image}}'
+              securityContext: "{{ container_security_context.capabilities|default(omit) }}"
               imagePullPolicy: "Always"
               ports:
                 - containerPort: "{{ app_port }}"
@@ -69,6 +71,8 @@
               volumeMounts: "{{ container_volumes }}"
           volumes: "{{ host_volumes }}"
       when: no_liveness is defined and no_liveness is true
+
+
 
     # DEPLOY ######################################################################
     # Déploiement : lancement du pod principal
@@ -96,22 +100,6 @@
                   ksapp: "{{ application }}"
                   app: "{{ application }}"
               spec: "{{ specs }}"
-
-    # Ajout du security context ##################################################
-    # Patche avec un security context s'il existe
-    - name: "Launch Security context"
-      kubernetes.core.k8s:
-        api_version: apps/v1
-        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-        kind: Deployment
-        state: patched
-        definition:
-          spec:
-            template:
-              spec:
-                containers:
-                  securityContext: "{{ container_security_context }}"
-      when: container_security_context is defined
 
     # Lancement du service de connexion
     - name: "Launch {{ application }} - Service"

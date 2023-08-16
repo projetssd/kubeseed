@@ -5,7 +5,7 @@
     state: present
     kind: Service
     namespace: kubeseed
-    name: "svc-{{ application }}-{{ item }}"
+    name: "svc-udp-{{ application }}-51820-31820"
     definition:
       metadata:
         labels:
