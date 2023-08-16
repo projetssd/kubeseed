@@ -33,6 +33,7 @@
       loop_control:
         loop_var: detail_volume
 
+
     # Specs #######################################################################
     # Prépare un dictionnaire qui sera appelé lors du déploiement
     - name: Prepare specs if liveness
@@ -96,6 +97,21 @@
                   app: "{{ application }}"
               spec: "{{ specs }}"
 
+    # Ajout du security context ##################################################
+    # Patche avec un security context s'il existe
+    - name: "Launch Security context"
+      kubernetes.core.k8s:
+        api_version: apps/v1
+        kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+        kind: Deployment
+        state: patched
+        definition:
+          spec:
+            template:
+              spec:
+                containers:
+                  securityContext: "{{ container_security_context }}"
+      when: container_security_context is defined
 
     # Lancement du service de connexion
     - name: "Launch {{ application }} - Service"
