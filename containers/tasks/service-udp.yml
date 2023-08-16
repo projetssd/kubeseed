@@ -1,0 +1,22 @@
+---
+- name: "Launch {{ application }} - SPECIFIC Service"
+  kubernetes.core.k8s:
+    kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+    state: present
+    kind: Service
+    namespace: kubeseed
+    name: "svc-{{ application }}-{{ item }}"
+    definition:
+      metadata:
+        labels:
+          ksapp: "{{ application }}"
+          app: "{{ application }}"
+      spec:
+        type: NodePort
+        selector:
+          ksapp: "{{ application }}"
+          app: "{{ application }}"
+        ports:
+          - protocol: UDP
+            port: 51820
+            nodePort: 31820

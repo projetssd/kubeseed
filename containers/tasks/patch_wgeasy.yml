@@ -1,0 +1,6 @@
+---
+- name: "Patch {{ application }}"
+  shell:
+    /bin/bash -c "kubectl apply -f {{ settings.source }}/containers/tasks/patch-deployment/wgeasy.yml"
+  environment:
+    KUBECONFIG: "{{ settings.storage }}/k3s/k3s.yaml"

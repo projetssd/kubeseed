@@ -1,0 +1,41 @@
+---
+application: 'wgeasy'
+app_port: 51821
+description: "You have found the easiest way to install & manage WireGuard on any Linux host!"
+image: 'weejewel/wg-easy'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/etc/wireguard"
+  - local_path: "/lib/modules"
+    container_path: "/lib/modules"
+
+application_env:
+  - name: WG_HOST
+    value: '{{ network.ipv4 }}'
+  - name: PASSWORD
+    value: '{{ user.pass }}'
+  - name: WG_PORT
+    value: '31820'
+
+no_liveness: true
+
+no_gui: false
+
+#specific_container_info:
+container_security_context:
+   capabilities:
+      add:
+          - NET_ADMIN
+          - SYS_MODULE
+      privileged: true
+      sysctls:
+      - name: net.ipv4.conf.all.src_valid_mark
+        value: "1"
+      - name: net.ipv4.ip_forward
+        value: "1"
+
+pretasks:
+  - service-udp
+
+posttasks:
+  - patch_wgeasy
