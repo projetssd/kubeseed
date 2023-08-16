@@ -1,0 +1,20 @@
+---
+application: 'rollarr'
+app_port: 3100
+description: "This is the new and improved Automatic Pre-roll script with a GUI for Plex now called Rollarr! "
+image: 'thehumanrobot/rollarr:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true
+
+no_gui: true
