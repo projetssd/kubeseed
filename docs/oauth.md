@@ -1,3 +1,8 @@
+---
+layout: post
+title: oAuth
+---
+
 Google OAuth2 vous permet d'utiliser votre compte Google pour vous connecter à vos services. 
 
 L’utilisation de Google OAuth avec Traefik permet d’inscrire des comptes dans la liste blanche, de mettre en œuvre la norme 2FA de Google et de fournir une authentification unique (SSO) à vos services.  
