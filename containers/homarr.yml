@@ -1,0 +1,15 @@
+---
+application: 'homarr'
+app_port: 7575
+description: "homarr helps you organize your self-hosted services"
+image: 'ghcr.io/ajnart/homarr:latest'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/data/configs"
+    container_path: "/app/data/configs/"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/public/icons"
+    container_path: "/app/public/icons/"
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
