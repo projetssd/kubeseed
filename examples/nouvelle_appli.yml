@@ -37,7 +37,7 @@ application_env:                     # Variables d'environnement du container
 no_liveness: true # Si positionné à true, ne mettra pas de check du liveness
 # Utile pour certaines applications (plex, on te regarde...)
 
-no_gui: true # Si pas d'interface graphique (que du container en arrière plan)
+no_gui: false # Si pas d'interface graphique (que du container en arrière plan) mettre à true
 
 #specific_container_info:
   # Liste des ports à ouvrir en direct sur l'hôte
