@@ -1,0 +1,21 @@
+---
+application: 'neonlink'
+app_port: 3333
+description: "NeonLink is a simple and open-source self-hosted bookmark service."
+image: 'alexscifier/neonlink:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/background"
+    container_path: "/app/public/static/media/background"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/app/data"
+
+application_env:
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true
+no_gui: false
+
+posttasks:
+  - change_rights
+  - restart

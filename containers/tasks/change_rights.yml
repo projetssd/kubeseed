@@ -6,3 +6,4 @@
     owner: "{{ user.userid }}"
     group: "{{ user.groupid }}"
     recurse: yes
+    state: directory
