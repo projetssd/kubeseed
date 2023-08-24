@@ -1,0 +1,14 @@
+---
+- name: Create all dirs and change ownership recursively
+  become: true
+  ansible.builtin.file:
+    path: "{{ my_volume.local_path }}"
+    owner: "{{ user.userid }}"
+    group: "{{ user.groupid }}"
+    recurse: yes
+    state: directory
+  loop: application_volumes
+  loop_control: 
+    loop_var: my_volume
+    
+  
