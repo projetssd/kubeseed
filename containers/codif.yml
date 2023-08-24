@@ -2,15 +2,21 @@
 application: 'codif'
 app_port: 8443
 description: "Code-server is VS Code running on a remote server, accessible through the browser."
-image: 'ghcr.io/linuxserver/code-server'
+image: 'lscr.io/linuxserver/code-server:latest'
 application_volumes:
-  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "/config/workspace"
 
 application_env:
   - name: PUID
     value: '{{user.userid}}'
   - name: PGID
     value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true
