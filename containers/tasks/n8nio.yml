@@ -1,0 +1,21 @@
+---
+- name: Launch post n8nio task
+  kubernetes.core.k8s:
+    api_version: apps/v1
+    kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+    kind: Pod
+    namespace: kubeseed
+    template:
+      spec:
+        containers:
+        - name: chown-container
+          image: n8nio/base:16
+          command: ["chown", "-R", "node:node", "/home/node/.n8n"]
+          volumeMounts:
+          - name: n8n-settings
+            mountPath: /home/node/.n8n
+        volumes:
+        - name: n8n-settings
+          hostPath:
+            path: "${SETTINGS_STORAGE}/node/.n8n"
+        restartPolicy: Never
