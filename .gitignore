@@ -5,4 +5,5 @@ kickstart
 .c9/**
 containers/.**~
 **/*.pyc
-**/$~
+**/*~
+.codetasty/**
