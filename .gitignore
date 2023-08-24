@@ -1,3 +1,8 @@
 .DS_Store
 .idea
 kickstart
+.c9/
+.c9/**
+containers/.**~
+**/*.pyc
+**/$~
