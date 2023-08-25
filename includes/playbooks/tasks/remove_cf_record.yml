@@ -1,5 +1,6 @@
 ---
-- name: Remove DNS Record
+### CLOUDFLARE ###
+- name: Remove DNS Record in CloudFlare
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.login }}"
@@ -8,15 +9,18 @@
     proxied: yes
     type: A
     record: "{{ subdomain }}"
+  when: cloudflare.usage == "O"
 
-
-- name: Remove record for ipv6
-  cloudflare_dns:
-    account_api_token: "{{ cloudflare.api }}"
-    account_email: "{{ cloudflare.login }}"
+### PDNS/NSUPDATE ###
+- name: Remove DNS Record in NSUPDATE
+  community.general.nsupdate:
+    key_algorithm: "{{ dns.algo }}"
+    key_name: "{{ dns.keyname }}"
+    key_secret: "{{ dns.keysecret }}"
+    server: "{{ dns.server }}"
     zone: "{{ user.domain }}"
-    state: absent
-    proxied: yes
-    type: AAAA
     record: "{{ subdomain }}"
-  when: (network.ipv6 is defined) and (network.ipv6|length > 0)
+    value: "{{ network.ipv4 }}"
+    type: "A"
+    state: absent
+  when: dns.usage == "O"
