@@ -3,9 +3,9 @@
   gather_facts: false
 
   tasks:
-  - name: Set DNS Record
+  - name: Remove DNS Record
     include_tasks:
-      "{{ settings.source }}/includes/playbooks/tasks/cloudflare_domain.yml"
+      "{{ settings.source }}/includes/playbooks/tasks/remove_cf_record.yml"
     vars:
       subdomain: "{{  applis[application].subdomain}}"
 
