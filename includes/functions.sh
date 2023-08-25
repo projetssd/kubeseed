@@ -623,7 +623,7 @@ function ks_restart_deployment() {
 
 function ks_delete_deployment() {
   myapplication=${1//  [NoGui]}
-  kubectl -n kubeseed delete deployment,service,ingress -l ksapp="${myapplication}"
+  kubectl -n kubeseed delete deployment,service,ingress,pod -l ksapp="${myapplication}"
   ks_manage_account_yml "applis.${myapplication}" " "
 }
 

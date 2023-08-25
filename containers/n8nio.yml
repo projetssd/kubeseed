@@ -1,0 +1,39 @@
+---
+application: 'n8nio'
+app_port: 5678
+description: "n8n.io - a powerful workflow automation tool"
+image: 'n8nio/n8n'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/home/node/.n8n"
+
+
+application_env:
+  - name: DB_TYPE
+    value: "postgresdb"
+  - name: DB_POSTGRESDB_DATABASE
+    value: "{{ application }}"
+  - name: DB_POSTGRESDB_HOST
+    value: "db-{{ application }}"
+  - name: DB_POSTGRESDB_PORT
+    value: "5432"
+  - name: DB_POSTGRESDB_USER
+    value: "{{ application }}"
+  - name: DB_POSTGRESDB_PASSWORD
+    value: "{{ application }}"
+  - name: TZ
+    value;: "Europe/Paris"
+  - name: WEBHOOK_URL
+    value: "https:/{{ applis[application].subdomain }}.{{ user.domain }}"
+  - name: N8N_BASIC_AUTH_ACTIVE
+    value: "true"
+  - name: N8N_BASIC_AUTH_USER
+    value: "{{ user.name }}"
+  - name: N8N_BASIC_AUTH_PASSWORD
+    value: "{{ user.pass }}"
+
+pretasks:
+  - postgresql
+
+posttasks: 
+  - n8nio
