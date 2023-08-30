@@ -12,3 +12,6 @@ application_env:
 
   - name: TZ
     value: 'Europe/Paris'
+
+posttasks:
+- change_rights
