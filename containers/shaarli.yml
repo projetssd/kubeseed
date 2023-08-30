@@ -1,0 +1,14 @@
+---
+application: 'shaarli'
+app_port: 80
+description: "The personal, minimalist bookmarking service"
+image: 'containers/sonarr.yml'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/data"
+    container_path: "/var/www/shaarli/data"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/cache"
+    container_path: "/var/www/shaarli/cache"
+application_env:
+
+  - name: TZ
+    value: 'Europe/Paris'
