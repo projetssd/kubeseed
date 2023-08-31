@@ -24,7 +24,7 @@ application_env:
   - name: TZ
     value;: "Europe/Paris"
   - name: WEBHOOK_URL
-    value: "https:/{{ applis[application].subdomain }}.{{ user.domain }}"
+    value: "https://{{ applis[application].subdomain }}.{{ user.domain }}"
   - name: N8N_BASIC_AUTH_ACTIVE
     value: "true"
   - name: N8N_BASIC_AUTH_USER
