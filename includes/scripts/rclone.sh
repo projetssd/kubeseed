@@ -36,61 +36,18 @@ function paste() {
 function detection() {
   #clear
   echo ""
-  echo -e "${CCYAN}Choisir le remote principal :${CEND}"
-  echo -e "${CGREEN}${CEND}"
-  echo -e "${CGREEN}   1) Share Drive ${CEND}"
-  echo -e "${CGREEN}   2) Gdrive${CEND}"
-  echo -e "${CGREEN}   3) Dropbox${CEND}"
+  echo -e "${CCYAN}Choisir le remote :${CEND}"
   echo ""
 
-  read -rp "Votre choix: " RTYPE
-
-  case "$RTYPE" in
-  1)
-    #
-    # Shared drive
-    #
-    rm -f /tmp/choix_crypt
-    rm -f /tmp/id_teamdrive
-    "${SETTINGS_SOURCE}/includes/scripts/rclone_list_td.py"
-    remotecrypt=$(cat /tmp/choix_crypt)
-    id_teamdrive=$(cat /tmp/id_teamdrive)
-    rm -f /tmp/choix_crypt
-    rm -f /tmp/id_teamdrive
-    ;;
-
-  2)
-    rm -f /tmp/choix_crypt
-    rm -f /tmp/id_teamdrive
-    "${SETTINGS_SOURCE}/includes/scripts/rclone_list_gd.py"
-    remotecrypt=$(cat /tmp/choix_crypt)
-    id_teamdrive=$(cat /tmp/id_teamdrive)
-    rm -f /tmp/choix_crypt
-    rm -f /tmp/id_teamdrive
-    ;;
-
-   3)
-    rm -f /tmp/choix_crypt
-    rm -f /tmp/id_teamdrive
-    "${SETTINGS_SOURCE}/includes/scripts/rclone_list_dropbox.py"
-    remotecrypt=$(cat /tmp/choix_crypt)
-    echo $remotecrypt
-    id_teamdrive=$(cat /tmp/id_teamdrive)
-    #rm -f /tmp/choix_crypt
-    #rm -f /tmp/id_teamdrive
-    ;;
-
-  *)
-    echo -e "${CRED}Action inconnue${CEND}"
-    ;;
-  esac
-
+  rm -f /tmp/choix_crypt
+  "${SETTINGS_SOURCE}/includes/scripts/rclone_list_drives.py"
+  remotecrypt=$(cat /tmp/choix_crypt)
+  rm -f /tmp/choix_crypt
 }
 
 function verif() {
   detection
   ks_manage_account_yml rclone.remote $remotecrypt
-  ks_manage_account_yml rclone.id_teamdrive $id_teamdrive
   exit
 }
 

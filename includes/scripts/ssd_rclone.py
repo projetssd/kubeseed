@@ -10,38 +10,10 @@ import os
 rclone_config_file = os.environ['HOME'] + '/.config/rclone/rclone.conf'
 
 
-def detect_td():
-    """
-    Fonction de choix d'un teamdrive
-    Génère une liste des td
-    """
-    config = configparser.ConfigParser()
-    config.read(rclone_config_file)
 
-    mytd = []  # la liste des td
+    
 
-    for section in config.sections():
-        if "team_drive" in config[section]:
-            mytd.append(section)
-
-    return mytd
-
-def detect_drop():
-    """
-    Fonction de détection d'un dropbox
-    Génère une liste des dropbox
-    """
-    config = configparser.ConfigParser()
-    config.read(rclone_config_file)
-
-    mytd = []
-
-    for section in config.sections():
-        if config[section]['type'] == 'dropbox':
-            mytd.append(section)
-    return mytd
-
-def detect_gd():
+def detect_all_remotes():
     """
     Fonction de choix d'un google drive
     Génère une liste des gd
@@ -51,12 +23,10 @@ def detect_gd():
 
     mytd = [] 
     for section in config.sections():
-        if config[section]['type'] == 'drive':
-            mytd.append(section)
+        mytd.append(section)
     return mytd
 
-
-def choix_td():
+def valide_choix_remote():
     """
     Juste la fonction d'input
     teste si on a bien un integer, si oui, le retourne
@@ -68,7 +38,7 @@ def choix_td():
         mystockage = int(mystockage)
         return mystockage
     except:
-        choix_td()
+        valide_choix_remote()
 
 
 def recherche_crypt(myremote):
@@ -120,9 +90,9 @@ def affiche_drive(drives):
     stockage = 0
     print("")
 
-    stockage = choix_td()
+    stockage = valide_choix_remote()
     while stockage not in dict_td:
-        stockage = choix_td()
+        stockage = valide_choix_remote()
     remote = dict_td[stockage]
     print("Source sélectionnée : " + remote)
 
@@ -130,13 +100,8 @@ def affiche_drive(drives):
 
     # Recherche d'un remote de type crypt associé
 
-    crypt = recherche_crypt(remote)
-    if not crypt:
-        print("Erreur, aucun remote de type crypt trouvé, fallback sur le non chiffré")
-        crypt = remote
-    else:
-        print("le remote de type crypt est " + crypt)
+
 
     f = open("/tmp/choix_crypt", "a")
-    f.write(crypt)
+    f.write(remote)
     f.close()
