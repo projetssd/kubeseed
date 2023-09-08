@@ -525,6 +525,7 @@ EOF
   ks_install_sauvegarde
 
   # on stocke les patchs pour ne pas les appliquer
+  mkdir -p "${HOME}/.config/kubeseed/patches"
   for patch in $(ls ${SETTINGS_SOURCE}/patches); do
     echo "${patch}" >>"${HOME}/.config/kubeseed/patches"
   done
