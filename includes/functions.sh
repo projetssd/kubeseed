@@ -91,13 +91,13 @@ function ks_install_autoscan() {
   #configuration autoscan avec ansible
   echo -e "${BLUE}### AUTOSCAN ###${NC}"
   echo -e " ${BWHITE}* Installation autoscan${NC}"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/autoscan.yml"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/${SETTINGS_TYPE}/autoscan.yml"
 }
 
 function ks_install_cloudplow() {
   echo -e "${BLUE}### CLOUDPLOW ###${NC}"
   echo -e " ${BWHITE}* Installation cloudplow${NC}"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cloudplow.yml"
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/${SETTINGS_TYPE}/cloudplow.yml"
 }
 
 function ks_check_dir() {
@@ -190,11 +190,11 @@ function ks_launch_service() {
 
   if [[ -f "${SETTINGS_STORAGE}/app_persos/${line}.yml" ]]; then
     # il y a déjà un playbook "perso", on le lance
-    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "var_file=${SETTINGS_STORAGE}/app_persos/${line}.yml"
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/${SETTINGS_TYPE}/launch_service.yml" --extra-vars "var_file=${SETTINGS_STORAGE}/app_persos/${line}.yml"
 
   elif [[ -f "${SETTINGS_SOURCE}/containers/${line}.yml" ]]; then
     # puis on lance le générique avec ce qu'on vient de copier
-    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/launch_service.yml" --extra-vars "var_file=${SETTINGS_SOURCE}/containers/${line}.yml"
+    ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/${SETTINGS_TYPE}/launch_service.yml" --extra-vars "var_file=${SETTINGS_SOURCE}/containers/${line}.yml"
   else
     ks_log_write "Aucun fichier de configuration trouvé dans les sources, abandon"
     error=1
@@ -297,7 +297,8 @@ function ks_install() {
   "python3-kubernetes"
   "fuse3"
   "bash-completion"
-  "gettext")
+  "gettext"
+)
   version_ok=0
 
   set -e # pour sortir du script si erreur
@@ -470,40 +471,77 @@ EOF
   ks_log_statusbar "Installation de crowdsec"
   ks_install_crowdsec
 
-
-  # Installation de k3s
-  ks_log_statusbar "Installation de K3S"
-  echo "Installation de K3S"
-  curl -sfL https://get.k3s.io | sudo sh -
-  mkdir -p "${SETTINGS_STORAGE}/k3s"
-  sudo cp /etc/rancher/k3s/k3s.yaml "${SETTINGS_STORAGE}/k3s"
-  sudo chown "${USER}:" "${SETTINGS_STORAGE}/k3s/k3s.yaml"
-  export KUBECONFIG="${SETTINGS_STORAGE}/k3s/k3s.yaml"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=kubeseed
-
-  # Letsencrypt
-  ks_log_statusbar "Installation du mode letsencrypt"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=cert-manager
-  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
-
-  # Création auth basique
-  ks_log_statusbar "Création auth basique"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_secret.yml"
-
-  # Dashboard traefik
-  ks_log_statusbar "Installation du dashboard Traefik"
-  "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
-  ks_pause
-
-  ks_log_statusbar "Configuration du module letsencrypt avec traefik"
-  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
-
-  # Installation dashboard
-  ks_log_statusbar "Installation du dashboard Kubernetes"
-  "${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh"
-  ks_pause
+  echo "########################################"
+  echo "# Quel backend souhaitez vous utiliser ?"
+  echo "# 1 - Kubernetes (k3s)"
+  echo "# 2 - docker"
+  echo "########################################"
+  type_install = ""
+  while [[ ${type_install} -ne 1 &&  ${type_install} -ne 2 ]]
+  do
+    read -p "Votre choix (1,2) :  "
+  done
+  
+  case ${type_install} in
+    1)
+      echo "SETTINGS_TYPE=k3s" >> "${HOME}/.config/settings/env"
+      export SETTINGS_TYPE=k3s
+      ks_manage_account_yml settings.type k3s
+      
+      # Installation de k3s
+      ks_log_statusbar "Installation de K3S"
+      echo "Installation de K3S"
+      curl -sfL https://get.k3s.io | sudo sh -
+      mkdir -p "${SETTINGS_STORAGE}/k3s"
+      sudo cp /etc/rancher/k3s/k3s.yaml "${SETTINGS_STORAGE}/k3s"
+      sudo chown "${USER}:" "${SETTINGS_STORAGE}/k3s/k3s.yaml"
+      export KUBECONFIG="${SETTINGS_STORAGE}/k3s/k3s.yaml"
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=kubeseed
+    
+      # Letsencrypt
+      ks_log_statusbar "Installation du mode letsencrypt"
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=cert-manager
+      kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
+    
+      # Création auth basique
+      ks_log_statusbar "Création auth basique"
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_secret.yml"
+    
+      # Dashboard traefik
+      ks_log_statusbar "Installation du dashboard Traefik"
+      "${SETTINGS_SOURCE}/includes/scripts/install_traefik_dashboard.sh"
+      ks_pause
+    
+      ks_log_statusbar "Configuration du module letsencrypt avec traefik"
+      kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
+      ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
+    
+      # Installation dashboard
+      ks_log_statusbar "Installation du dashboard Kubernetes"
+      "${SETTINGS_SOURCE}/includes/scripts/install_dashboard.sh"
+      ks_pause    
+    
+    
+    ;;
+    2)
+      ks_log_statusbar "Installation de docker"
+      echo "SETTINGS_TYPE=docker" >> "${HOME}/.config/settings/env"
+      export SETTINGS_TYPE=docker
+      ks_manage_account_yml settings.type docker
+      sudo install -m 0755 -d /etc/apt/keyrings
+      curl -fsSL https://download.docker.com/linux/${distro}/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      sudo chmod a+r /etc/apt/keyrings/docker.gpg
+      echo \
+        "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${distro} \
+        "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      sudo apt-get update
+      sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    ;;
+  esac
+  
+  
 
   # Installation rclone
   ks_log_statusbar "Installation/configuration de rclone"

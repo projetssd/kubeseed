@@ -1,1 +1,1 @@
-- mettre un cron pour l'update des images (kubectl rollout restart deployment myapp)
+- kickstart pour docker
