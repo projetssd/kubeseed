@@ -557,7 +557,7 @@ function ks_log_write() {
 
 function ks_stocke_public_ip() {
   echo "Stockage des adresses ip publiques"
-  IPV4=$(curl -4 https://ip4.mn83.fr)
+  IPV4=$(curl -s -4 https://ip4.mn83.fr)
   echo "IPV4 = ${IPV4}"
   ks_manage_account_yml network.ipv4 "${IPV4}"
   #IPV6=$(curl -6 https://ip6.mn83.fr)
