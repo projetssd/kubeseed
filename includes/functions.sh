@@ -525,7 +525,8 @@ EOF
   ks_install_sauvegarde
 
   # on stocke les patchs pour ne pas les appliquer
-  mkdir -p "${HOME}/.config/kubeseed/patches"
+  mkdir -p "{HOME}/.config/kubeseed
+  touch "${HOME}/.config/kubeseed/patches"
   for patch in $(ls ${SETTINGS_SOURCE}/patches); do
     echo "${patch}" >>"${HOME}/.config/kubeseed/patches"
   done
@@ -559,13 +560,13 @@ function ks_stocke_public_ip() {
   IPV4=$(curl -4 https://ip4.mn83.fr)
   echo "IPV4 = ${IPV4}"
   ks_manage_account_yml network.ipv4 "${IPV4}"
-  IPV6=$(curl -6 https://ip6.mn83.fr)
-  if [ $? -eq 0 ]; then
-    echo "IPV6 = ${IPV6}"
-    ks_manage_account_yml network.ipv6 "a[${IPV6}]"
-  else
-    echo "Aucune adresse ipv6 trouvée"
-  fi
+  #IPV6=$(curl -6 https://ip6.mn83.fr)
+  #if [ $? -eq 0 ]; then
+  #  echo "IPV6 = ${IPV6}"
+  #  ks_manage_account_yml network.ipv6 "a[${IPV6}]"
+  #else
+  #  echo "Aucune adresse ipv6 trouvée"
+  #fi
 }
 
 function ks_install_environnement() {
