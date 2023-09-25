@@ -1,0 +1,34 @@
+---
+application: 'speedtest-tracker'
+app_port: 80
+description: "A Docker image to check your internet speed using Ookla's Speedtest service."
+image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/config"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/web"
+    container_path: "/etc/ssl/web"
+
+application_env:
+  - name: PUID
+    value: '{{ user.userid }}'
+  - name: PGID
+    value: '{{ user.groupid }}'
+  - name: DB_CONNECTION
+    value: 'mysql'
+  - name: DB_HOST
+    value: 'db-{{ application }}'
+  - name: DB_PORT
+    value: '3306'
+  - name: DB_DATABASE
+    value: '{{ application }}'
+  - name: DB_USERNAME
+    value: '{{ application }}'
+  - name: DB_PASSWORD
+    value: '{{ application }}'
+  - name: TZ
+    value: 'Europe/Paris'
+
+pretasks:
+  - mariadb
+
