@@ -28,9 +28,12 @@ cd kubeseed
 
 Full documentation (french only for now) [here](https://projetssd.github.io/kubeseed/)
 
+## Additional information:
+- IPv6 support is not OK
+- HW transcoding for plex/jellyfin/emby via iGPU or NVIDIA is not yet fully supported
+
 # PROJET EN RELEASE CANDIDATE - UTILISEZ A VOS RISQUES ET PERILS
 
-test
 A installer sur Debian 11 ou 12 (Ubuntu 22.04 compatible mais non testé)
 
 ## Prérequis : 
@@ -54,6 +57,9 @@ et se laisser guider
 
 La documentation complète se trouve [ici](https://projetssd.github.io/kubeseed/)
 
+## Informations complémentaires :
+* Le support de l'IPv6 n'est pas OK
+* Le transcodage HW pour plex/jellyfin/emby via iGPU ou NVIDIA n'est pas encore supporté pleinement
 
 
 
