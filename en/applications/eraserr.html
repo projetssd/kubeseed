@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Eraserr | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Eraserr" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Eraserr" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Eraserr","url":"/kubeseed/en/applications/eraserr.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/en/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/en/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/en/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/en/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/en/migration_ssdv2.html">Migration from SSDv2</a></li>
+    <li><a href="/kubeseed/en/kubernetes.html">Kubernetes usage</a></li>
+    <li><a href="/kubeseed/en/liste_functions.html">Functions</a></li>
+    <li><a href="/kubeseed/en/paths.html">Paths</a></li>
+    <li><a href="/kubeseed/en/traductions.html">Translations</a></li>
+    <li><a href="/kubeseed/en/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/en/applications.html">Detail of apps</a>
+    <li><a href="/kubeseed/en/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+                <a href="/kubeseed//applications/eraserr.html">Français</a>
+            
+
+        
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Eraserr</h1>
+
+<h1 id="eraserr">Eraserr</h1>
+
+<p>Eraserr works in CLI only, and doesn’t have a graphical interface.</p>
+
+<p>It is installed in “dry run” mode, and won’t remove any of your media until you decide to modify the configuration</p>
+
+<h2 id="read-the-logs">Read the logs</h2>
+
+<h3 id="gui">GUI</h3>
+
+<p>USe the k8s dashboard, find the  “eraser-xxxxx” pod, and watch the logs</p>
+
+<h3 id="cli">CLI</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get pods
+kubectl logs -f eraserr-xxxxx # get the pod name you fount on the previous command 
+</code></pre></div></div>
+
+<h2 id="protect-medias">Protect medias</h2>
+
+<p>In <em>arr, use the tag *do-not-delete</em> So eraserr won’t delete this media</p>
+
+<h2 id="edit-configuration">Edit configuration</h2>
+
+<p>The file <em>${APP_SETTINGS}/eraserr/app/config.json</em> has to be modified using sudo</p>
+
+<p>Example :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "tautulli": {
+        "api_key": "xxxxxxxxxxxxxxxxxxxxxx",
+        "base_url": "http://tautulli:8181/api/v2",
+        "fetch_limit": 25
+    },
+    "radarr": {
+        "api_key": "xxxxxxxxxxxxxxxxxxxxxxx",
+        "base_url": "http://radarr:7878/api/v3", # change radarr as radarrnightly if needed
+        "exempt_tag_names": [
+            "do-not-delete"
+        ]
+    },
+    "sonarr": {
+        "api_key": "xxxxxxxxxxxxxxxxxxxx",
+        "base_url": "http://sonarr:8989/api/v3",
+        "monitor_continuing_series": true,
+        "exempt_tag_names": [
+            "do-not-delete"
+        ]
+    },
+    "overseerr": {
+        "api_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "base_url": "http://overseerr:5055/api/v1",
+        "fetch_limit": 10
+    },
+    "plex": {
+        "base_url": "http://plex:32400",
+        "token": "R24sRqmRvCzA_egLLUxv",
+        "refresh": true
+    },
+    "last_watched_days_deletion_threshold": 90,
+    "unwatched_days_deletion_threshold": 90,
+    "dry_run": true, # set to true if you want to get out of dry run mode
+    "schedule_interval": 86400
+}
+</code></pre></div></div>
+
+<p>Once the file has been modified :</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ks_restart_deployment eraserr
+</code></pre></div></div>
+<p>in order to relaunch the service</p>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/en/assets/js/scale.fix.js"></script>
+  </body>
+</html>

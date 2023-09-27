@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Traductions | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Traductions" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Traductions" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Traductions","url":"/kubeseed/en/traductions.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/en/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/en/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/en/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/en/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/en/migration_ssdv2.html">Migration from SSDv2</a></li>
+    <li><a href="/kubeseed/en/kubernetes.html">Kubernetes usage</a></li>
+    <li><a href="/kubeseed/en/liste_functions.html">Functions</a></li>
+    <li><a href="/kubeseed/en/paths.html">Paths</a></li>
+    <li><a href="/kubeseed/en/traductions.html">Translations</a></li>
+    <li><a href="/kubeseed/en/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/en/applications.html">Detail of apps</a>
+    <li><a href="/kubeseed/en/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+                <a href="/kubeseed//traductions.html">Français</a>
+            
+
+        
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Traductions</h1>
+
+<h1 id="comment-ajoutermodifier-une-traduction">Comment ajouter/modifier une traduction</h1>
+
+<p>Par défaut, Kubeseed est en français. Certains éléments peuvent être traduits pour prendre en charge la langue du système ou de l’utilisateur (visible par la commande <strong>locale</strong> dans un terminal).</p>
+
+<p>Si un élément n’est pas traduit, il sera affiché en français par défaut.</p>
+
+<h2 id="fichier-po">Fichier .po</h2>
+
+<p>Il faut commencer par générer (pour une nouvelle traduction) ou modifier (pour une traduction existante) un fichier i18n/xx.po (xx étant le langage que l’on veut modifier)</p>
+
+<p>Par défaut, pas besoin de fr.po, le programme étant en français par défaut.</p>
+
+<p>Une fois le fichier créé, il faut lancer la commande <strong>ks_generate_translation</strong> qui va générer les fichiers .mo au bon endroit. Ces fichiers doivent ensuite être ajoutés au git et poussés sur le repo (soit directement pour les devs internes, soit au moyen d’une pull request)</p>
+
+<h2 id="modification-des-appels">Modification des appels</h2>
+
+<h3 id="dans-les-fichiers-bashscripts">Dans les fichiers bash/scripts</h3>
+
+<p>Au lieu de faire</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"Lancement en root"</span>
+</code></pre></div></div>
+
+<p>Il faut faire</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"</span><span class="si">$(</span>gettext <span class="s2">"Lancement en root"</span><span class="si">)</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>Pour que la traduction soit prise en compte.</p>
+
+<h3 id="dans-les-scripts-python">Dans les scripts python</h3>
+
+<p>Il faut remplacer les variables ou les textes par _(“xxxxx”)</p>
+
+<p>Par exemple</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="s">"Menu principal"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>devient</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s">"Menu principal"</span><span class="p">))</span>
+</code></pre></div></div>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/en/assets/js/scale.fix.js"></script>
+  </body>
+</html>

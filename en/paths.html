@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Chemins utilisés par Kubeseed | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Chemins utilisés par Kubeseed" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Chemins utilisés par Kubeseed" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Chemins utilisés par Kubeseed","url":"/kubeseed/en/paths.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/en/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/en/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/en/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/en/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/en/migration_ssdv2.html">Migration from SSDv2</a></li>
+    <li><a href="/kubeseed/en/kubernetes.html">Kubernetes usage</a></li>
+    <li><a href="/kubeseed/en/liste_functions.html">Functions</a></li>
+    <li><a href="/kubeseed/en/paths.html">Paths</a></li>
+    <li><a href="/kubeseed/en/traductions.html">Translations</a></li>
+    <li><a href="/kubeseed/en/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/en/applications.html">Detail of apps</a>
+    <li><a href="/kubeseed/en/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+                <a href="/kubeseed//paths.html">Français</a>
+            
+
+        
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Chemins utilisés par Kubeseed</h1>
+
+<h2 id="settings_source">SETTINGS_SOURCE</h2>
+
+<p>La variable ${SETTINGS_SOURCE} comprend le chemin contenant les sources du projet (repo git). Le contenu de ce répertoire ne doit pas être modifié à la main, et n’est mis à jour que par git</p>
+
+<h2 id="settings_storage">SETTINGS_STORAGE</h2>
+
+<p>La variable ${SETTINGS_STORAGE} comprend le chemin où l’application va sauvgarder toutes les données nécessires au fonctionnement (par défaut, ${HOME}/seedbox)</p>
+
+<p>Les sous répertoires sont :</p>
+
+<ul>
+  <li>app_persos : permet de stocker des yml personnalisés pour lancer des apps non présentes dans l’application, ou pour surcharger certaines infos. Le format doit respecter le contenu de <strong>examples/nouvelle_appli.yml</strong></li>
+  <li>app_settings : l’endroit où sont stockés tous les réglages des applications, un répertoire par application</li>
+  <li>backup : l’endroit où sont stockés les backups locaux</li>
+  <li>k3s : fichiers de conf k3s</li>
+  <li>local (uniquement si utilisation de rclone) : l’endroit  où sont téléchargés/stockés les fichiers avant upload. Cloudplow va vider ce répertoire au moment de l’upoad vers rclone</li>
+  <li>logs: je vous laisse deviner</li>
+  <li>Medias : emplacement final des fichiers multimedias. Si utilisation de rclone, c’est un mergerfs entre “local” et “rclone”</li>
+  <li>rclone (uniquement si utilisation de rclone) : point de montage de rclone</li>
+  <li>venv : stockage du virtualenv nécessaire au fonctionnement de kubeseed</li>
+</ul>
+
+<h2 id="autres">Autres</h2>
+
+<ul>
+  <li>${HOME}/.config/kubeseed : permet de stocker certaines informations sur l’état de l’application (variables d’environnement, patches installés, …)</li>
+  <li>/var/lib/rancher : répertoire de stockage pour k3s</li>
+</ul>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/en/assets/js/scale.fix.js"></script>
+  </body>
+</html>

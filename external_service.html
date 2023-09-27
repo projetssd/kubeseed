@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Service externe | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Service externe" />
+<meta property="og:locale" content="fr" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Service externe" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Service externe","url":"/kubeseed/external_service.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/migration_ssdv2.html">Migration depuis SSDv2</a></li>
+    <li><a href="/kubeseed/kubernetes.html">Utilisation de Kubernetes</a></li>
+    <li><a href="/kubeseed/liste_functions.html">Fonctions</a></li>
+    <li><a href="/kubeseed/paths.html">Chemins</a></li>
+    <li><a href="/kubeseed/traductions.html">Traductions</a></li>
+    <li><a href="/kubeseed/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/applications.html">Détail des applications</a>
+    <li><a href="/kubeseed/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+
+        
+            
+                <a href="/kubeseed/en//external_service.html">English</a>
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Service externe</h1>
+
+<p>Le but est que kubernetes accepte les connexions et renvoie vers un service qui n’est pas géré par lui</p>
+
+<h2 id="prérequis">Prérequis</h2>
+
+<p>Avoir une entrée dns (cloudflare ou autre) avec le bon fqdn qui pointe vers le serveur kubeseed</p>
+
+<h2 id="création">Création</h2>
+
+<p>Créer le fichier <strong>external.yml</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kind: Service
+apiVersion: v1
+metadata:
+  name: external-service
+  labels:
+    app: externalservice
+    ksapp: externalservice
+spec:
+  ports:
+  - protocol: TCP
+    port: 80 # Mettre le port de ton appli
+
+---
+
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: external-service
+  labels:
+    app: externalservice
+    ksapp: externalservice
+subsets:
+- addresses:
+  - ip: 1.2.3.4 # Mettre l'ip de ton appli (ou l'ip publique du node si le service tourne sur le node)
+  ports:
+  - port: 80 # Mettre le port de ton appli
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ing-externalservice
+  namespace: kubeseed
+  labels:
+    app: externalservice
+    ksapp: externalservice
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
+spec:
+  tls:
+    - hosts:
+        - xxxxxx.ndd.tld # Mettre ici le fqdn d'accès
+      secretName: externalservice-tls
+  rules:
+    - host: xxxxxx.ndd.tld # Mettre ici le fqdn d'accès
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: external-service
+                port:
+                  number: 80 # Mettre le port de ton appli
+
+
+</code></pre></div></div>
+
+<p>Modifier les données nécessaires (ip, port, et fqdn),</p>
+
+<p>puis</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f external.yml
+</code></pre></div></div>
+
+<p>Vous pouvez personnaliser les noms et labels external-service et externalservice. Ils doivent correspondre entre tous les éléments (service, ingress et endpoint)</p>
+
+<h2 id="suppression">Suppression</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl delete -f external.yml
+</code></pre></div></div>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/assets/js/scale.fix.js"></script>
+  </body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Heimdall | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Heimdall" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Heimdall" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Heimdall","url":"/kubeseed/en/applications/heimdall.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/en/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/en/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/en/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/en/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/en/migration_ssdv2.html">Migration from SSDv2</a></li>
+    <li><a href="/kubeseed/en/kubernetes.html">Kubernetes usage</a></li>
+    <li><a href="/kubeseed/en/liste_functions.html">Functions</a></li>
+    <li><a href="/kubeseed/en/paths.html">Paths</a></li>
+    <li><a href="/kubeseed/en/traductions.html">Translations</a></li>
+    <li><a href="/kubeseed/en/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/en/applications.html">Detail of apps</a>
+    <li><a href="/kubeseed/en/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+                <a href="/kubeseed//applications/heimdall.html">Français</a>
+            
+
+        
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Heimdall</h1>
+
+<p>Heimdall en action : <a href="https://youtu.be/GXnnMAxPzMc">https://youtu.be/GXnnMAxPzMc</a>
+<img src="https://i.imgur.com/MrC4QpN.gif" alt="Heimdall demo animation" /></p>
+<hr />
+
+<h3 id="ajout-dune-application-avec-retour-des-informations">Ajout d’une application avec retour des informations</h3>
+<p>Un exemple avec <strong>Sonarr</strong> :</p>
+<h4 id="en-ssh-récupérer-lurl-interne-">En ssh, récupérer l’url interne :</h4>
+<p><code class="highlighter-rouge">kubectl describe ingress ing-sonarr</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Name:             ing-sonarr
+Labels:           app=sonarr
+                  ksapp=sonarr
+Namespace:        kubeseed
+Address:          xxxx
+Ingress Class:    &lt;none&gt;
+Default backend:  &lt;default&gt;
+TLS:
+  sonarr-tls terminates sonarr.ndd.fr
+Rules:
+  Host               Path  Backends
+  ----               ----  --------
+  sonarr.ndd.fr
+                     /   sonarr:8989 (10.42.0.201:8989)
+Annotations:         cert-manager.io/cluster-issuer: letsencrypt-prod
+                     kubernetes.io/ingress.class: traefik
+                     traefik.ingress.kubernetes.io/router.middlewares: kubeseed-oauth@kubernetescrd, default-redirect-https@kubernetescrd
+Events:              &lt;none&gt;
+</code></pre></div></div>
+
+<p>On récupère l’url <code class="highlighter-rouge">sonarr:8989</code></p>
+
+<p>Note : on peut aussi faire
+<code class="highlighter-rouge">kubectl describe ingress ing-sonarr | grep -oP '/\s+\K[^ (]+'</code> 
+et changer sonarr par le service souhaité.</p>
+
+<h4 id="compléter">Compléter</h4>
+<ul>
+  <li>Ajouter une application :
+    <ul>
+      <li>Nom de l’application : Sonarr</li>
+      <li>URL : https://sonarr.ndd.fr</li>
+    </ul>
+  </li>
+  <li>Config (Optionnel) : <strong>Actif</strong>. <em>Essentiel pour avoir les retours (Le service Heimdall peut communiquer avec le service Sonarr</em>)
+    <ul>
+      <li>URL : <strong>sonarr:8989</strong></li>
+      <li>Clé API si demandée : voir dans l’application (Sonarr, Radarr…)</li>
+      <li>Si <strong>Plex</strong> : Plex token : en ssh, <code class="highlighter-rouge">ks_get_from_account_yml plex.token</code> et récupérer le token</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Résultat : 
+<img src="https://i.imgur.com/2nSfbNJ.png" alt="image" /></p>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/en/assets/js/scale.fix.js"></script>
+  </body>
+</html>

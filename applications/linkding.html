@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>linkding | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="linkding" />
+<meta property="og:locale" content="fr" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="linkding" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"linkding","url":"/kubeseed/applications/linkding.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/migration_ssdv2.html">Migration depuis SSDv2</a></li>
+    <li><a href="/kubeseed/kubernetes.html">Utilisation de Kubernetes</a></li>
+    <li><a href="/kubeseed/liste_functions.html">Fonctions</a></li>
+    <li><a href="/kubeseed/paths.html">Chemins</a></li>
+    <li><a href="/kubeseed/traductions.html">Traductions</a></li>
+    <li><a href="/kubeseed/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/applications.html">Détail des applications</a>
+    <li><a href="/kubeseed/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+
+        
+            
+                <a href="/kubeseed/en//applications/linkding.html">English</a>
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>linkding</h1>
+
+<p>Pour créer un identifiant super utilisateur :</p>
+
+<p>Une commande à lancer (tout copier-coller):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl exec -it $(kubectl get pods -o custom-columns=NAME:.metadata.name | grep linkding) -- python manage.py createsuperuser
+
+</code></pre></div></div>
+<p>Compléter username, email, password, qui seront les identifiants du superuser</p>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/assets/js/scale.fix.js"></script>
+  </body>
+</html>

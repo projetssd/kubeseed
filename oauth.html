@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>oAuth | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="oAuth" />
+<meta property="og:locale" content="fr" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="oAuth" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"oAuth","url":"/kubeseed/oauth.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/migration_ssdv2.html">Migration depuis SSDv2</a></li>
+    <li><a href="/kubeseed/kubernetes.html">Utilisation de Kubernetes</a></li>
+    <li><a href="/kubeseed/liste_functions.html">Fonctions</a></li>
+    <li><a href="/kubeseed/paths.html">Chemins</a></li>
+    <li><a href="/kubeseed/traductions.html">Traductions</a></li>
+    <li><a href="/kubeseed/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/applications.html">Détail des applications</a>
+    <li><a href="/kubeseed/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+
+        
+            
+                <a href="/kubeseed/en//oauth.html">English</a>
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>oAuth</h1>
+
+<p>Google OAuth2 vous permet d’utiliser votre compte Google pour vous connecter à vos services.</p>
+
+<p>L’utilisation de Google OAuth avec Traefik permet d’inscrire des comptes dans la liste blanche, de mettre en œuvre la norme 2FA de Google et de fournir une authentification unique (SSO) à vos services.</p>
+
+<p>Cela offre, non seulement l’avantage de ne pas avoir de demandes de connexions fréquentes, mais améliore également la sécurité.</p>
+
+<h2 id="configuration-google-oauth2-service">Configuration Google OAuth2 Service</h2>
+
+<blockquote>
+  <h4 id="note">Note</h4>
+  <p>Pour ceux qui utilisent Cloudflare, la création du CNAME est automatisée par le script, pour les autres pensez à le créer auprès de votre Registrar.<br />
+<img src="https://user-images.githubusercontent.com/64525827/105626357-56f06100-5e2f-11eb-815d-684ea953c4c8.png" alt="01-clouldflare-dns-records-for-traefik-google-oauth-740x265" /></p>
+</blockquote>
+
+<h3 id="nous-allons-à-nouveau-créer-un-projet-cette-fois-pour-traefik-google-oauth">Nous allons à nouveau créer un projet cette fois pour traefik Google oAuth</h3>
+
+<ul>
+  <li>Rendez vous à l’adresse suivante et connectez vous avec votre compte Gsuite :<br />
+<a href="https://href.li/?https://console.cloud.google.com/cloud-resource-manager">Google Apps Script API</a></li>
+</ul>
+
+<blockquote>
+  <p>ATTENTION : Vous devez être sur et certains de vous connecter au bon compte Google.
+Si vous en avez plusieurs, connectez-vous alors en fenêtre de navigation privée !</p>
+</blockquote>
+
+<ul>
+  <li>
+    <h3 id="cliquez-sur-créer-un-projet">Cliquez sur Créer un projet</h3>
+    <p><img src="https://user-images.githubusercontent.com/64525827/119948392-14839000-bf99-11eb-96a0-c7509bde74e9.png" alt="creer_un_projet" /><br />
+<br /><br /></p>
+  </li>
+  <li>
+    <h3 id="entrer-le-nom-du-projet-oauth-puis-cliquer-sur-créer">Entrer le nom du projet <code class="highlighter-rouge">oauth</code> puis cliquer sur Créer</h3>
+    <p><img src="https://user-images.githubusercontent.com/64525827/119948566-3f6de400-bf99-11eb-8ddf-ce61d54a76b4.png" alt="creation_projet" /><br />
+<br /><br /></p>
+  </li>
+  <li>
+    <h3 id="dans-la-notification-en-haut-à-droite-cliquer-sur-sélectionner-un-projet">Dans la notification en haut à droite, cliquer sur “sélectionner un projet”</h3>
+    <p><img src="https://user-images.githubusercontent.com/64525827/119949044-c28f3a00-bf99-11eb-8c9f-3342f6c0649e.png" alt="notification" /></p>
+  </li>
+</ul>
+
+<h3 id="après-linstallation-cliquer-sur-identifiants">Après l’installation cliquer sur “identifiants”</h3>
+<p><img src="https://user-images.githubusercontent.com/64525827/119950352-0a629100-bf9b-11eb-923c-fd49240cc6e0.png" alt="identifiant" />
+<br /><br />
+Dans la nouvelel fenetre, cliquer sur “Créer des identifiants” puis sur “ID client OAuth”
+<img src="https://user-images.githubusercontent.com/64525827/119950515-33832180-bf9b-11eb-9e12-14995ab54f3c.png" alt="creation_identifiant" /><br />
+<br /><br />
+Il y a une étape intermédiaire, cliquer sur “Configurer l’écran d’autorisation”<br />
+<img src="https://user-images.githubusercontent.com/64525827/119950915-af7d6980-bf9b-11eb-9d4a-f51a90294427.png" alt="configurer oauth" /><br />
+<br /><br />
+puis sélectionner “externe” et Créer<br />
+<img src="https://user-images.githubusercontent.com/64525827/119951092-dc318100-bf9b-11eb-8fb2-79b59052fecf.png" alt="externe" />
+<br /><br />
+Dans la nouvelle fenêtre, remplissez les champs :</p>
+<ul>
+  <li>Nom de l’application =&gt; <code class="highlighter-rouge">identique au nom du projet</code></li>
+  <li>Adresse e-mail d’assistance utilisateur =&gt; <code class="highlighter-rouge">sélectionner celle du compte google</code></li>
+  <li>Coordonnées du développeur (Adresse email) =&gt; <code class="highlighter-rouge">Entrer votre email</code></li>
+</ul>
+
+<h3 id="sur-chaque-étapes-cliqurer-en-bas-sur-enregistrer">Sur chaque étapes, cliqurer en bas sur enregistrer</h3>
+<p><img src="https://user-images.githubusercontent.com/64525827/119951704-8a3d2b00-bf9c-11eb-9632-8c3698a45e5d.png" alt="etapes" />
+<br /><br />
+Une fois terminé, cliquer à nouveau sur “Identifiants” sur la gauche de l’écran<br />
+Puis :</p>
+<ul>
+  <li>Créer des identifiants</li>
+  <li>ID client OAuth</li>
+  <li>Type d’application  =&gt; <code class="highlighter-rouge">Application web</code></li>
+  <li>Nom =&gt; <code class="highlighter-rouge">identique au nom du projet</code></li>
+  <li>URI =&gt; <code class="highlighter-rouge">https://oauth.example.com/oauth</code>  (pas de underscore comme sur ssdv2)
+<img src="https://user-images.githubusercontent.com/64525827/119953309-2451a300-bf9e-11eb-9a85-fb8414e3c667.png" alt="oauth" /> <br />
+<br /><br /></li>
+</ul>
+
+<h3 id="vous-aurez-besoin-par-la-suite-de-ces-identifiants-pour-créer-votre-rclone">Vous aurez besoin par la suite de ces identifiants pour créer votre Rclone.</h3>
+<p><img src="https://user-images.githubusercontent.com/64525827/119952283-236c4180-bf9d-11eb-9937-86ca1d319f1c.png" alt="identifians_ok" />
+<br /><br /></p>
+
+<ul>
+  <li>
+    <h3 id="copier-sur-un-bloc-note-le-client-id-et-le-client-secret">Copier sur un bloc note le CLIENT ID et le CLIENT SECRET</h3>
+    <p><img src="https://user-images.githubusercontent.com/64525827/105181463-1ee5d700-5b2c-11eb-85b1-55a14668ea34.jpeg" alt="google-apps-script-api-client-id-et-secret" /></p>
+  </li>
+</ul>
+
+<h3 id="vous-aurez-besoin-par-la-suite-de-ces-identifiants">Vous aurez besoin par la suite de ces identifiants.</h3>
+
+<p>Si vous avez fermer la fenêtre avec vos identifiants, vous pouvez les retrouver dans la rubrique identifiant de projet drive. <a href="https://href.li/?https://console.developers.google.com">Dashboard API</a>.</p>
+
+<p><img src="https://user-images.githubusercontent.com/64525827/105181488-2907d580-5b2c-11eb-9b8b-cc39e3e2ed04.jpg" alt="projets-google-api-identifiants" /></p>
+
+<hr />
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/assets/js/scale.fix.js"></script>
+  </body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Radarr / Sonarr | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Radarr / Sonarr" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Radarr / Sonarr" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Radarr / Sonarr","url":"/kubeseed/en/applications/radarr_sonarr.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/en/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/en/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/en/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/en/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/en/migration_ssdv2.html">Migration from SSDv2</a></li>
+    <li><a href="/kubeseed/en/kubernetes.html">Kubernetes usage</a></li>
+    <li><a href="/kubeseed/en/liste_functions.html">Functions</a></li>
+    <li><a href="/kubeseed/en/paths.html">Paths</a></li>
+    <li><a href="/kubeseed/en/traductions.html">Translations</a></li>
+    <li><a href="/kubeseed/en/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/en/applications.html">Detail of apps</a>
+    <li><a href="/kubeseed/en/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+                <a href="/kubeseed//applications/radarr_sonarr.html">Français</a>
+            
+
+        
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Radarr / Sonarr</h1>
+
+<h3 id="authentification">Authentification</h3>
+
+<p>Il est conseillé de ne pas mettre d’authentification pour ces applis dans kubeseed, et ensuite de mettre une authentification de type Basic (Brower popup) dans l’outil (menu Settings =&gt; general =&gt; security)
+<img src="https://user-images.githubusercontent.com/3830148/236147092-b22a7470-c48e-4df9-a938-c69feb486b47.png" alt="image" /></p>
+
+<p>Cela permettra d’utiliser des outils tiers comme des applis portables
+NB : Les nouvelles versions des *arrs force la mise en place d’une authentification gérée par le ARR en question, le fait de ne pas mettre d’auth par kubeseed permet d’éviter des loops d’auth.</p>
+
+<h3 id="connexion-à-rutorrent">Connexion à rutorrent</h3>
+
+<p><img src="https://user-images.githubusercontent.com/3830148/236146740-a5496dd2-7130-432f-98c1-4c2cb710ba9a.png" alt="image" /></p>
+
+<h3 id="remote-paths">Remote paths</h3>
+
+<p>Dans settings =&gt; downbload clients =&gt; remote path mappings</p>
+
+<p><img src="https://user-images.githubusercontent.com/3830148/236147591-1571cc91-192e-4e7e-b4df-0a9541299fc8.png" alt="image" /></p>
+
+<h3 id="import-manuel">Import manuel</h3>
+
+<p>Vous avez téléchargez du contenu avant de le mettre en surveillance dans *arr ou vous avez une erreur à l’importation.</p>
+
+<p>Alors vous devez utilisez la fonction “manual import” :</p>
+
+<p>Il faut utiliser le chemin vers le dossier contenant vos données (attention vous devez utilisez le chemin “Medias”
+Ensuite “interactive import” et enfin vous pouvez sélectionner les fichiers à importés en ayant pris soins de cocher selon vos besoins “hardlink ou “move”</p>
+
+<p><img src="https://user-images.githubusercontent.com/3830148/236148214-f224f5ba-1cd2-4ca4-81c7-45157f3d9ffd.png" alt="image" /></p>
+
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/en/assets/js/scale.fix.js"></script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubeseed | Une seedbox sous Kubernetes</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Kubeseed" />
+<meta property="og:locale" content="fr" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubeseed" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"Une seedbox sous Kubernetes","headline":"Kubeseed","name":"Kubeseed","url":"/kubeseed/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/migration_ssdv2.html">Migration depuis SSDv2</a></li>
+    <li><a href="/kubeseed/kubernetes.html">Utilisation de Kubernetes</a></li>
+    <li><a href="/kubeseed/liste_functions.html">Fonctions</a></li>
+    <li><a href="/kubeseed/paths.html">Chemins</a></li>
+    <li><a href="/kubeseed/traductions.html">Traductions</a></li>
+    <li><a href="/kubeseed/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/applications.html">Détail des applications</a>
+    <li><a href="/kubeseed/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+
+        
+            
+                <a href="/kubeseed/en//">English</a>
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Kubeseed</h1>
+
+<h1 id="kubeseed-cest-quoi-">Kubeseed, c’est quoi ?</h1>
+
+<p>Kubeseed est un projet de seedbox et autres outils tournant sur un moteur Kubernetes. L’implémentation qui a été choisie est <a href="https://k3s.io/">k3s</a></p>
+
+<h1 id="puis-je-lutiliser-">Puis-je l’utiliser ?</h1>
+
+<p>Ce projet est destiné à simplifier l’installation et l’usage des outils nécessaires à une seedbox. Toutefois, l’utilisation de kubernetes n’est pas forcément simple.
+Il est recommandé d’avoir des bases en administration système linux, et de ne pas avoir peur de mettre les mains dans le cambouis.</p>
+
+<p>De plus, le projet est en cours de développement actif, et il y aura certainement des adaptations à faire au fil de l’eau.</p>
+
+<p>Si vous cherchez un projet plus simple à utiliser, je recommande <a href="https://github.com/projetssd/ssdv2">ssdv2</a> des mêmes auteurs, qui tourne en docker.</p>
+
+<h1 id="comment-linstaller">Comment l’installer</h1>
+
+<p>Vous avez besoin :</p>
+<ul>
+  <li>d’un serveur en debian 11 ou 12 fraîchement installé (Théoriquement compatible ubuntu 22.04 mais non testé)</li>
+  <li>d’un nom de domaine</li>
+</ul>
+
+<p>Non obligatoire mais conseillé : l’utilisation de cloudflare. Cela permet les enregistrements automatiques des sous domaines.</p>
+
+<p>Si vous utilisez <a href="https://rclone.org/">rclone</a>, vous aurez besoin d’un rclone.conf déjà configuré.</p>
+
+<p>A minima, les ports 80 et 443 doivent être accessibles. Certaines autres ports devront être accessibles selon les outils installés :</p>
+<ul>
+  <li>32400 pour plex</li>
+  <li>30000 pour rutorrent</li>
+  <li>etc…</li>
+</ul>
+
+<p>Avec ces outils, connectez vous avec un user qui a les droits sudo (pas en root !), puis :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/projetssd/kubeseed.git
+cd kubeseed
+./seedbox.sh
+</code></pre></div></div>
+
+<p>et laissez vous guider…</p>
+
+<h2 id="installation-avec-kickstart-et-variables-denvironnements">Installation avec kickstart et variables d’environnements.</h2>
+
+<h3 id="variables-denvironnement">Variables d’environnement</h3>
+
+<p>Plusieurs variables d’environnement peuvent être déclarées avant installation, pour éviter des saisies manuelles. La liste des variables possibles se trouve dans le fichier <strong><em>kickstart.sample</em></strong></p>
+
+<h3 id="fichier-kickstart">Fichier kickstart</h3>
+
+<p>Vous pouvez aussi copier le fichier <strong>kickstart.sample</strong> en <strong>kickstart</strong>, modifier son contenu selon votre convenance, et il sera pris en compte lors de l’installation.</p>
+
+<h2 id="migration-depuis-ssdv2">Migration depuis ssdv2</h2>
+
+<p>Dans le cas ou vous faites une migration depuis ssdV2, <a href="migration_ssdv2.html">suivez ce guide</a></p>
+
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/assets/js/scale.fix.js"></script>
+  </body>
+</html>

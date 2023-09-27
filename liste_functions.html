@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Liste des functions utilisable | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Liste des functions utilisable" />
+<meta property="og:locale" content="fr" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Liste des functions utilisable" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Liste des functions utilisable","url":"/kubeseed/liste_functions.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/migration_ssdv2.html">Migration depuis SSDv2</a></li>
+    <li><a href="/kubeseed/kubernetes.html">Utilisation de Kubernetes</a></li>
+    <li><a href="/kubeseed/liste_functions.html">Fonctions</a></li>
+    <li><a href="/kubeseed/paths.html">Chemins</a></li>
+    <li><a href="/kubeseed/traductions.html">Traductions</a></li>
+    <li><a href="/kubeseed/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/applications.html">Détail des applications</a>
+    <li><a href="/kubeseed/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+
+        
+            
+                <a href="/kubeseed/en//liste_functions.html">English</a>
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Liste des functions utilisable</h1>
+
+<h2 id="index-des-functions-utilisables-en-général">Index des functions utilisables en général</h2>
+
+<p>Voici une petite liste, la totalité des fonctions n’est pas utilisable par le commun des mortels.<br />
+Ne fonctionne que si kubeseed est installé complètement est sans bavure ;)</p>
+
+<p><strong>__Cette liste peut-être utile:__</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Nom de la function</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ks_cloudplow_upload</td>
+      <td style="text-align: left">Force l’upload de cloudplow en dehors des heures prévus par le fichier de config</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_generate_dashboard_token</td>
+      <td style="text-align: left">Génère le token permettant l’accès au dashboard de K3S, ce token est valable 1H</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_get_from_account_yml</td>
+      <td style="text-align: left">Permet de récuperer une valeur dans le fichier all.yaml, on veut le domaine alors ks_get_from_account_yml user.domain</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_get_system_info</td>
+      <td style="text-align: left">Utile à des fins de debug si un Admin vous le demande</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_manage_account_yml</td>
+      <td style="text-align: left">Mode expert, permet de remplacer une valeur dans la all.yml, ks_get_from_account_yml applis.sonarr.auth 3 permet de remplacer par exemple l’authentification basique par aucune notification</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_stocke_public_ip</td>
+      <td style="text-align: left">Mode expert, permet de remplacer les valeurs des ips stockées dans le all.yml, uniquement a la demande d’un admin</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_launch_service</td>
+      <td style="text-align: left">Permet de lancer une application présente dans le scripts ou dans /seedbox/app_persos/nomdelappli.yml sans passer par le menu sous la forme de ks_launch_service nomdelappli</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_delete_deployment</td>
+      <td style="text-align: left">Permet de supprimer une application du script ou app_persos sans passer par le menu</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ks_restart_deployment</td>
+      <td style="text-align: left">Permet de restart une application, ks_restart_deployment sonarr permet un restart de sonarr</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/assets/js/scale.fix.js"></script>
+  </body>
+</html>

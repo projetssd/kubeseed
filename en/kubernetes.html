@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Kubernetes | Kubeseed</title>
+<meta name="generator" content="Jekyll v3.8.7" />
+<meta property="og:title" content="Kubernetes" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="Une seedbox sous Kubernetes" />
+<meta property="og:description" content="Une seedbox sous Kubernetes" />
+<meta property="og:site_name" content="Kubeseed" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Une seedbox sous Kubernetes","headline":"Kubernetes","url":"/kubeseed/en/kubernetes.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/kubeseed/en/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/kubeseed/en/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/kubeseed/en/">Kubeseed</a></h1>
+
+        
+
+        <p>Une seedbox sous Kubernetes</p>
+
+          <p>
+<ul>
+    <li><a href="/kubeseed/en/index.html">Description - installation</a></li>
+    <li><a href="/kubeseed/en/migration_ssdv2.html">Migration from SSDv2</a></li>
+    <li><a href="/kubeseed/en/kubernetes.html">Kubernetes usage</a></li>
+    <li><a href="/kubeseed/en/liste_functions.html">Functions</a></li>
+    <li><a href="/kubeseed/en/paths.html">Paths</a></li>
+    <li><a href="/kubeseed/en/traductions.html">Translations</a></li>
+    <li><a href="/kubeseed/en/oauth.html">oAuth</a></li>
+
+    <li><a href="/kubeseed/en/applications.html">Detail of apps</a>
+    <li><a href="/kubeseed/en/external_service.html">Gérer un service externe</a>
+        
+    </li>
+    <li><a href="/kubeseed/support.html">Support</a></li>
+</ul>
+</p>
+<hr />
+
+        
+            
+                <a href="/kubeseed//kubernetes.html">Français</a>
+            
+
+        
+            
+
+        
+
+
+
+        
+
+        
+
+        
+      </header>
+      <section>
+
+      <small></small>
+<h1>Kubernetes</h1>
+
+<h2 id="implémentation-de-kubernetes-pour-kubeseed">Implémentation de kubernetes pour Kubeseed</h2>
+
+<p>Pour Kubeseed, l’infra kubernetes est constitué d’un seul noeud, installé avec <a href="https://k3s.io/">k3s</a>. Cela permet d’avoir un cluster Kubernetes rapidement et simplement.</p>
+
+<p>Kubeseed tourne sur un cluster d’un seul noeud, et n’est donc pas adapté pour de la haute disponibilité.</p>
+
+<h2 id="la-commande-kubectl">La commande kubectl</h2>
+
+<p>La commande kubectl est disponible pour l’utilisateur qui a installé la seedbox.</p>
+
+<p>Par exemple, pour avoir la liste des déploiements du namespace kubeseed :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get deployments
+</code></pre></div></div>
+
+<p>Par défaut, l’autocomplétion fonctionne, vous pouvez taper “tab” pour afficher les différentes possibilités (liste des namespaces, des objets, …).
+Le namespace par défaut est “kubeseed”</p>
+
+<h2 id="génération-dun-jeton-pour-le-dashboard">Génération d’un jeton pour le dashboard</h2>
+
+<p>Le dashboard Kubernetes permet d’avoir un oeil sur votre infrastructure. Afin de pouvoir se loguer, vous devez générer un jeton (token).</p>
+
+<p>Cela peut se faire soit depuis le menu (Gestion =&gt; Gestion Kubernetes =&gt; générer un jeton pour le dashboard), soit en lançant la commande <strong>ks_generate_dashboard_token</strong></p>
+
+<p>Lors de l’utilisation du dashboard, pensez à choisir le bon namespace (kubeseed)</p>
+
+<h2 id="notions-kubernetes">Notions kubernetes</h2>
+
+<p>Une appli kubeseed est en général composée de trois éléments (les puristes de k8s, tapez pas !):</p>
+
+<ul>
+  <li>un deployment =&gt; un ensemble de pods (dans kubeseed, un deployment = 1 pod) avec diverses règles. Le déployement porte le nom de l’application</li>
+  <li>un pod =&gt; c’est un ensemble de containers. Dans le cas de Kubeseed, 1 pod = 1 container. Les pods ne peuvent pas communiquer entre eux ni avec l’extérieur. Le pod a un nom qui commence par le nom de l’application, suivi d’une chaine de caractère déterminé par k8s.</li>
+  <li>un service =&gt; c’est ce qui permet le lien réseau entre un pod et le réseau interne de Kuberenetes. Ca permet aux pods de dialoguer entre eux. Dans kubeseed, le service a le même nom que le déploiement (radarr, sonarr…). Quand rutorrent veut parler à radarr, il appelle le service radarr (et non le container radarr comme dans docker)</li>
+  <li>un ingress =&gt; c’est une règle entrante, basée sur une url, qui fait le lien entre le monde extérieur et un service (et donc indirectement un pod). C’est par là qu’on indique que radarr.ndd.fr doit être redirigé vers le service radarr, et donc vers le pod radarr-xxxxx</li>
+</ul>
+
+<p>Certaines applications vont avoir des services complémentaires (c’est le cas de rutorrent qui va avoir un service qui va lui permettre d’accepter les requêtes venant de l’extérieur sur le port 3000), ou bien des objetc complémentaires (les bases de données vont avoir un objet NetworkPolicy, qui va limiter les communications uniquement au pod maitre de l’application par exemple)</p>
+
+<h3 id="debug-des-applications">Debug des applications</h3>
+
+<p>Il faut tout d’abord regarder l’état des déploiements.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get deployements
+</code></pre></div></div>
+
+<p>Ils doivent tous être en “up to date = 1”, et “available = 1”</p>
+
+<p>Si un déploiement n’est pas dans cet état là, il faut faire</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl describe deployement &lt;nom_du_déploiement&gt;
+</code></pre></div></div>
+<p>Qui va nous donner des premières indications sur pourquoi les pods n’ont pas démarré.</p>
+
+<p>Si un déploiement est dans un état correct, mais que l’application n’est pas joignable, il faut regarder les logs des pods associés</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get pods
+</code></pre></div></div>
+<p>Va nous donner les noms des pods</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl logs &lt;nom_du_pod&gt; 
+</code></pre></div></div>
+
+<p>Va afficher les logs du pods (comme docker logs avant)</p>
+
+<p>On peut faire</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl logs -f &lt;nom_du_pod&gt; 
+</code></pre></div></div>
+
+<p>pour faire défiler les logs en temps réél</p>
+
+
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/kubeseed/en/assets/js/scale.fix.js"></script>
+  </body>
+</html>
