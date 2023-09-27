@@ -1,0 +1,20 @@
+---
+application: 'jellyfin'
+app_port: 8096
+description: "logiciel de serveur multimédia sous licence libre"
+image: 'lscr.io/linuxserver/jellyfin:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/app/data"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true
