@@ -2,7 +2,7 @@
 layout: post
 title: Liste des functions utilisable
 ---
-# Index des functions utilisables en général
+## Index des functions utilisables en général
 
 Voici une petite liste, la totalité des fonctions n'est pas utilisable par le commun des mortels.<br>
 Ne fonctionne que si kubeseed est installé complètement est sans bavure ;)
