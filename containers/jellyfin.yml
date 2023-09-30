@@ -5,7 +5,7 @@ description: "logiciel de serveur multimédia sous licence libre"
 image: 'lscr.io/linuxserver/jellyfin:latest'
 application_volumes:
   - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/config"
-    container_path: "/app/data"
+    container_path: "/config"
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
 
