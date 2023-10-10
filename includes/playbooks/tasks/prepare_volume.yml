@@ -2,7 +2,7 @@
 - name: prepare host volume
   set_fact:
     temp_dict:
-      - name: "{{ application }}-{{ detail_volume.container_path| replace('/','')|replace('.','')|replace('_','')  }}"
+      - name: "{{ application }}-{{ detail_volume.container_path| replace('/','')|replace('.','')|replace('_','')|lower  }}"
         hostPath:
           path: "{{ detail_volume.local_path }}"
 
@@ -14,7 +14,7 @@
   set_fact:
     temp_dict:
       - mountPath: "{{ detail_volume.container_path }}"
-        name: "{{ application}}-{{ detail_volume.container_path| replace('/','')|replace('.','')|replace('_','')  }}"
+        name: "{{ application}}-{{ detail_volume.container_path| replace('/','')|replace('.','')|replace('_','')|lower  }}"
 
 - name: append container volume
   set_fact:
