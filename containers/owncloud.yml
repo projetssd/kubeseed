@@ -1,0 +1,38 @@
+---
+application: 'Owncloud'
+app_port: 80
+description: "owncloud"
+image: 'owncloud/server'
+application_volumes:
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/data"
+    container_path: "/mnt/data"
+application_env:
+  - name: OWNCLOUD_DOMAIN
+    value: "{{ applis[application].subdomain }}.{{ user.domain }}"
+  - name: OWNCLOUD_TRUSTED_DOMAINS
+    value: "{{ applis[application].subdomain }}.{{ user.domain }}"
+  - name: OWNCLOUD_DB_TYPE
+    value: "mysql"
+  - name: OWNCLOUD_DB_NAME
+    value: "{{ application }}"
+  - name: OWNCLOUD_DB_USERNAME
+    value: "{{ application }}"
+  - name: OWNCLOUD_DB_PASSWORD
+    value: "{{ application }}"
+  - name: OWNCLOUD_DB_HOST
+    value: "db-{{application}}"
+  - name: OWNCLOUD_ADMIN_USERNAME
+    value: "{{ user.name }}"
+  - name: OWNCLOUD_ADMIN_PASSWORD
+    value: "{{ user.pass }}"
+  - name: OWNCLOUD_REDIS_ENABLED
+    value: "true"
+  - name: OWNCLOUD_REDIS_HOST
+    value: "redis-{{ application }}"
+
+pretasks:
+  - mariadb
+  - redis
+

@@ -4,6 +4,7 @@
     dbimage: "mariadb"
     db_app_port: 3306
     db_persistent_path: "/var/lib/mysql"
+    container_name: "db-{{ application }}"
     db_application_env:
       - name: "MYSQL_DATABASE"
         value: "{{ application }}"

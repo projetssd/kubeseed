@@ -1,0 +1,15 @@
+---
+- name: Set facts
+  set_fact:
+    dbimage: "redis:6"
+    container_name: "redis-{{ application }}"
+    db_app_port: 6379
+    db_persistent_path: "/data"
+    db_application_env:
+      - name: "TEMP"
+        value: "temp"
+
+
+- name: Launch databasess
+  include_tasks: "{{ settings.source }}/containers/tasks/bdd.yml"
+

@@ -3,6 +3,7 @@
   set_fact:
     dbimage: "mongo:4.4"
     db_app_port: 27017
+    container_name: "db-{{ application }}"
     db_persistent_path: "/data/db"
     db_application_env:
       - name: "TZ"

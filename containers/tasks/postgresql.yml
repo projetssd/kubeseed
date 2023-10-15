@@ -4,6 +4,7 @@
     dbimage: "postgres"
     db_app_port: 5432
     db_persistent_path: "/var/lib/postgresql/data"
+    container_name: "db-{{ application }}"
     db_application_env:
       - name: "POSTGRES_DB"
         value: "{{ application }}"
