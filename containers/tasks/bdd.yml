@@ -10,17 +10,17 @@
       metadata:
         labels:
           ksapp: "{{ application }}"
-          app: "db.{{ application }}"
+          app: "{{ container_name }}.{{ application }}"
       spec:
         replicas: 1
         selector:
           matchLabels:
             ksapp: "{{ application }}"
-            app: "db.{{ application }}"
+            app: "{{ container_name }}.{{ application }}"
         template:
           metadata:
             labels:
-              app: "db.{{ application }}"
+              app: "{{ container_name }}.{{ application }}"
               ksapp: "{{ application }}"
           spec:
             containers:
@@ -50,12 +50,12 @@
       metadata:
         labels:
           ksapp: "{{ application }}"
-          app: "db.{{ application }}"
-          role: "db.{{ application }}"
+          app: "{{ container_name }}.{{ application }}"
+          role: "{{ container_name }}.{{ application }}"
       spec:
         selector:
           ksapp: "{{ application }}"
-          app: "db.{{ application }}"
+          app: "{{ container_name }}.{{ application }}"
         ports:
           - protocol: TCP
             port: "{{ db_app_port }}"
@@ -72,7 +72,7 @@
       spec:
         podSelector:
           matchLabels:
-            app: "db.{{ application }}"
+            app: "{{ container_name }}.{{ application }}"
             ksapp: "{{ application }}"
         ingress:
           - from:
