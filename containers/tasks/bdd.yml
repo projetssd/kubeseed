@@ -32,9 +32,9 @@
                 env: "{{ db_application_env }}"
                 volumeMounts:
                   - mountPath: "{{ db_persistent_path }}"
-                    name: "db-{{ application}}-persistent"
+                    name: "{{ container_name }}-persistent"
             volumes:
-              - name: "db-{{ application }}-persistent"
+              - name: "{{ container_name }}-persistent"
                 hostPath:
                   path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/db/persistent"
                   type: DirectoryOrCreate
