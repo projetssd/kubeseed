@@ -1,7 +1,7 @@
 ---
-application: 'Owncloud'
+application: 'owncloud'
 app_port: 80
-description: "owncloud"
+description: "Owncloud"
 image: 'owncloud/server'
 application_volumes:
   - local_path: "{{ lookup('env','HOME') }}"
