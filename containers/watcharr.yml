@@ -1,0 +1,17 @@
+---
+application: 'watcharr'
+app_port: 3080
+description: "I'm your new easily self-hosted content watched list."
+image: 'ghcr.io/sbondco/watcharr:latest'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{ application }}/data"
+    container_path: "/data"
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true
