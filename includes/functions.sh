@@ -780,7 +780,6 @@ function ks_install_zurg() {
   ks_get_and_store_info "zurg.token" "Token API pour Zurg (https://real-debrid.com/apitoken)" UNCHECK 
   # launch zurg
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/zurg.yml"
-  screen -d -m "${SETTINGS_STORAGE}/app_settings/zurg/zurg"
-  
+
   
 }
