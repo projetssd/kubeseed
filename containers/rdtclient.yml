@@ -1,0 +1,18 @@
+---
+application: 'rdtclient'
+app_port: 6500
+description: "Real debrid clients"
+image: 'laster13/rdtclient:latest'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/db"
+    container_path: "/data/db"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: PUID
+    value: '{{user.userid}}'
+  - name: PGID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'

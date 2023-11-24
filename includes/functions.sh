@@ -154,13 +154,8 @@ function ks_install_fail2ban() {
 
 function ks_install_rclone() {
   curl https://rclone.org/install.sh | sudo bash
-  echo -e "${BLUE}### RCLONE ###${NC}"
-  fusermount -uz "${RCLONE_MNT_DIR}" >>/dev/null 2>&1
-  ks_create_dir "${RCLONE_MNT_DIR}"
-  "${SETTINGS_SOURCE}/includes/scripts/rclone.sh"
-  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/rclone.yml"
-  ks_checking_errors $?
-  echo ""
+  mkdir -p "${HOME}/.config/rclone"
+  
 }
 
 function ks_mergerfs() {
@@ -297,7 +292,8 @@ function ks_install() {
   "python3-kubernetes"
   "fuse3"
   "bash-completion"
-  "gettext")
+  "gettext"
+  "screen")
   version_ok=0
 
   set -e # pour sortir du script si erreur
@@ -768,4 +764,20 @@ function ks_install_fail2ban() {
 
 function ks_install_loki() {
     ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/loki.yml"
+}
+
+function ks_install_zurg() {
+  ks_install_rclone
+  architecture=$(dpkg --print-architecture)
+  sudo systemctl stop zurg > /dev/null 2>&1
+  wget "https://github.com/debridmediamanager/zurg-testing/raw/main/releases/v0.9.0/zurg-v0.9.0-linux-${architecture}.zip?download=" -O zurg.zip
+  unzip -o /tmp/zurg.zip
+  mkdir -p "${SETTINGS_STORAGE}/app_settings/zurg"
+  cp "zurg-linux-${architecture}" "${SETTINGS_STORAGE}/app_settings/zurg/zurg"
+  ks_get_and_store_info "zurg.token" "Token API pour Zurg (https://real-debrid.com/apitoken)" UNCHECK 
+  # launch zurg
+  ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/zurg.yml"
+  ks_launch_service rdtclient
+
+  
 }
