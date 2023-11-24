@@ -53,3 +53,6 @@
         - menu: Install fail2ban
           type_dest: bash
           dest: ks_install_fail2ban
+        - menu: INstall Zurg - Rdtclient
+          type_dest: bash
+          dest: ks_install_zurg
