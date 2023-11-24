@@ -47,7 +47,7 @@
       become: yes
       template:
         dest: "/etc/systemd/system/zurg-mount.service"
-        src: "{{ lookup('env', 'SETTINGS_SOURCE') }}/includes/playbooks/templates/zurg.service.j2"
+        src: "{{ lookup('env', 'SETTINGS_SOURCE') }}/includes/playbooks/templates/zurg-mount.service.j2"
 
     - name: Launch mount
       become: yes
