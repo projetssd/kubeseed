@@ -1,0 +1,31 @@
+---
+application: 'kanboard'
+app_port: 80
+description: "Kanboard is a free and open source Kanban project management software."
+image: 'kanboard/kanboard'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/plugins"
+    container_path: "/var/www/app/plugins"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/var/www/app/data"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/ssl"
+    container_path: "/etc/nginx/ssl"
+
+application_env:
+  - name: UID
+    value: '{{user.userid}}'
+  - name: GID
+    value: '{{user.groupid}}'
+  - name: TZ
+    value: 'Europe/Paris'
+  - name: PLUGIN_INSTALLER
+    value: 'true'
+  - name: DATABASE_URL
+    value: 'mysql://kanboard:kanboard@db-kanboard/kanboard'
+
+no_liveness: true
+no_gui: false
+
+pretasks:
+  - mariadb
+
