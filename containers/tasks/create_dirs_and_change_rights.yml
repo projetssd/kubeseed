@@ -8,7 +8,5 @@
     recurse: yes
     state: directory
   loop: application_volumes
-  loop_control: 
+  loop_control:
     loop_var: my_volume
-    
-  
