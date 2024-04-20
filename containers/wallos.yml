@@ -1,0 +1,18 @@
+---
+application: 'wallos'
+app_port: 80
+description: "Wallos simplifies the process of tracking expenses and helps you gain better control over your financial life."
+image: 'bellamy/wallos:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/db"
+    container_path: "/var/www/html/db"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/logos"
+    container_path: "/var/www/html/images/uploads/logos"
+
+application_env:
+  - name: TZ
+    value: 'Europe/Paris'
+
+no_liveness: true
+no_gui: false
+
