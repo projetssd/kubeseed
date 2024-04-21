@@ -2,12 +2,10 @@
 application: 'speedtest-tracker'
 app_port: 80
 description: "A Docker image to check your internet speed using Ookla's Speedtest service."
-image: 'ghcr.io/alexjustesen/speedtest-tracker:latest'
+image: 'lscr.io/linuxserver/speedtest-tracker:latest'
 application_volumes:
   - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
     container_path: "/config"
-  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/web"
-    container_path: "/etc/ssl/web"
 
 application_env:
   - name: PUID
@@ -32,9 +30,5 @@ application_env:
 pretasks:
   - mariadb
 
-# Si positionné à true, ne mettra pas de check du liveness
-# Utile pour certaines applications (plex, on te regarde...)
 no_liveness: true
-
-# Si pas d'interface graphique (que du container en arrière plan) mettre à true
 no_gui: false
