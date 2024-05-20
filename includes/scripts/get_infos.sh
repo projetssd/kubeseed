@@ -47,6 +47,7 @@ ks_get_and_store_info "dns.usage" "Voulez vous utilise nsupdate ? [O/N]" KS_NS_U
 dns_usage=$(ks_get_from_account_yml dns.usage)
 if [ "${dns_usage}" == "O" ]; then
   ks_get_and_store_info "dns.algo" "algo nsupdate" KS_NS_ALGO
+  ks_get_and_store_info "dns.tsigalgo" "algo cert-manager" KS_NS_TSIGALGO
   ks_get_and_store_info "dns.keyname" "keyname" KS_NS_KEYNAME
   ks_get_and_store_info "dns.keysecret" "keysecret" KS_NS_KEYSECRET
   ks_get_and_store_info "dns.server" "ip serveur ns" KS_NS_SERVER

@@ -1,6 +1,6 @@
 ---
-### CLOUDFLARE ###
-- name: Set DNS Record in CF
+### CLOUDFLARE IPv4 ###
+- name: Set DNS Record IPv4 in CF
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.login }}"
@@ -13,8 +13,8 @@
     record: "{{ subdomain }}"
   when: cloudflare.usage == "O"
 
-### PDNS/NSUPDATE ###
-- name: Set DNS Record in NSUP
+### PDNS/NSUPDATE IPv4 ###
+- name: Set DNS Record IPv4 in NSUP
   community.general.nsupdate:
     key_algorithm: "{{ dns.algo }}"
     key_name: "{{ dns.keyname }}"
@@ -26,3 +26,31 @@
     ttl: "86400"
     type: "A"
   when: dns.usage == "O"
+
+### CLOUDFLARE IPv6 ###
+- name: Set DNS Record IPv6 in CF
+  cloudflare_dns:
+    account_api_token: "{{ cloudflare.api }}"
+    account_email: "{{ cloudflare.login }}"
+    zone: "{{ user.domain }}"
+    state: present
+    solo: true
+    proxied: true
+    type: AAAA
+    value: "{{ network.ipv6 }}"
+    record: "{{ subdomain }}"
+  when: cloudflare.usage == "O" and network.ipv6 != 'YAPAS'
+
+### PDNS/NSUPDATE ###
+- name: Set DNS Record IPv6 in NSUP
+  community.general.nsupdate:
+    key_algorithm: "{{ dns.algo }}"
+    key_name: "{{ dns.keyname }}"
+    key_secret: "{{ dns.keysecret }}"
+    server: "{{ dns.server }}"
+    zone: "{{ user.domain }}"
+    record: "{{ subdomain }}"
+    value: "{{ network.ipv6 }}"
+    ttl: "86400"
+    type: "AAAA"
+  when: dns.usage == "O" and network.ipv6 != 'YAPAS'

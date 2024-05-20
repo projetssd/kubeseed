@@ -58,6 +58,6 @@
                         port:
                           number: 9000
           tls:
-            - secretName: "traefik-tls"
-              hosts:
-                - "{{ applis.traefik.subdomain }}.{{ user.domain }}"
+            - hosts:
+                - "*.{{ user.domain }}"
+              secretName: "wildcard-cert-tls-mptsm"

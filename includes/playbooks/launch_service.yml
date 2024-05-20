@@ -194,10 +194,10 @@
                             port:
                               number: "{{ app_port }}"
               tls:
-                - secretName: "{{ application }}-tls"
-                  hosts:
+                - hosts:
+                    - "*.{{ user.domain }}"
+                  secretName: "wildcard-cert-tls-mptsm"
 
-                    - "{{ applis[application].subdomain }}.{{ user.domain }}"
       when: no_gui is false
     # POST TASKS ###################################################################
 

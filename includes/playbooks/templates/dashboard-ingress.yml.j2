@@ -5,7 +5,7 @@ metadata:
   name: kubernetes-dashboard
   namespace: kubernetes-dashboard
   annotations:
-    cert-manager.io/issuer: selfsigned
+    cert-manager.io/issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
 spec:
   ingressClassName: traefik
@@ -29,8 +29,8 @@ spec:
                   number: 9000
 
   tls:
-    - secretName: "dashboard-tls"
+    - secretName: "wildcard-cert-tls-mptsm"
       hosts:
-        - "{{ applis.dashboard.domain}}.{{ user.domain }}"
+        - "*.{{ user.domain }}"
 
 

@@ -466,10 +466,33 @@ EOF
   ks_log_statusbar "Installation de crowdsec"
   ks_install_crowdsec
 
-
-  # Installation de k3s
+  # Installation de k3s avec support IPv6
   ks_log_statusbar "Installation de K3S"
   echo "Installation de K3S"
+  IP4=$(ks_get_from_account_yml network.ipv4)
+  IP6=$(ks_get_from_account_yml network.ipv6)
+
+  # Afficher les variables pour confirmation
+  echo "Configuration de K3s :"
+  echo "IPv4 : $IP4"
+  echo "IPv6 : $IP6"
+
+  # Définir la variable INSTALL_K3S_EXEC en fonction de la valeur de IP6
+  if [ "$IP6" = "YAPAS" ]; then
+      export INSTALL_K3S_EXEC="server --cluster-cidr=10.42.0.0/16,fd42::/48 --service-cidr=10.43.0.0/16,fd43::/112 --node-ip=${IP4}"
+  else
+      export INSTALL_K3S_EXEC="server --cluster-cidr=10.42.0.0/16,fd42::/48 --service-cidr=10.43.0.0/16,fd43::/112 --node-ip=${IP4},${IP6}"
+  fi
+
+  # Afficher la commande pour confirmation
+  echo "INSTALL_K3S_EXEC : $INSTALL_K3S_EXEC"
+
+  # Pause utilisateur pour valider ou sortir du script
+  read -p "Confirmez-vous l'installation avec cette configuration ? (oui/non) : " CONFIRM
+  if [ "$CONFIRM" != "oui" ]; then
+      echo "Installation annulée."
+      exit 1
+  fi
   curl -sfL https://get.k3s.io | sudo sh -
   mkdir -p "${SETTINGS_STORAGE}/k3s"
   sudo cp /etc/rancher/k3s/k3s.yaml "${SETTINGS_STORAGE}/k3s"
@@ -482,6 +505,7 @@ EOF
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/k3s_create_namespace.yml" -e ns=cert-manager
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
+  #ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/powerdns.yml"
 
   # Création auth basique
   ks_log_statusbar "Création auth basique"
@@ -495,6 +519,7 @@ EOF
   ks_log_statusbar "Configuration du module letsencrypt avec traefik"
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.yaml
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/letsencrypt.yml"
+  #ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/powerdns.yml"
 
   # Installation dashboard
   ks_log_statusbar "Installation du dashboard Kubernetes"
@@ -556,14 +581,14 @@ function ks_stocke_public_ip() {
   IPV4=$(curl -s -4 https://ip4.mn83.fr)
   echo "IPV4 = ${IPV4}"
   ks_manage_account_yml network.ipv4 "${IPV4}"
-  #IPV6=$(curl -6 https://ip6.mn83.fr)
-  #if [ $? -eq 0 ]; then
-  #  echo "IPV6 = ${IPV6}"
-  #  ks_manage_account_yml network.ipv6 "${IPV6}"
-  #else
-  #  echo "Aucune adresse ipv6 trouvée"
-  #  ks_manage_account_yml network.ipv6 YAPAS
-  #fi
+  IPV6=$(curl -6 https://ip6.mn83.fr)
+  if [ $? -eq 0 ]; then
+    echo "IPV6 = ${IPV6}"
+    ks_manage_account_yml network.ipv6 "${IPV6}"
+  else
+    echo "Aucune adresse ipv6 trouvée"
+    ks_manage_account_yml network.ipv6 YAPAS
+  fi
 }
 
 function ks_install_environnement() {

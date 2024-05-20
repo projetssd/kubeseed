@@ -7,10 +7,55 @@
     pause:
       seconds: 30
 
-  - name: Deploy from template
+  - name: Create DNS secret when CF is used
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: dns-secret
+          namespace: cert-manager
+        data:
+          api-token: "{{ cloudflare.api | b64encode }}"
+    when: cloudflare.usage == "O"
+
+  - name: Debug API-TOKEN
+    debug:
+      msg: "API-TOKEN is {{ cloudflare.api | b64encode }}"
+    when: cloudflare.usage == "O"
+
+  - name: Create DNS secret when nsupdate is used
+    kubernetes.core.k8s:
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: dns-secret
+          namespace: cert-manager
+        data:
+          nsupdate-key: "{{ dns.keysecret | b64encode }}"
+    when: dns.usage == "O"
+
+  - name: Debug NSUPDATE_KEY
+    debug:
+      msg: "NSUPDATE_KEY is {{ dns.keysecret | b64encode }}"
+    when: dns.usage == "O"
+
+  - name: Deploy from template for Cloudflare
     template:
-      src: "{{ settings.source }}/includes/playbooks/templates/letsencrypt.yml.j2"
+      src: "{{ settings.source }}/includes/playbooks/templates/letsencrypt_cloudflare.yml.j2"
       dest: "/tmp/le.yml"
+    when: cloudflare.usage == "O"
+
+  - name: Deploy from template for nsupdate
+    template:
+      src: "{{ settings.source }}/includes/playbooks/templates/letsencrypt_nsupdate.yml.j2"
+      dest: "/tmp/le.yml"
+    when: dns.usage == "O"
 
   - name: Apply template
     kubernetes.core.k8s:
@@ -29,4 +74,21 @@
       state: present
       src: "{{ settings.source }}/includes/files/redirect.yml"
 
-
+  - name: Create wildcard certificate
+    kubernetes.core.k8s:
+      api_version: cert-manager.io/v1
+      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
+      kind: Certificate
+      name: wildcard-cert
+      namespace: kube-system
+      definition:
+        spec:
+          dnsNames:
+            - "{{ user.domain }}"
+            - "*.{{ user.domain }}"
+          secretName: wildcard-cert-tls-mptsm
+          issuerRef:
+            name: letsencrypt-prod
+            kind: ClusterIssuer
+          dns01:
+            timeout: 120

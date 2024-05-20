@@ -33,23 +33,6 @@
             name: admin-user
             namespace: kubernetes-dashboard
 
-  - name: Create certificate
-    kubernetes.core.k8s:
-      api_version: cert-manager.io/v1
-      kubeconfig: "{{ settings.storage }}/k3s/k3s.yaml"
-      kind: Certificate
-      name: "{{ applis.dashboard.domain }}.{{ user.domain }}"
-      namespace: kube-system
-      definition:
-        spec:
-          dnsNames:
-            - "{{ applis.dashboard.domain }}.{{ user.domain }}"
-          secretName: "{{ applis.dashboard.domain }}.{{ user.domain }}"
-          issuerRef:
-            name: letsencrypt-prod
-            kind: ClusterIssuer
-
-
   - name: Transport and Ingress template
     template:
       src: "{{ settings.source }}/includes/playbooks/templates/dashboard-ingress.yml.j2"
