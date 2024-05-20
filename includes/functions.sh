@@ -559,9 +559,10 @@ function ks_stocke_public_ip() {
   #IPV6=$(curl -6 https://ip6.mn83.fr)
   #if [ $? -eq 0 ]; then
   #  echo "IPV6 = ${IPV6}"
-  #  ks_manage_account_yml network.ipv6 "a[${IPV6}]"
+  #  ks_manage_account_yml network.ipv6 "${IPV6}"
   #else
   #  echo "Aucune adresse ipv6 trouvée"
+  #  ks_manage_account_yml network.ipv6 YAPAS
   #fi
 }
 
