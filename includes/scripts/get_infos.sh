@@ -38,6 +38,7 @@ if [ "${cloudflare_usage}" == "O" ]; then
   ks_manage_account_yml dns.usage N
   ks_get_and_store_info "cloudflare.login" "Votre Email cloudflare" KS_CF_MAIL
   ks_get_and_store_info "cloudflare.api" "Votre API cloudflare" KS_CF_API
+  ks_get_and_store_info "cloudflare.token" "Votre API token" KS_CF_TOKEN
   # On met le ssl CF à full
   ansible-playbook "${SETTINGS_SOURCE}/includes/playbooks/cf_force_full_ssl.yml"
 else
