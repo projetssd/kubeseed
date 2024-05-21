@@ -1,6 +1,6 @@
 ---
-### CLOUDFLARE ###
-- name: Remove DNS Record in CloudFlare
+### CLOUDFLARE IPv4 ###
+- name: Remove DNS Record A in CloudFlare
   cloudflare_dns:
     account_api_token: "{{ cloudflare.api }}"
     account_email: "{{ cloudflare.login }}"
@@ -11,8 +11,8 @@
     record: "{{ subdomain }}"
   when: cloudflare.usage == "O"
 
-### PDNS/NSUPDATE ###
-- name: Remove DNS Record in NSUPDATE
+### PDNS/NSUPDATE IPv4 ###
+- name: Remove DNS Record A in NSUPDATE 
   community.general.nsupdate:
     key_algorithm: "{{ dns.algo }}"
     key_name: "{{ dns.keyname }}"
@@ -24,3 +24,29 @@
     type: "A"
     state: absent
   when: dns.usage == "O"
+
+### CLOUDFLARE IPv6 ###
+- name: Remove DNS Record AAAA in CloudFlare
+  cloudflare_dns:
+    account_api_token: "{{ cloudflare.api }}"
+    account_email: "{{ cloudflare.login }}"
+    zone: "{{ user.domain }}"
+    state: absent
+    proxied: yes
+    type: AAAA
+    record: "{{ subdomain }}"
+  when: cloudflare.usage == "O" and network.ipv6 != 'YAPAS'
+
+### PDNS/NSUPDATE IPv6 ###
+- name: Remove DNS Record AAAA in NSUPDATE 
+  community.general.nsupdate:
+    key_algorithm: "{{ dns.algo }}"
+    key_name: "{{ dns.keyname }}"
+    key_secret: "{{ dns.keysecret }}"
+    server: "{{ dns.server }}"
+    zone: "{{ user.domain }}"
+    record: "{{ subdomain }}"
+    value: "{{ network.ipv6 }}"
+    type: "AAAA"
+    state: absent
+  when: dns.usage == "O" and network.ipv6 != 'YAPAS'

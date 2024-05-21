@@ -41,7 +41,7 @@
     record: "{{ subdomain }}"
   when: cloudflare.usage == "O" and network.ipv6 != 'YAPAS'
 
-### PDNS/NSUPDATE ###
+### PDNS/NSUPDATE IPv6 ###
 - name: Set DNS Record IPv6 in NSUP
   community.general.nsupdate:
     key_algorithm: "{{ dns.algo }}"
