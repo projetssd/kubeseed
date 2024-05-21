@@ -36,8 +36,17 @@ export KS_CF_USAGE=O
 export KS_CF_MAIL=monemail@kubeseed.com
 
 #################################################
-# Adresse mail cloudflare
-export KS_CF_API=xxxxxxxxxxxxxxxxxxxxxxxxx
+# API Global cloudflare
+#export KS_CF_API=xxxxxxxxxxxxxxxxxxxxxxxxx
+
+#################################################
+# Token API CloudFlare
+# Permissions
+# Zone -> Zone -> Read
+# Zone -> DNS -> Edit
+# Zone Resources
+# Includes -> All zones
+#export KS_CF_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 #################################################
 # Sous domaine pour traefik
@@ -58,11 +67,13 @@ export KS_DASHBOARD_SUBDOMAIN=dashboard
 
 ### PDNS / NSUPDATE
 #export KS_NS_USAGE=O
-### Algorithm
-#export KS_NS_ALGO=xxx
+### Algorithm NSUP
+#export KS_NS_ALGO=xxxx-xxxx
+### Algo cert-manager HMACSHA512, HMACSHA256, ETC
+export KS_NS_TSIGALGO=XXXXXXX
 ### Key name
-#export KS_NS_KEYNAME=xxx
+export KS_NS_KEYNAME=xxxxxxxx
 ### Key secret
-#export KS_NS_KEYSECRET=xxx
+export KS_NS_KEYSECRET=xxxxxxxxxxxxxxxxxxxxxxxxxx
 ### SERVER NS au format ip (ex:X.X.X.X)
-#export KS_NS_SERVER=X.X.X.X
+export KS_NS_SERVER=x.x.x.x
