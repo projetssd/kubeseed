@@ -471,13 +471,16 @@ EOF
   echo "Installation de K3S"
   IP4=$(ks_get_from_account_yml network.ipv4)
   IP6=$(ks_get_from_account_yml network.ipv6)
-
   # Afficher les variables pour confirmation
   echo "Configuration de K3s :"
   echo "IPv4 : $IP4"
   echo "IPv6 : $IP6"
-
-  export INSTALL_K3S_EXEC="server --cluster-cidr=10.42.0.0/16,fd42::/48 --service-cidr=10.43.0.0/16,fd43::/112 --node-ip=${IP4},${IP6} --kubelet-arg=node-ip=::"
+  # Définir la variable INSTALL_K3S_EXEC en fonction de la valeur de IP6
+  if [ "$IP6" = "YAPAS" ]; then
+      export INSTALL_K3S_EXEC="server --cluster-cidr=10.42.0.0/16,fd42::/48 --service-cidr=10.43.0.0/16,fd43::/112 --node-ip=${IP4}"
+  else
+      export INSTALL_K3S_EXEC="server --cluster-cidr=10.42.0.0/16,fd42::/48 --service-cidr=10.43.0.0/16,fd43::/112 --node-ip=${IP4},${IP6} --kubelet-arg=node-ip=::"
+  fi
   sudo -E curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.24.6+k3s1 sudo -E sh -
   mkdir -p "${SETTINGS_STORAGE}/k3s"
   sudo cp /etc/rancher/k3s/k3s.yaml "${SETTINGS_STORAGE}/k3s"
