@@ -13,22 +13,20 @@ application_env:
   - name: PGID
     value: '{{ user.groupid }}'
   - name: DB_CONNECTION
-    value: 'mysql'
-  - name: DB_HOST
-    value: 'db-{{ application }}'
-  - name: DB_PORT
-    value: '3306'
-  - name: DB_DATABASE
-    value: '{{ application }}'
-  - name: DB_USERNAME
-    value: '{{ application }}'
-  - name: DB_PASSWORD
-    value: '{{ application }}'
+    value: 'sqlite'
   - name: TZ
     value: 'Europe/Paris'
-
+  - name: APP_KEY
+    value: '{{ appkeyspt }}'
+  - name: SPEEDTEST_SCHEDULE
+    value: '36 /2 * * *'
+  - name: APP_TIMEZONE
+    value: 'Europe/Paris'
+  - name: PUBLIC_DASHBOARD
+    value: 'true'
+    
 pretasks:
-  - mariadb
+  - appkey_spt
 
 no_liveness: true
 no_gui: false
