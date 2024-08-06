@@ -1,3 +1,5 @@
+[![Discord: https://discord.gg/ZhWvKVmTuh](https://img.shields.io/badge/Discord-gray.svg?style=for-the-badge)](https://discordapp.com/invite/ZhWvKVmTuh)
+
 # Kubeseed
 
 Kubeseed - uses kubernetes for containers
