@@ -14,7 +14,7 @@ CCYAN="${CSI}0;36m"
 
 backupList() {
 
-    local backups=({{ settings.storage }}/backup/backup-*)
+    local backups=({{ settings.storage }}/backup/backup_ks-*)
     local i=0
     local n=""
 
@@ -41,7 +41,7 @@ backupList() {
         exit 1
     fi
 
-    ARCHIVEPATH=${BACKUPPATH[$n]##*/} # backup-JJMMAAAA-HHMM
+    ARCHIVEPATH=${BACKUPPATH[$n]##*/} # backup_ks-JJMMAAAA-HHMM
     ARCHIVE="$ARCHIVEPATH.tar.gz"
 }
 
