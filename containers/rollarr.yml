@@ -16,5 +16,4 @@ application_env:
     value: 'Europe/Paris'
 
 no_liveness: true
-
-no_gui: true
+no_gui: false

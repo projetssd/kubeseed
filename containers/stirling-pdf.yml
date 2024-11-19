@@ -1,0 +1,49 @@
+---
+application: 'stirling-pdf'
+app_port: 8080
+description: "Stirling-PDF is a robust, locally hosted web-based PDF manipulation tool using Docker."
+image: 'stirlingtools/stirling-pdf:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/configs"
+    container_path: "/configs"
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/trainingdata"
+    container_path: "/usr/share/tessdata"
+  - local_path: "{{ lookup('env','HOME') }}"
+    container_path: "{{ lookup('env','HOME') }}"
+
+application_env:
+  - name: DOCKER_ENABLE_SECURITY
+    value: 'false'
+  - name: INSTALL_BOOK_AND_ADVANCED_HTML_OPS
+    value: 'false'
+  - name: LANGS
+    value: 'fr_FR'
+
+############# OPTIONS ###################################
+# A partir d'ici, tout est optionnel
+
+no_liveness: true # Si positionné à true, ne mettra pas de check du liveness
+# Utile pour certaines applications (plex, on te regarde...)
+
+no_gui: false # Si pas d'interface graphique (que du container en arrière plan) mettre à true
+
+#specific_container_info:
+  # Liste des ports à ouvrir en direct sur l'hôte
+  # Correspond à ports: -3000:3000 dans docker
+  # C'est une liste, donc chaque élément doit avoir un tiret
+  # seuls les ports 30000-32767 sont utilisables dans k3s
+  # CE N'EST PAS LE PORT DE LA WEBUI DU SERVICE !
+#  ports:
+#    - 30000
+
+# liste des pretasks (lancées avant le déploiement)
+# Doit correspondre a un fichier yml dans le répertoire containers/tasks
+#pretasks:
+#  - first_pretask
+
+# liste des posttasks (lancées après le déploiement)
+# Doit correspondre a un fichier yml dans le répertoire containers/tasks
+#posttasks:
+#  - configure_rutorrent
+#  - restart
+
