@@ -9,29 +9,29 @@
     path: "{{ lookup('env','SETTINGS_STORAGE') }}/local/{{application}}"
     state: directory
 
-- name: Set default download location
-  lineinfile:
-    path:
-      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
-    regexp: '#*directory.default.set\s*=.*'
-    line: "directory.default.set = {{ lookup('env','SETTINGS_STORAGE') }}/local/{{application}}"
-    state: present
+#- name: Set default download location
+#  lineinfile:
+#    path:
+#      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
+#    regexp: '#*directory.default.set\s*=.*'
+#    line: "directory.default.set = {{ lookup('env','SETTINGS_STORAGE') }}/local/{{application}}"
+#    state: present
 
-- name: Set Top Directory
-  lineinfile:
-    path:
-      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rutorrent/conf/config.php"
-    regexp: '\$topDirectory\s*=.*'
-    line: "$topDirectory = '/home/{{ lookup('env','USER') }}';"
-    state: present
+#- name: Set Top Directory
+#  lineinfile:
+#    path:
+#      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rutorrent/conf/config.php"
+#    regexp: '\$topDirectory\s*=.*'
+#    line: "$topDirectory = '/home/{{ lookup('env','USER') }}';"
+#    state: present
 
-- name: Change port
-  lineinfile:
-    path:
-      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
-    regexp: '#*network.port_range.set\s*=.*'
-    line: "network.port_range.set = {{ specific_container_info.ports[0] }}-{{ specific_container_info.ports[0] }}"
-    state: present
+#- name: Change port
+#  lineinfile:
+#    path:
+#      "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config/rtorrent/.rtorrent.rc"
+#    regexp: '#*network.port_range.set\s*=.*'
+#    line: "network.port_range.set = {{ specific_container_info.ports[0] }}-{{ specific_container_info.ports[0] }}"
+#    state: present
 
 - name: Clone Ratio Color plugin
   git:

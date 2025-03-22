@@ -1,0 +1,40 @@
+---
+application: 'speedtest-tracker'
+app_port: 80
+description: "A Docker image to check your internet speed using Ookla's Speedtest service."
+image: 'lscr.io/linuxserver/speedtest-tracker:latest'
+application_volumes:
+  - local_path: "{{ lookup('env', 'APP_SETTINGS') }}/{{application}}/config"
+    container_path: "/config"
+application_env:
+  - name: PUID
+    value: '{{ user.userid }}'
+  - name: PGID
+    value: '{{ user.groupid }}'
+  - name: DB_CONNECTION
+    value: 'sqlite'
+  - name: TZ
+    value: 'Europe/Paris'
+  - name: APP_KEY
+    value: '{{ speedtest.appkey }}'
+  - name: APP_URL
+    value: "https://{{ applis[application].subdomain }}.{{ user.domain }}"
+  - name: SPEEDTEST_SCHEDULE
+    value: "36 */2 * * *"
+  - name: APP_TIMEZONE
+    value: 'Europe/Paris'
+  - name: PUBLIC_DASHBOARD
+    value: 'true'
+  - name: SPEEDTEST_SERVERS
+    value: '47318'
+
+pretasks:
+  - appkey_spt
+posttasks:
+  - default_login_and_password
+
+no_liveness: true
+no_gui: false
+
+dlogin: "admin@example.com"
+dpasswd: "password"

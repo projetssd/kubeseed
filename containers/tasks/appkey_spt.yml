@@ -1,7 +1,25 @@
 ---
-- pause:
+- name: Check if APP_KEY is present
+  set_fact:
+    speedtest_appkey_exists: "{{ not (speedtest.appkey is undefined or speedtest.appkey is none or (speedtest.appkey | trim | length == 0)) }}"
+
+- name: Ask APP_KEY if missing
+  pause:
     prompt: "rendez vous à https://speedtest-tracker.dev/ et copier coller l'APP_KEY affichée base64:blabla"
     echo: yes
-  register: appkeyspt
-- set_fact:
-    appkeyspt: "{{ appkeyspt.user_input }}"
+  register: speedtest_appkey_input
+  when: not speedtest_appkey_exists
+
+
+- name: Update APP_KEY
+  set_fact:
+    speedtest:
+      appkey: "{{ speedtest_appkey_input.user_input if not speedtest_appkey_exists else speedtest.appkey }}"
+
+- name: Add APP_KEY in the vault
+  shell: |
+    source ${SETTINGS_SOURCE}/profile.sh
+    ks_manage_account_yml speedtest.appkey "{{ speedtest.appkey }}"
+  args:
+    executable: /bin/bash
+  when: speedtest_appkey_input is defined

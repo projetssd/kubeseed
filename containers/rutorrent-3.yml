@@ -21,7 +21,7 @@ application_env:
   - name: TZ
     value: 'Europe/Paris'
   - name: DOWNLOAD_DIRECTORY
-    value: "{{ lookup('env','SETTINGS_STORAGE') }}/local/{{application}}"
+    value: "{{ lookup('env','HOME') }}"
   - name: PORT_RTORRENT
     value: "30003"
 
