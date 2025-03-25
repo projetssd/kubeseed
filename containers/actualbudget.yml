@@ -1,0 +1,16 @@
+---
+application: 'actualbudget'
+app_port: 5006
+description: "Actual is a local-first personal finance tool."
+image: 'docker.io/actualbudget/actual-server:latest'
+application_volumes:
+  - local_path: "{{ lookup('env','APP_SETTINGS') }}/{{application}}/data"
+    container_path: "/data"
+
+application_env:
+
+no_liveness: true
+
+no_gui: false
+
+
