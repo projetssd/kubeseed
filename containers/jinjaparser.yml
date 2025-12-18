@@ -2,7 +2,7 @@
 application: 'jinjaparser'
 app_port: 8125
 description: "Jinja Parser"
-image: 'tautulli/tautulli'
+image: 'hatamiarash7/jinja-parser'
 application_volumes:
   - local_path: "{{ lookup('env','HOME') }}"
     container_path: "{{ lookup('env','HOME') }}"
